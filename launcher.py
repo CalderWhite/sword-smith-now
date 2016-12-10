@@ -1,13 +1,19 @@
-import logging,json, tkinter, time, threading, sys
+import logging,json, tkinter, time, threading, sys, datetime
 from tkinter import ttk
 class gui(object):
 	def __init__(self):
 		self.tk = tkinter.Tk()
-		self.tk.geometry("760x480+0+0")
-		##self.tk.resizable(width=False, height=False)
+		sw = self.tk.winfo_screenwidth()
+		sh = self.tk.winfo_screenheight()
+		ww = 760
+		wh = 480
+		x = int(sw / 2) - int(ww/2)
+		y = int(sh / 2) - int(wh / 2)
+		self.tk.geometry("%sx%s+%s+%s" % (ww,wh,x,y))
+		self.tk.resizable(width=False, height=False)
 		self.tk.title("Launching...")
 		# text
-		self.log_field = tkinter.Text(self.tk,height=10,width=95 )
+		self.log_field = tkinter.Text(self.tk,height=25,width=95 )
 		self.log_text = ""
 		self.log_field.configure(state=tkinter.DISABLED)
 		self.log_field.grid(row=0)
@@ -21,7 +27,7 @@ class launcher(object):
 			# 1 : developer mode; will check modules, as if it were being run by the python interperator instead of .exe format.
 			# 2 : cheats mode; nothing yet, going to be a version of dev mode to test bosses with hacks.
 			self.mode = mode
-			print("Running log configuration.\nAll other logging/debugging messages will be sent to the specified log file once configured.")
+			##print("Running log configuration.\nAll other logging/debugging messages will be sent to the specified log file once configured.")
 			logging.basicConfig(filename=log_file,level="INFO")
 			self.game_info_name = info_file
 			self.game_name = "GAME NAME IS UNKNOWN"
@@ -34,6 +40,10 @@ class launcher(object):
 	def try_launch(self):
 		if self.allow_run:
 			self.log("Launching [%s]..." % self.game_name)
+			import runtime
+			r = open(self.game_info_name,'r').read()
+			self.info = json.loads(r)
+			runtime.main(self)
 		elif self.allow_run == False:
 			self.log("There were errors during checks, no launch may be run.",level="ERROR")
 		elif self.allow_run == None:
@@ -51,6 +61,10 @@ class launcher(object):
 			s.configure('my.TButton', font=("Arial", 12,"bold"),padding=17,width=25,justify="center")
 			self.play_b = ttk.Button(self.gui.tk, text="Play", command=self.try_launch,style="my.TButton")
 			self.play_b.grid(row=1)
+			self.log("Time: " + str(datetime.datetime.now()))
+			self.log("Setting launcher icon.")
+			#load the ico version instead of the png. This just seems to work
+			self.gui.tk.iconbitmap(default='images/blank.ico')
 			checks = self.do_checks()
 			if checks:
 				self.log("Load was succesful.")
@@ -60,6 +74,7 @@ class launcher(object):
 			self.waiting_loop()
 		else:
 			self.log("Running launcher in non-gui mode.")
+			self.log("Time: " + str(datetime.datetime.now()))
 			checks = self.do_checks()
 			if checks:
 				self.log("Load was succesful.")
@@ -89,12 +104,12 @@ class launcher(object):
 	def waiting_loop(self):
 		"""Just wait for some user input"""
 		self.gui.tk.mainloop()
-	def log(self,msg,level="INFO"):
+	def log(self,msg,level="INFO",user="LAUNCHER"):
 		logging.log(logging.__getattribute__(level),msg)
 		if self.initial_gui:
 			self.gui.log_field.pack_forget()
-			self.gui.log_field = tkinter.Text(self.gui.tk,height=10,width=95 )
-			self.gui.log_text = self.gui.log_text + "[" + level + "] : " + msg + "\n"
+			self.gui.log_field = tkinter.Text(self.gui.tk,height=25,width=95 )
+			self.gui.log_text = self.gui.log_text + "[" + user +  "]:[" + level + "]: " + msg + "\n"
 			##print(self.gui.log_text)
 			self.gui.log_field.insert(tkinter.END,self.gui.log_text)
 			self.gui.log_field.grid(row=0)
@@ -139,6 +154,51 @@ class launcher(object):
 				return True
 		elif self.mode == 2:
 			pass
+def main():
+	dash = []
+	ddash = []
+	commands = []
+	for i in sys.argv[1:]:
+		if i[0:2] == "--":
+			ddash.append(i)
+		elif i[0] == "-":
+			dash.append(i)
+		else:
+			command.append(i)
+	if len(sys.argv[1:]) == 0:
+		l = launcher(0,"Sword_Smith_Now_logs.log","game_info.json",initial_gui=True)
+		l.load()
+	"""
+	accepted = {
+		"-t" : [0,"Sword_Smith_Now_logs.log","game_info.json",False],
+		"--terminal-only" : [0,"Sword_Smith_Now_logs.log","game_info.json",False],
+		"-d" : [1,"Sword_Smith_Now_logs.log","game_info.json",True],
+		"--dev-mode" : [1,"Sword_Smith_Now_logs.log","game_info.json",True],
+		"-c" : [2,"Sword_Smith_Now_logs.log","game_info.json",True],
+		"--cheats" : [2,"Sword_Smith_Now_logs.log","game_info.json",True]
+	}"""
+	if commands.__contains__("help") or dash.__contains__("-h") or ddash.__contains__("--help") or commands.__contains__("/?"):
+		t = " -t, --terminal-only 	Disables the gui pop up for the launcher, and instead uses the terminal."
+		d = " -d, --dev-mode		Launches in dev mode. Read more in the dev manual."
+		c = " -c, --cheats		Launches in a version of dev mode with cheats."
+		descriptions = [t,d,c]
+		ptext = "\n".join(descriptions)
+		print(ptext)
+	elif len(commands) == 0:
+		m = 0
+		log = "Sword_Smith_Now_logs.log"
+		info = "game_info.json"
+		display = True
+		if dash.__contains__("-t") or ddash.__contains__("--terminal-only"):
+			display = False
+		if dash.__contains__("-d") or ddash.__contains__("--dev-mode"):
+			m = 1
+		if dash.__contains__("-c") or ddash.__contains__("--cheats"):
+			m = 2
+		l = launcher(m,log,info,initial_gui=display)
+		l.load()
+	
 if __name__ == '__main__':
-	launch = launcher(1,"Sword_Smith_Now_logs.log","game_info.json",initial_gui=False)
-	launch.load()
+	##launch = launcher(1,"Sword_Smith_Now_logs.log","game_info.json",initial_gui=True)
+	##launch.load()
+	main()
