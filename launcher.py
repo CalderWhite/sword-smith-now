@@ -1,4 +1,4 @@
-import logging,json, tkinter, time, threading, sys, datetime
+import logging,json, tkinter, time, threading, sys, datetime, imp
 from tkinter import ttk
 class gui(object):
 	def __init__(self):
@@ -40,10 +40,17 @@ class launcher(object):
 	def try_launch(self):
 		if self.allow_run:
 			self.log("Launching [%s]..." % self.game_name)
+			# reload runtime so that all code changes are implimented
 			import runtime
+			runtime = imp.reload(runtime)
 			r = open(self.game_info_name,'r').read()
 			self.info = json.loads(r)
 			runtime.main(self)
+			self.log("Game has stopped.")
+			self.log("Running main loop until user closes.")
+			self.waiting_loop()
+			while True:
+				pass
 		elif self.allow_run == False:
 			self.log("There were errors during checks, no launch may be run.",level="ERROR")
 		elif self.allow_run == None:
@@ -64,7 +71,7 @@ class launcher(object):
 			self.log("Time: " + str(datetime.datetime.now()))
 			self.log("Setting launcher icon.")
 			#load the ico version instead of the png. This just seems to work
-			self.gui.tk.iconbitmap(default='images/blank.ico')
+			self.gui.tk.iconbitmap(default='images/icon.ico')
 			checks = self.do_checks()
 			if checks:
 				self.log("Load was succesful.")
