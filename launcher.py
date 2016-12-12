@@ -1,4 +1,4 @@
-import logging,json, tkinter, time, threading, sys, datetime, imp
+import logging,json, tkinter, time, threading, sys, datetime, imp, os
 from tkinter import ttk
 class gui(object):
 	def __init__(self):
@@ -39,6 +39,7 @@ class launcher(object):
 		pass
 	def try_launch(self):
 		if self.allow_run:
+			self.log("--------------------------------------------------------")
 			self.log("Launching [%s]..." % self.game_name)
 			# reload runtime so that all code changes are implimented
 			import runtime
@@ -48,6 +49,10 @@ class launcher(object):
 			runtime.main(self)
 			self.log("Game has stopped.")
 			self.log("Running main loop until user closes.")
+			if self.mode == 1:
+				self.log("Restarting self since in developer mode.")
+				os.system("start " + __file__)
+				sys.exit(0)
 			self.waiting_loop()
 			while True:
 				pass
