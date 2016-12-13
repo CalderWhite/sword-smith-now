@@ -1,4 +1,4 @@
-import logging,json, tkinter, time, threading, sys, datetime, imp, os
+import logging,json, tkinter, time, threading, sys, datetime, imp, os, gc
 from tkinter import ttk
 class gui(object):
 	def __init__(self):
@@ -48,14 +48,15 @@ class launcher(object):
 			self.info = json.loads(r)
 			runtime.main(self)
 			self.log("Game has stopped.")
+			self.log("Collecting the garbage...")
+			gc.collect()
 			self.log("Running main loop until user closes.")
-			if self.mode == 1:
-				self.log("Restarting self since in developer mode.")
-				os.system("start " + __file__)
-				sys.exit(0)
-			self.waiting_loop()
-			while True:
-				pass
+			##if self.mode == 1:
+			##	self.log("Restarting self since in developer mode.")
+			##	os.system("start " + __file__)
+			##	sys.exit(0)
+			if self.initial_gui:
+				self.waiting_loop()
 		elif self.allow_run == False:
 			self.log("There were errors during checks, no launch may be run.",level="ERROR")
 		elif self.allow_run == None:
