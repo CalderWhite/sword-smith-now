@@ -5,6 +5,7 @@ class new_player(object):
 		self.x = 0
 		self.y = 0
 		self.speed = 10
+		self.hitbox = (60,120)
 class gui(object):
 	def __init__(self,parent):
 		self.parent = parent
@@ -27,7 +28,7 @@ class gui(object):
 		if self.parent.mode == 1:
 			# only for dev mode
 			self.chunks = []
-			self.chunks.append(pygame.image.load("./saves/chunk_1.png"))
+			self.chunks.append(pygame.image.load("./saves/new_chunk.png"))
 class game(object):
 	def log(self,msg,level="INFO",user="GAME"):
 		if self.mode == 1:
@@ -46,6 +47,11 @@ class game(object):
 		self.page = None
 		self.mouse = pygame.mouse
 		self.log("Loading player...")
+	def quit(self):
+		self.log("Quit event activated. Stopping game.")
+		self.page = None
+		self.stop == True
+		pygame.quit()
 	def game_loop(self):
 		pass
 	def run_start(self):
@@ -54,99 +60,113 @@ class game(object):
 		self.gui.screen.fill( (255,255,255) )
 		clock = pygame.time.Clock()
 		while self.page == "startup":
+			self.stop = False
 			# check events
 			for event in pygame.event.get():
 				if event.type == pygame.QUIT:
-					self.log("Quit event activated. Stopping game.")
-					self.page = None
-					pygame.quit()
+					self.quit()
+					break
 					pass
-			self.gui.screen.fill( (255,255,255) )
-			mx,my = self.mouse.get_pos()
-			height,width = pygame.display.get_surface().get_size()
-			# load all the rectangles
-			# load all the text
-			# play button/text
-			x,y = self.gui.screen.get_size()
-			x = x/2 - 20
-			y=  y - (height/3.6)
-			##print(mx,my)
-			default_font = pygame.font.SysFont("monospace", 32,bold=True)
-			play_text = default_font.render("Play",0,(0,0,0))
-			#use the text rectangle
-			empyty1,empty2,tw,th = tuple(play_text.get_rect())
-			if mx > x and mx < (x + tw) and my > y and my < (y + th):
-				color = (0,128,0)
-				#play_text.set_colorkey(color)
-				if self.mouse.get_pressed()[0]:
-					self.log("Entering Realm 1...",user="REALMS")
-					self.page = "realm_1"
-					self.run_realm_explorer()
-			else:
-				color = (0,0,0)
-				#play_text.set_colorkey(color)
-				pass
-			new_text = default_font.render("Play",0,color)
-			self.gui.screen.blit(new_text,(x,y))
-			# blit mouse last
-			x = mx - (self.gui.cursor.get_height() / 2)
-			y = my - (self.gui.cursor.get_width() / 2)
-			self.gui.screen.blit(self.gui.cursor,(x,y))
-			# refresh
-			pygame.display.update()
+			if self.stop == False:
+				self.gui.screen.fill( (255,255,255) )
+				mx,my = self.mouse.get_pos()
+				height,width = pygame.display.get_surface().get_size()
+				# load all the rectangles
+				# load all the text
+				# play button/text
+				x,y = self.gui.screen.get_size()
+				x = x/2 - 20
+				y=  y - (height/3.6)
+				##print(mx,my)
+				default_font = pygame.font.SysFont("monospace", 32,bold=True)
+				play_text = default_font.render("Play",0,(0,0,0))
+				#use the text rectangle
+				empyty1,empty2,tw,th = tuple(play_text.get_rect())
+				if mx > x and mx < (x + tw) and my > y and my < (y + th):
+					color = (0,128,0)
+					#play_text.set_colorkey(color)
+					if self.mouse.get_pressed()[0]:
+						self.log("Entering Realm 1...",user="REALMS")
+						self.page = "realm_1"
+						self.run_realm_explorer()
+						break
+				else:
+					color = (0,0,0)
+					#play_text.set_colorkey(color)
+					pass
+				new_text = default_font.render("Play",0,color)
+				self.gui.screen.blit(new_text,(x,y))
+				# blit mouse last
+				x = mx - (self.gui.cursor.get_height() / 2)
+				y = my - (self.gui.cursor.get_width() / 2)
+				self.gui.screen.blit(self.gui.cursor,(x,y))
+				# refresh
+				pygame.display.update()
 	def run_realm_explorer(self):
 		self.page = "realm_1"
+		self.stop = False
 		while self.page == "realm_1":
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					self.log("Quit event activated. Stopping game.")
-					self.page = None
-					pygame.quit()
-			# clear
-			self.gui.screen.fill( (255,255,255) )
-			# load values
-			mx,my = self.mouse.get_pos()
-			height,width = pygame.display.get_surface().get_size()
-			# modify player's position accordingly
-			# speed modification
-			keys = pygame.key.get_pressed()
-			if keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]:
-				self.player.speed = 10
-			elif keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
-				self.player.speed = 0.5
-			else:
-				self.player.speed = 1
-			# movement keys
-			if keys[pygame.K_w]:
-				# positive effect
-				self.player.y+=1 * self.player.speed
-				pass
-			if keys[pygame.K_s]:
-				# negative effect
-				self.player.y-=1 * self.player.speed
-				pass
-			if keys[pygame.K_d]:
-				# positive effect
-				self.player.x+=1 * self.player.speed
-				pass
-			if keys[pygame.K_a]:
-				# negative effect
-				self.player.x-=1 * self.player.speed
-				pass
-			#print(self.player.x,self.player.y)
-			# load & render background according to player's xy
-			crop = pygame.Surface(pygame.display.get_surface().get_size())
-			# invert the y in offsets so we get a four quadrent coordinet system
-			# we also add half the height and width of the chunk to create the four quadrent system
-
-			crop.blit(self.gui.chunks[0],(0,0),(int(self.gui.chunks[0].get_size()[0] / 2) + self.player.x,int(self.gui.chunks[0].get_size()[1] / 2) + (self.player.y * -1),width,height))
-			self.gui.screen.blit(crop,(-1,-1))
-			# render mouse
-			x = mx - (self.gui.cursor.get_height() / 2)
-			y = my - (self.gui.cursor.get_width() / 2)
-			self.gui.screen.blit(self.gui.cursor,(x,y))
-			# finally, update
-			pygame.display.update()
+			##print(self.stop)
+			if self.stop == False:
+				# clear
+				self.gui.screen.fill( (255,255,255) )
+				# load values
+				mx,my = self.mouse.get_pos()
+				height,width = pygame.display.get_surface().get_size()
+				# modify player's position accordingly
+				# speed modification
+				keys = pygame.key.get_pressed()
+				if keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]:
+					self.player.speed = 10
+				elif keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+					self.player.speed = 0.5
+				else:
+					self.player.speed = 1
+				# movement keys
+				if keys[pygame.K_w]:
+					# positive effect
+					self.player.y+=1 * self.player.speed
+					pass
+				if keys[pygame.K_s]:
+					# negative effect
+					self.player.y-=1 * self.player.speed
+					pass
+				if keys[pygame.K_d]:
+					# positive effect
+					self.player.x+=1 * self.player.speed
+					pass
+				if keys[pygame.K_a]:
+					# negative effect
+					self.player.x-=1 * self.player.speed
+					pass
+				#print(self.player.x,self.player.y)
+				# load & render background according to player's xy
+				crop = pygame.Surface(pygame.display.get_surface().get_size())
+				# invert the y in offsets so we get a four quadrent coordinet system
+				# we also add half the height and width of the chunk to create the four quadrent system
+				print(self.player.x,self.player.y)
+				crop.blit(self.gui.chunks[0],(0,0),(int(self.gui.chunks[0].get_size()[0] / 2) + self.player.x,int(self.gui.chunks[0].get_size()[1] / 2) + (self.player.y * -1),width,height))
+				self.gui.screen.blit(crop,(-1,-1))
+				# render player
+				width,height = self.player.hitbox
+				dw,dh = pygame.display.get_surface().get_size()
+				# the x,y definitions look weird, but that's just because I want the player to be at zero forever
+				x = (dw / 2) - width / 2
+				y = (dh / 2) - height / 2
+				pygame.draw.rect(self.gui.screen,(255,0,0),[x,y,width,height],1)
+				# render mouse
+				x = mx - (self.gui.cursor.get_height() / 2)
+				y = my - (self.gui.cursor.get_width() / 2)
+				self.gui.screen.blit(self.gui.cursor,(x,y))
+				# finally, update
+				pygame.display.update()
+				for event in pygame.event.get():
+					if event.type == pygame.QUIT:
+						self.log("Quit event activated. Stopping game.")
+						self.page = None
+						self.stop == True
+						pygame.quit()
+						break
 
 
 def main(parent):
@@ -159,6 +179,7 @@ def main(parent):
 			parent.log("Beginning runtime boot.",user="GAME")
 			g = game(parent.info,dev_window=parent)
 			g.run_start()
+			print("Done")
 		elif parent.mode == 2:
 			##parent.log("Running in cheat mode.",user="GAME")
 			pass
