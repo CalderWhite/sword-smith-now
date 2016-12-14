@@ -6,30 +6,57 @@ class new_player(object):
 		self.y = 0
 		self.speed = 10
 		self.hitbox = (60,120)
+	def check_movement(self):
+		keys = pygame.keys.get_pressed()
+		if keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]:
+			self.speed = 10
+		elif keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
+			self.speed = 0.5
+		else:
+			self.speed = 1
+		# movement keys
+		if keys[pygame.K_w]:
+			# positive effect
+			self.y+=1 * self.speed
+			pass
+		if keys[pygame.K_s]:
+			# negative effect
+			self.y-=1 * self.speed
+			pass
+		if keys[pygame.K_d]:
+			# positive effect
+			self.x+=1 * self.speed
+			pass
+		if keys[pygame.K_a]:
+			# negative effect
+			self.x-=1 * self.speed
+			pass
 class gui(object):
 	def __init__(self,parent):
 		self.parent = parent
 		parent.log("Initializing pygame...",user="GUI")
 		pygame.init()
-		self.screen = pygame.display.set_mode( (450,450))
+		self.screen = pygame.display.set_mode( (550,550))
 		pygame.display.set_caption(parent.info["name"])
 		parent.log("Loading images....",user="GUI")
 		self.icon = pygame.image.load("images/icon.png")
 		self.icon = pygame.transform.scale(self.icon, (32,32) )
-		parent.log("Setting window icon...")
+		parent.log("Setting window icon...",user="GUI")
 		pygame.display.set_icon(self.icon)
 		parent.log("Loading and setting cursor...",user="GUI")
 		self.cursor = pygame.image.load("images/cursor1.png").convert_alpha()
 		pygame.mouse.set_visible(False);
 		parent.log("Loading chunks...",user="GUI")
 		self.load_chunks()
+		parent.log("Loading objects [trees,bushes, etc.]...")
+		self.chunk_objects = []
 		pass
 	def load_chunks(self):
 		if self.parent.mode == 1:
 			# only for dev mode
 			self.chunks = []
 			self.chunks.append(pygame.image.load("./saves/new_chunk.png"))
-class game(object):
+class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
 		if self.mode == 1:
 			# will only log stuff if in developer mode
@@ -115,30 +142,7 @@ class game(object):
 				height,width = pygame.display.get_surface().get_size()
 				# modify player's position accordingly
 				# speed modification
-				keys = pygame.key.get_pressed()
-				if keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]:
-					self.player.speed = 10
-				elif keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
-					self.player.speed = 0.5
-				else:
-					self.player.speed = 1
-				# movement keys
-				if keys[pygame.K_w]:
-					# positive effect
-					self.player.y+=1 * self.player.speed
-					pass
-				if keys[pygame.K_s]:
-					# negative effect
-					self.player.y-=1 * self.player.speed
-					pass
-				if keys[pygame.K_d]:
-					# positive effect
-					self.player.x+=1 * self.player.speed
-					pass
-				if keys[pygame.K_a]:
-					# negative effect
-					self.player.x-=1 * self.player.speed
-					pass
+				self.player.check_movement()
 				#print(self.player.x,self.player.y)
 				# load & render background according to player's xy
 				crop = pygame.Surface(pygame.display.get_surface().get_size())
@@ -177,8 +181,16 @@ def main(parent):
 			pass
 		elif parent.mode == 1:
 			parent.log("Beginning runtime boot.",user="GAME")
-			g = game(parent.info,dev_window=parent)
-			g.run_start()
+			try:
+				g = game_kernel(parent.info,dev_window=parent)
+				g.run_start()
+			except:
+				e = sys.exc_info()
+				parent.log("Exception:",level="CRITICAL",user="GAME")
+				parent.log(str(e[1]),level="CRITICAL",user="GAME")
+				parent.log("File: [%s]" % (str(e[2].tb_frame.f_code.co_filename)),level="CRITICAL",user="GAME")
+				parent.log("Line number: [" + str(e[2].tb_lineno) + "]",level="CRITICAL",user="GAME")
+				pygame.quit()
 			print("Done")
 		elif parent.mode == 2:
 			##parent.log("Running in cheat mode.",user="GAME")
