@@ -1,36 +1,79 @@
 import pygame, time, random, sys
 class new_player(object):
-	def __init__(self,name):
+	def __init__(self,name,parent):
 		self.name = name
-		self.x = 0
-		self.y = 0
+		self.x = 0#parent.current_chunk.get_rect()[0] / 2
+		self.y = 0#parent.current_chunk.get_rect()[1] / 2
 		self.speed = 10
 		self.hitbox = (60,120)
+		self.parent = parent
 	def check_movement(self):
-		keys = pygame.keys.get_pressed()
+		keys = pygame.key.get_pressed()
 		if keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]:
 			self.speed = 10
 		elif keys[pygame.K_LSHIFT] or keys[pygame.K_RSHIFT]:
 			self.speed = 0.5
 		else:
 			self.speed = 1
-		# movement keys
+		# create offset variables so we aren't changing the player's x and y right away
+		xoff = 0
+		yoff = 0
+		# set offset variables
 		if keys[pygame.K_w]:
 			# positive effect
-			self.y+=1 * self.speed
+			yoff+=1 * self.speed
 			pass
 		if keys[pygame.K_s]:
 			# negative effect
-			self.y-=1 * self.speed
+			yoff-=1 * self.speed
 			pass
 		if keys[pygame.K_d]:
 			# positive effect
-			self.x+=1 * self.speed
+			xoff+=1 * self.speed
 			pass
 		if keys[pygame.K_a]:
 			# negative effect
-			self.x-=1 * self.speed
+			xoff-=1 * self.speed
 			pass
+		check = self.check_collision(xoff,yoff)
+		#print(check)
+		if check == True:
+			self.x+= xoff
+			self.y+= yoff
+		else:
+			self.x,self.y = check
+	def check_collision(self,xoff,yoff):
+		# first check outline
+		useless1,useless2,w,h=self.parent.current_chunk.get_rect()
+		#print(w,h)
+		# at some point I may want to change this, so I'll just use these variables from the start.
+		minx = (w/2) * -1
+		miny = h/2 * -1
+		maxx = w/2
+		maxy = h/2
+		newx = self.x + xoff
+		newy = self.y + yoff
+		rx = None
+		ret = False
+		print(newx,newy)
+		if newy > maxy:
+			newy = maxy
+			ret = True
+		elif newy < miny:
+			newy = miny
+			ret = True
+		if newx > maxx:
+			newx = maxx
+			ret = True
+		elif newx < minx:
+			newx = minx
+			ret = True
+		if ret:
+			return (newx,newy)
+		# now check all the game/gui's objects
+		for obj in self.parent.gui.chunk_objects:
+			pass
+		return True
 class gui(object):
 	def __init__(self,parent):
 		self.parent = parent
@@ -67,7 +110,6 @@ class game_kernel(object):
 		if dev_window != None:
 			self.mode = 1
 			self.dev = dev_window
-			self.player = new_player("Developer")
 		self.info = info
 		self.log("Building gui...")
 		self.gui = gui(self)
@@ -129,9 +171,16 @@ class game_kernel(object):
 				self.gui.screen.blit(self.gui.cursor,(x,y))
 				# refresh
 				pygame.display.update()
+	def realm_explorer_init(self):
+		if self.mode == 1:
+			self.current_chunk = self.gui.chunks[0]
+			self.player = new_player("Developer",self)
 	def run_realm_explorer(self):
 		self.page = "realm_1"
 		self.stop = False
+		self.realm_explorer_init()
+		if self.mode == 1:
+			self.current_chunk = self.gui.chunks[0]
 		while self.page == "realm_1":
 			##print(self.stop)
 			if self.stop == False:
@@ -148,8 +197,8 @@ class game_kernel(object):
 				crop = pygame.Surface(pygame.display.get_surface().get_size())
 				# invert the y in offsets so we get a four quadrent coordinet system
 				# we also add half the height and width of the chunk to create the four quadrent system
-				print(self.player.x,self.player.y)
-				crop.blit(self.gui.chunks[0],(0,0),(int(self.gui.chunks[0].get_size()[0] / 2) + self.player.x,int(self.gui.chunks[0].get_size()[1] / 2) + (self.player.y * -1),width,height))
+				##print(self.player.x,self.player.y)
+				crop.blit(self.current_chunk,(0,0),(int(self.gui.chunks[0].get_size()[0] / 2) + self.player.x,int(self.gui.chunks[0].get_size()[1] / 2) + (self.player.y * -1),width,height))
 				self.gui.screen.blit(crop,(-1,-1))
 				# render player
 				width,height = self.player.hitbox
@@ -181,6 +230,9 @@ def main(parent):
 			pass
 		elif parent.mode == 1:
 			parent.log("Beginning runtime boot.",user="GAME")
+			g = game_kernel(parent.info,dev_window=parent)
+			g.run_start()
+			"""
 			try:
 				g = game_kernel(parent.info,dev_window=parent)
 				g.run_start()
@@ -191,6 +243,7 @@ def main(parent):
 				parent.log("File: [%s]" % (str(e[2].tb_frame.f_code.co_filename)),level="CRITICAL",user="GAME")
 				parent.log("Line number: [" + str(e[2].tb_lineno) + "]",level="CRITICAL",user="GAME")
 				pygame.quit()
+			"""
 			print("Done")
 		elif parent.mode == 2:
 			##parent.log("Running in cheat mode.",user="GAME")
