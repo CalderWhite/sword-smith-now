@@ -88,6 +88,7 @@ class new_player(object):
 		return (newx,newy)
 class gui(object):
 	def __init__(self,parent):
+		"""Defines the function and boots at the same time. (Logs stuff and loads stuff)"""
 		self.parent = parent
 		parent.log("Initializing pygame...",user="GUI")
 		pygame.init()
@@ -107,16 +108,58 @@ class gui(object):
 		self.chunk_objects = [chunkObject.rect([0,0,100,10],(255,0,0))]
 		pass
 	def load_chunks(self):
+		"""Experimental so far. Only works in dev mode"""
 		if self.parent.mode == 1:
 			# only for dev mode
 			self.chunks = []
 			self.chunks.append(pygame.image.load("./saves/new_chunk.png"))
+	def render_floor(self):
+		"""renders floor (background)."""
+		sheight,swidth = pygame.display.get_surface().get_size()
+		crop = pygame.Surface(pygame.display.get_surface().get_size())
+		# invert the y in offsets so we get a four quadrent coordinet system
+		# we also add half the sheight and swidth of the chunk to create the four quadrent system
+		# ---------------------------------------------------------------------------------------------
+		# subtract swidth and sheight (divided by two) to accomodate for the display
+		# Explanation:
+		# if the offset was 0,0 (player's x and y would be (-7200,7200)) then
+		# it would display the top left corner, but It wouldn't go off screen, meaning the PLAYER isn't acutally
+		# at 0,0 ; they're at (swidth/,sheight/2)
+		# Consequently if the player was at the very bottom of the chunk, there would be nothing since they are off the chunk.
+		# DERP idk ^^^
+		xo = (int(self.chunks[0].get_size()[0] / 2) + self.parent.player.x) - swidth / 2
+		yo = (int(self.chunks[0].get_size()[1] / 2 + (self.parent.player.y * -1))) - sheight / 2
+		crop.blit(self.parent.current_chunk,(0,0),(xo,yo,swidth,sheight))
+		self.screen.blit(crop,(0,0))
+	def render_objects(self):
+		"""Renders all the objects from self.chunk_objects. Which should contain chunkObject objects."""
+		# honestly, I had to play around with the positioning equation for a while, so
+		# some if it I can't explain, but most of it is straight forward.
+		# All in all it's just converting from one coordinat system to another.
+		sheight,swidth = pygame.display.get_surface().get_size()
+		for obj in self.chunk_objects:
+			# firstly, set both offsets to zero.
+			xoff = int(self.chunks[0].get_size()[0] / 2) * -1
+			yoff = int(self.chunks[0].get_size()[1] / 2)
+			# add screen to adjust
+			xoff+= swidth/2 * -1
+			yoff+= sheight/2 * -1
+			# add their positions and convert them from four quadrant to 3rd quardrent
+			xoff+= obj.x + int(self.chunks[0].get_size()[0] / 2)
+			yoff+= obj.y + int(self.chunks[0].get_size()[1] / 2) * -1
+			# add player positions
+			xoff+= self.parent.player.x
+			yoff+= self.parent.player.y * -1
+			obj.draw(self.screen,(xoff * -1,yoff * -1))
+		pass
 class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
+		"""If in developer mode, logs a message to the launcher window that created that initialized this class."""
 		if self.mode == 1:
 			# will only log stuff if in developer mode
 			self.dev.log(msg,level=level,user=user)
 	def __init__(self,info,dev_window=None,mode=0):
+		"""Loads a bit of stuff and logs, however it does not run any boot scripts. That method can be run by self.run_start()."""
 		self.mode = mode
 		#automatically change mode to 1 if a dev window is supplied
 		if dev_window != None:
@@ -129,13 +172,16 @@ class game_kernel(object):
 		self.mouse = pygame.mouse
 		self.log("Loading player...")
 	def quit(self):
+		"""Sets all looping variables to False, quits pygame and logs that the Game is stopping."""
 		self.log("Quit event activated. Stopping game.")
 		self.page = None
 		self.stop == True
 		pygame.quit()
 	def game_loop(self):
+		"""Unused at this point. Really self.run_realm_explorer() is the game loop."""
 		pass
 	def run_start(self):
+		"""Displays the start page"""
 		self.log("Entering Start Page",user="REALMS")
 		self.page = "startup"
 		self.gui.screen.fill( (255,255,255) )
@@ -184,10 +230,12 @@ class game_kernel(object):
 				# refresh
 				pygame.display.update()
 	def realm_explorer_init(self):
+		"""Sets up some properties for self.run_realm_explorer()"""
 		if self.mode == 1:
 			self.current_chunk = self.gui.chunks[0]
 			self.player = new_player("Developer",self)
 	def run_realm_explorer(self):
+		"""Essentially the game loop."""
 		self.page = "realm_1"
 		self.stop = False
 		self.realm_explorer_init()
@@ -206,43 +254,15 @@ class game_kernel(object):
 				self.player.check_movement()
 				#print(self.player.x,self.player.y)
 				# load & render background according to player's xy
-				crop = pygame.Surface(pygame.display.get_surface().get_size())
-				# invert the y in offsets so we get a four quadrent coordinet system
-				# we also add half the sheight and swidth of the chunk to create the four quadrent system
-				# ---------------------------------------------------------------------------------------------
-				# subtract swidth and sheight (divided by two) to accomodate for the display
-				# Explanation:
-				# if the offset was 0,0 (player's x and y would be (-7200,7200)) then
-				# it would display the top left corner, but It wouldn't go off screen, meaning the PLAYER isn't acutally
-				# at 0,0 ; they're at (swidth/,sheight/2)
-				# Consequently if the player was at the very bottom of the chunk, there would be nothing since they are off the chunk.
-				# DERP idk ^^^
-				xo = (int(self.gui.chunks[0].get_size()[0] / 2) + self.player.x) - swidth / 2
-				yo = (int(self.gui.chunks[0].get_size()[1] / 2 + (self.player.y * -1))) - sheight / 2
-				crop.blit(self.current_chunk,(0,0),(xo,yo,swidth,sheight))
-				self.gui.screen.blit(crop,(0,0))
+				self.gui.render_floor()
 				# render player
 				width,height = self.player.hitbox
-				dw,dh = pygame.display.get_surface().get_size()
 				# the x,y definitions look weird, but that's just because I want the player to be at zero forever
-				x = (dw / 2) - width / 2
-				y = (dh / 2) - height / 2
+				x = (swidth / 2) - width / 2
+				y = (sheight / 2) - height / 2
 				pygame.draw.rect(self.gui.screen,(255,0,0),[x,y,width,height],1)
 				# temporary rendering object
-				for obj in self.gui.chunk_objects:
-					# firstly, set both offsets to zero.
-					xoff = int(self.gui.chunks[0].get_size()[0] / 2) * -1
-					yoff = int(self.gui.chunks[0].get_size()[1] / 2)
-					# add screen to adjust
-					xoff+= dw/2 * -1
-					yoff+= dh/2 * -1
-					# add their positions and convert them from four quadrant to 3rd quardrent
-					xoff+= obj.x + int(self.gui.chunks[0].get_size()[0] / 2)
-					yoff+= obj.y + int(self.gui.chunks[0].get_size()[1] / 2) * -1
-					# add player positions
-					xoff+= self.player.x
-					yoff+= self.player.y * -1
-					obj.draw(self.gui.screen,(xoff * -1,yoff * -1))
+				self.gui.render_objects()
 				# render mouse
 				x = mx - (self.gui.cursor.get_height() / 2)
 				y = my - (self.gui.cursor.get_width() / 2)
