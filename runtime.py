@@ -1,4 +1,4 @@
-import pygame, time, random, sys
+import pygame, time, random, sys, chunkObject
 class new_player(object):
 	def __init__(self,name,parent):
 		self.name = name
@@ -55,7 +55,7 @@ class new_player(object):
 		newy = self.y + yoff
 		rx = None
 		ret = False
-		print(newx,newy)
+		#print(newx,newy)
 		if newy > maxy:
 			newy = maxy
 			ret = True
@@ -72,10 +72,20 @@ class new_player(object):
 			return (newx,newy)
 		# now check all the game/gui's objects
 		for obj in self.parent.gui.chunk_objects:
-			rx = None
-			ry = None
+			# write a bunch of variables to simplify
+			xi = newx >= obj.x and newx <= obj.x + obj.width
+			yi = newy >= obj.y and newy <= obj.y + obj.height
+			ixi = self.x >= obj.x and self.x <= obj.x + obj.width
+			iyi = self.y >= obj.y and self.y <= obj.y + obj.height
+			# first as if we are moving upwards
+			if ixi and xi:
+				##print(self.y,obj.y + obj.height,newy)
+				if newy >= obj.y and self.y <= obj.y + obj.height:
+					# basically hit the object
+					newy = obj.y
+					break
 			pass
-		return True
+		return (newx,newy)
 class gui(object):
 	def __init__(self,parent):
 		self.parent = parent
@@ -94,7 +104,7 @@ class gui(object):
 		parent.log("Loading chunks...",user="GUI")
 		self.load_chunks()
 		parent.log("Loading objects [trees,bushes, etc.]...")
-		self.chunk_objects = []
+		self.chunk_objects = [chunkObject.rect([0,0,100,10],(255,0,0))]
 		pass
 	def load_chunks(self):
 		if self.parent.mode == 1:
@@ -190,7 +200,7 @@ class game_kernel(object):
 				self.gui.screen.fill( (255,255,255) )
 				# load values
 				mx,my = self.mouse.get_pos()
-				height,width = pygame.display.get_surface().get_size()
+				sheight,swidth = pygame.display.get_surface().get_size()
 				# modify player's position accordingly
 				# speed modification
 				self.player.check_movement()
@@ -198,18 +208,18 @@ class game_kernel(object):
 				# load & render background according to player's xy
 				crop = pygame.Surface(pygame.display.get_surface().get_size())
 				# invert the y in offsets so we get a four quadrent coordinet system
-				# we also add half the height and width of the chunk to create the four quadrent system
+				# we also add half the sheight and swidth of the chunk to create the four quadrent system
 				# ---------------------------------------------------------------------------------------------
-				# subtract width and height (divided by two) to accomodate for the display
+				# subtract swidth and sheight (divided by two) to accomodate for the display
 				# Explanation:
 				# if the offset was 0,0 (player's x and y would be (-7200,7200)) then
 				# it would display the top left corner, but It wouldn't go off screen, meaning the PLAYER isn't acutally
-				# at 0,0 ; they're at (width/,height/2)
+				# at 0,0 ; they're at (swidth/,sheight/2)
 				# Consequently if the player was at the very bottom of the chunk, there would be nothing since they are off the chunk.
 				# DERP idk ^^^
-				xo = (int(self.gui.chunks[0].get_size()[0] / 2) + self.player.x) - width / 2
-				yo = (int(self.gui.chunks[0].get_size()[1] / 2 + (self.player.y * -1))) - height / 2
-				crop.blit(self.current_chunk,(0,0),(xo,yo,width,height))
+				xo = (int(self.gui.chunks[0].get_size()[0] / 2) + self.player.x) - swidth / 2
+				yo = (int(self.gui.chunks[0].get_size()[1] / 2 + (self.player.y * -1))) - sheight / 2
+				crop.blit(self.current_chunk,(0,0),(xo,yo,swidth,sheight))
 				self.gui.screen.blit(crop,(0,0))
 				# render player
 				width,height = self.player.hitbox
@@ -218,6 +228,21 @@ class game_kernel(object):
 				x = (dw / 2) - width / 2
 				y = (dh / 2) - height / 2
 				pygame.draw.rect(self.gui.screen,(255,0,0),[x,y,width,height],1)
+				# temporary rendering object
+				for obj in self.gui.chunk_objects:
+					# firstly, set both offsets to zero.
+					xoff = int(self.gui.chunks[0].get_size()[0] / 2) * -1
+					yoff = int(self.gui.chunks[0].get_size()[1] / 2)
+					# add screen to adjust
+					xoff+= dw/2 * -1
+					yoff+= dh/2 * -1
+					# add their positions and convert them from four quadrant to 3rd quardrent
+					xoff+= obj.x + int(self.gui.chunks[0].get_size()[0] / 2)
+					yoff+= obj.y + int(self.gui.chunks[0].get_size()[1] / 2) * -1
+					# add player positions
+					xoff+= self.player.x
+					yoff+= self.player.y * -1
+					obj.draw(self.gui.screen,(xoff * -1,yoff * -1))
 				# render mouse
 				x = mx - (self.gui.cursor.get_height() / 2)
 				y = my - (self.gui.cursor.get_width() / 2)
@@ -231,7 +256,6 @@ class game_kernel(object):
 						self.stop == True
 						pygame.quit()
 						break
-
 
 def main(parent):
 	if parent == None:
