@@ -72,6 +72,8 @@ class new_player(object):
 			return (newx,newy)
 		# now check all the game/gui's objects
 		for obj in self.parent.gui.chunk_objects:
+			rx = None
+			ry = None
 			pass
 		return True
 class gui(object):
@@ -197,9 +199,18 @@ class game_kernel(object):
 				crop = pygame.Surface(pygame.display.get_surface().get_size())
 				# invert the y in offsets so we get a four quadrent coordinet system
 				# we also add half the height and width of the chunk to create the four quadrent system
-				##print(self.player.x,self.player.y)
-				crop.blit(self.current_chunk,(0,0),(int(self.gui.chunks[0].get_size()[0] / 2) + self.player.x,int(self.gui.chunks[0].get_size()[1] / 2) + (self.player.y * -1),width,height))
-				self.gui.screen.blit(crop,(-1,-1))
+				# ---------------------------------------------------------------------------------------------
+				# subtract width and height (divided by two) to accomodate for the display
+				# Explanation:
+				# if the offset was 0,0 (player's x and y would be (-7200,7200)) then
+				# it would display the top left corner, but It wouldn't go off screen, meaning the PLAYER isn't acutally
+				# at 0,0 ; they're at (width/,height/2)
+				# Consequently if the player was at the very bottom of the chunk, there would be nothing since they are off the chunk.
+				# DERP idk ^^^
+				xo = (int(self.gui.chunks[0].get_size()[0] / 2) + self.player.x) - width / 2
+				yo = (int(self.gui.chunks[0].get_size()[1] / 2 + (self.player.y * -1))) - height / 2
+				crop.blit(self.current_chunk,(0,0),(xo,yo,width,height))
+				self.gui.screen.blit(crop,(0,0))
 				# render player
 				width,height = self.player.hitbox
 				dw,dh = pygame.display.get_surface().get_size()
