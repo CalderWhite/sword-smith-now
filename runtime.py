@@ -4,8 +4,9 @@ class new_player(object):
 		self.name = name
 		self.x = 0#parent.current_chunk.get_rect()[0] / 2
 		self.y = 0#parent.current_chunk.get_rect()[1] / 2
-		self.speed = 10
+		self.speed = 1
 		self.hitbox = (60,120)
+		self.rect = (60,120)
 		self.parent = parent
 	def check_movement(self):
 		keys = pygame.key.get_pressed()
@@ -70,19 +71,51 @@ class new_player(object):
 			ret = True
 		if ret:
 			return (newx,newy)
+		# --------------------------------------------------------------------
 		# now check all the game/gui's objects
 		for obj in self.parent.gui.chunk_objects:
 			# write a bunch of variables to simplify
-			xi = newx >= obj.x and newx <= obj.x + obj.width
-			yi = newy >= obj.y and newy <= obj.y + obj.height
-			ixi = self.x >= obj.x and self.x <= obj.x + obj.width
-			iyi = self.y >= obj.y and self.y <= obj.y + obj.height
+			# add half the player's height / width for checks, so that the player can't go half through a block
+			# easier access to the rect
+			width, height = self.rect
+			# Left x inbetweent, initial x inbetween
+			Lxi = newx - width >= obj.x and newx - width <= obj.x + obj.width
+			Lixi = self.x - width/2>= obj.x and self.x - width/2 <= obj.x + obj.width
+			# Right x inbetweent, initial x inbetween
+			Rxi = newx + width/2 >= obj.x and newx + width/2 <= obj.x + obj.width
+			Rixi = self.x + width/2 >= obj.x and self.x + width/2 <= obj.x + obj.width
+			# Middle (object is smaller than player)
+			Mixg =  self.x + width/2 > obj.x + obj.width and self.x - width/2 <= obj.x - obj.width
+			# y stuff
+			yi = newy + height/2 >= obj.y and newy + height/2 <= obj.y + obj.height
+			iyi = self.y + height/2 >= obj.y and self.y + height/2 <= obj.y + obj.height
+			# initial y is less than that the
+			ily = self.y <= obj.y
+			# newy is greater than the object's y
+			ngy = newy >= obj.y
+			# moving upwards
+			mup = newy + height/2 >= obj.y - obj.height and self.y + height/2 <= obj.y - obj.height
+			# moving downwards
+			mdwn = newy - height/2 <= obj.y and self.y - height/2 >= obj.y
+			#print(self.y,obj.y,obj.y - obj.height)
+			#-------------------------------------
 			# first as if we are moving upwards
-			if ixi and xi:
+			if Lixi and Lxi or Rixi and Rxi:
 				##print(self.y,obj.y + obj.height,newy)
-				if newy >= obj.y and self.y <= obj.y + obj.height:
+				if mup:
 					# basically hit the object
+					newy = obj.y - obj.height - height/2
+					#print("Moving up...")
+					break
+				elif mdwn:
+					newy = obj.y + height/2
+					#print("Moving down...")
+			# collisions for below the object (diagonal motion)
+			if ily and ngy:
+				if self.x <= obj.x and newx >= obj.x or self.x >= obj.x + obj.width and newx <= obj.x + obj.width:
 					newy = obj.y
+					newx = obj.x
+					#print("Moving diagonally upwards...")
 					break
 			pass
 		return (newx,newy)
@@ -105,7 +138,7 @@ class gui(object):
 		parent.log("Loading chunks...",user="GUI")
 		self.load_chunks()
 		parent.log("Loading objects [trees,bushes, etc.]...")
-		self.chunk_objects = [chunkObject.rect([0,0,100,10],(255,0,0))]
+		self.chunk_objects = [chunkObject.rect([0,0,200,50],(255,0,0))]
 		pass
 	def load_chunks(self):
 		"""Experimental so far. Only works in dev mode"""
