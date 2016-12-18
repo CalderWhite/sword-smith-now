@@ -159,7 +159,7 @@ class gui(object):
 	def check_events(self):
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
-				self.quit()
+				self.parent.quit()
 				break
 				pass
 	def load_chunks(self):
@@ -236,7 +236,8 @@ class game_kernel(object):
 		"""Sets all looping variables to False, quits pygame and logs that the Game is stopping."""
 		self.log("Quit event activated. Stopping game.")
 		self.page = None
-		self.stop == True
+		if self.__dict__.__contains__("stop"):
+			self.stop == True
 		pygame.quit()
 	def game_loop(self):
 		"""Unused at this point. Really self.run_realm_explorer() is the game loop."""
