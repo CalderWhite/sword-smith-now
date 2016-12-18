@@ -1,4 +1,11 @@
 import pygame, time, random, sys, chunkObject
+class font_collection(object):
+	def __init__(self):
+		"""This is really just an empty skeleton so I can organize my code."""
+		self.title_mc = pygame.font.Font("fonts/Minecrafter_3.ttf",24)
+	def add(self,name,filename,size):
+		"""Honestly, I don't even know if this method is neccesary."""
+		self.__setattr__(name,pygame.font.Font(filename,size))
 class new_player(object):
 	def __init__(self,name,parent):
 		self.name = name
@@ -97,19 +104,28 @@ class new_player(object):
 			mup = newy + height/2 >= obj.y - obj.height and self.y + height/2 <= obj.y - obj.height
 			# moving downwards
 			mdwn = newy - height/2 <= obj.y and self.y - height/2 >= obj.y
+			# moving left/right
+			mlft = newx - width/2 <= obj.x + obj.width and self.x - width/2 >= obj.x + obj.width
+			mrgt = newx + width/2 >= obj.x and self.x + width/2 >= obj.x
+			print(newx - width/2,obj.x + obj.width)
 			#print(self.y,obj.y,obj.y - obj.height)
 			#-------------------------------------
-			# first as if we are moving upwards
+			# first as if we are moving along the y axis
 			if Lixi and Lxi or Rixi and Rxi:
 				##print(self.y,obj.y + obj.height,newy)
 				if mup:
 					# basically hit the object
 					newy = obj.y - obj.height - height/2
 					#print("Moving up...")
-					break
 				elif mdwn:
 					newy = obj.y + height/2
 					#print("Moving down...")
+			# now as if we were moving along the x axis
+			if iyi and yi:
+				if mrgt:
+					newx = obj.x - width/2
+				elif mlft:
+					newx = obj.x + obj.width + width/2
 			# collisions for below the object (diagonal motion)
 			if ily and ngy:
 				if self.x <= obj.x and newx >= obj.x or self.x >= obj.x + obj.width and newx <= obj.x + obj.width:
@@ -140,6 +156,12 @@ class gui(object):
 		parent.log("Loading objects [trees,bushes, etc.]...")
 		self.chunk_objects = [chunkObject.rect([0,0,200,50],(255,0,0))]
 		pass
+	def check_events(self):
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				self.quit()
+				break
+				pass
 	def load_chunks(self):
 		"""Experimental so far. Only works in dev mode"""
 		if self.parent.mode == 1:
@@ -204,6 +226,12 @@ class game_kernel(object):
 		self.page = None
 		self.mouse = pygame.mouse
 		self.log("Loading player...")
+		self.log("Loading fonts...")
+		self.fonts = font_collection()
+	def run(self):
+		self.log("Running credits...")
+		self.page = "init_credits"
+		self.init_credits()
 	def quit(self):
 		"""Sets all looping variables to False, quits pygame and logs that the Game is stopping."""
 		self.log("Quit event activated. Stopping game.")
@@ -213,6 +241,20 @@ class game_kernel(object):
 	def game_loop(self):
 		"""Unused at this point. Really self.run_realm_explorer() is the game loop."""
 		pass
+	def init_credits(self):
+		self.page = "init_credits"
+		# text we're going to blit
+		t1 = self.fonts.title_mc.render("Developed by Calder White",False,(255,255,255))
+		t2 = self.fonts.title_mc.render("Music by Kevin Hu",False,(255,255,255))
+		# some dimensions to help us with styling
+		useless1,useless2,swidth, sheight = self.gui.screen.get_rect()
+		# positions
+		t1_pos = ( int((swidth - t1.get_rect()[2]) /2),sheight/2)
+		while self.page == "init_credits":
+			self.gui.check_events()
+			self.gui.screen.fill((0,0,0))
+			self.gui.screen.blit(t1,t1_pos)
+			pygame.display.update()
 	def run_start(self):
 		"""Displays the start page"""
 		self.log("Entering Start Page",user="REALMS")
@@ -220,13 +262,9 @@ class game_kernel(object):
 		self.gui.screen.fill( (255,255,255) )
 		clock = pygame.time.Clock()
 		while self.page == "startup":
+			self.gui.check_events()
 			self.stop = False
 			# check events
-			for event in pygame.event.get():
-				if event.type == pygame.QUIT:
-					self.quit()
-					break
-					pass
 			if self.stop == False:
 				self.gui.screen.fill( (255,255,255) )
 				mx,my = self.mouse.get_pos()
@@ -302,13 +340,7 @@ class game_kernel(object):
 				self.gui.screen.blit(self.gui.cursor,(x,y))
 				# finally, update
 				pygame.display.update()
-				for event in pygame.event.get():
-					if event.type == pygame.QUIT:
-						self.log("Quit event activated. Stopping game.")
-						self.page = None
-						self.stop == True
-						pygame.quit()
-						break
+				self.gui.check_events()
 
 def main(parent):
 	if parent == None:
@@ -319,7 +351,7 @@ def main(parent):
 		elif parent.mode == 1:
 			parent.log("Beginning runtime boot.",user="GAME")
 			g = game_kernel(parent.info,dev_window=parent)
-			g.run_start()
+			g.run()
 			"""
 			try:
 				g = game_kernel(parent.info,dev_window=parent)
