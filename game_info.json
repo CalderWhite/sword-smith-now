@@ -3,6 +3,7 @@
 	"modules" : [
 		"pygame",
 		"tkinter",
-		"json"
+		"json",
+		"PIL"
 	]
 }

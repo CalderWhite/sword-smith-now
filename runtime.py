@@ -6,6 +6,26 @@ class font_collection(object):
 	def add(self,name,filename,size):
 		"""Honestly, I don't even know if this method is neccesary."""
 		self.__setattr__(name,pygame.font.Font(filename,size))
+class audio_manager(object):
+	def log(self,msg,level="INFO",user="AUDIO"):
+		self.parent.log(msg,level=level,user=user)
+	def __init__(self,parent):
+		self.muted = False
+		pass
+	def mute(self):
+		pygame.mixer.music.stop()
+		self.muted = True
+	def unmute(self):
+		self.muted = False
+		# don't play the music, since there might not have been any playing
+	def play_and_load_music(self,filename,loops=0):
+		if self.muted == False:
+			pygame.mixer.music.load(filename)
+			pygame.mixer.music.play(loops)
+	def load_audio(self):
+		#pygame.mixer.music.load("audio/music/tracks/theme_baseline.mp3")
+		# nothing to load right now
+		pass
 class new_player(object):
 	def __init__(self,name,parent):
 		self.name = name
@@ -228,10 +248,13 @@ class game_kernel(object):
 		self.log("Loading player...")
 		self.log("Loading fonts...")
 		self.fonts = font_collection()
+		self.log("Loading audio...")
+		self.audio = audio_manager(self)
 	def run(self):
 		self.log("Running credits...")
 		self.page = "init_credits"
 		self.init_credits()
+		self.run_start()
 	def quit(self):
 		"""Sets all looping variables to False, quits pygame and logs that the Game is stopping."""
 		self.log("Quit event activated. Stopping game.")
@@ -251,17 +274,68 @@ class game_kernel(object):
 		useless1,useless2,swidth, sheight = self.gui.screen.get_rect()
 		# positions
 		t1_pos = ( int((swidth - t1.get_rect()[2]) /2),sheight/2)
-		while self.page == "init_credits":
+		t2_pos = ( int((swidth - t2.get_rect()[2]) /2),sheight/2)
+		# surfaces
+		ts = pygame.Surface(self.fonts.title_mc.size("Developed by Calder White"))
+		ts.blit(t1,(0,0))
+		# delay (this is really just for your understanding)
+		# 7 is how many seconds the first portion of the music lasts
+		# multiplied by 1000 to convert to miliseconds
+		# divided by 255 to achive the smoothes fade in
+		# divided by 2 since half the time it will be fading in and half the time it will be fading out
+		delay = int(7 * 1000 / 255 / 2)
+		# music
+		self.audio.play_and_load_music("audio/music/tracks/theme_baseline.mp3")
+		for i in range(255):
 			self.gui.check_events()
 			self.gui.screen.fill((0,0,0))
-			self.gui.screen.blit(t1,t1_pos)
+			ts.set_alpha(i)
+			self.gui.screen.blit(ts,t1_pos)
+			pygame.time.delay(delay)
 			pygame.display.update()
+		# delay so we can read it for a while
+		# also to accomodate for the music rounding
+		pygame.time.delay(7*1000 - int(7 * 1000 / 255 / 2) * 2 * 255)
+		for i in range(255):
+			self.gui.check_events()
+			self.gui.screen.fill((0,0,0))
+			ts.set_alpha(255 - i)
+			self.gui.screen.blit(ts,t1_pos)
+			pygame.time.delay(delay)
+			pygame.display.update()
+		# second message
+		ts.fill((0,0,0))
+		ts.blit(t2,(0,0))
+		for i in range(255):
+			self.gui.check_events()
+			self.gui.screen.fill((0,0,0))
+			ts.set_alpha(i)
+			self.gui.screen.blit(ts,t2_pos)
+			pygame.time.delay(delay)
+			pygame.display.update()
+		# delay so we can read it for a while
+		# also to accomodate for the music rounding
+		pygame.time.delay(7*1000 - int(7 * 1000 / 255 / 2) * 2 * 255)
+		for i in range(255):
+			self.gui.check_events()
+			self.gui.screen.fill((0,0,0))
+			ts.set_alpha(255 - i)
+			self.gui.screen.blit(ts,t2_pos)
+			pygame.time.delay(delay)
+			pygame.display.update()
+		# since this is just an animation of sorts, this function is actually done.
+		pass
 	def run_start(self):
 		"""Displays the start page"""
+		# clear music
+		pygame.mixer.music.stop()
 		self.log("Entering Start Page",user="REALMS")
 		self.page = "startup"
 		self.gui.screen.fill( (255,255,255) )
-		clock = pygame.time.Clock()
+		#clock = pygame.time.Clock()
+		# play start music (in an endless loop)
+		self.audio.play_and_load_music("audio/music/tracks/theme_melody.mp3",loops=-1)
+		# mainloop
 		while self.page == "startup":
 			self.gui.check_events()
 			self.stop = False
@@ -273,12 +347,12 @@ class game_kernel(object):
 				# load all the rectangles
 				# load all the text
 				# play button/text
-				x,y = self.gui.screen.get_size()
-				x = x/2 - 20
-				y=  y - (height/3.6)
-				##print(mx,my)
 				default_font = pygame.font.SysFont("monospace", 32,bold=True)
 				play_text = default_font.render("Play",0,(0,0,0))
+				x,y = self.gui.screen.get_size()
+				x = int((x - play_text.get_rect()[2]) / 2)
+				y=  y - (height/3.6)
+				##print(mx,my)
 				#use the text rectangle
 				empyty1,empty2,tw,th = tuple(play_text.get_rect())
 				if mx > x and mx < (x + tw) and my > y and my < (y + th):
@@ -308,6 +382,8 @@ class game_kernel(object):
 			self.player = new_player("Developer",self)
 	def run_realm_explorer(self):
 		"""Essentially the game loop."""
+		# clear all music
+		pygame.mixer.music.stop()
 		self.page = "realm_1"
 		self.stop = False
 		self.realm_explorer_init()

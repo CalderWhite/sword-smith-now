@@ -5,6 +5,9 @@ class builder(object):
 		pass
 	def get_floors(self):
 		floor_dir = os.listdir("./images/world_pieces/sized/floors")
+		if floor_dir.__contains__("Thumbs.db"):
+			# pesky windows feature
+			floor_dir.pop(floor_dir.index("Thumbs.db"))
 		##floors = {}
 		##for i in floors:
 		##	floors[i.split(".")[-1]] = i
@@ -12,9 +15,9 @@ class builder(object):
 		return floor_dir
 	def generate_matrix(self):
 		chunk_matrix = numpy.empty([6,6],dtype=object)
-		##for y in range(0,len(chunk_matrix)):
-		##	for x in range(0,len(chunk_matrix[y])):
-		##		chunk_matrix[y][x] = "_"
+		for y in range(0,len(chunk_matrix)):
+			for x in range(0,len(chunk_matrix[y])):
+				chunk_matrix[y][x] = "_"
 		width = random.randrange(2,5)
 		height = random.randrange(2,5)
 		floor_index = self.get_floors()
@@ -46,21 +49,29 @@ class builder(object):
 		biome = random.randrange(0,len(floor_index))
 		for y in range(0,6):
 			for x in range(0,6):
-				if chunk_matrix[y][x] == '':
+				if chunk_matrix[y][x] == '_':
 					chunk_matrix[y][x] = floor_index[biome]
 		return chunk_matrix
 	def level(self,matrix):
 		base = Image.new("RGB",(14400,14400),(255,255,255))
+		index = {}
+		for i in self.get_floors():
+			index[i] = Image.open("./images/world_pieces/sized/floors/" + i)
 		for yoff in range(0,len(matrix)):
 			for xoff in range(0,len(matrix[yoff])):
 				#the size of a chunk, multiplied by which chunk it is in the row
 				x = 2400 * xoff
 				y = 2400 * yoff
+				##print(x,y)
+				img = index[matrix[yoff][xoff]]
 				base.paste(img,(x,y))
 		return base
 if __name__ == '__main__':
 	b = builder()
+	print("Building matrix...")
 	m = b.generate_matrix()
+	print("Pasting images...")
 	img = b.level(m)
 	print("Saving...")
 	img.save("./saves/new_chunk.png")
+	print("Saved.")

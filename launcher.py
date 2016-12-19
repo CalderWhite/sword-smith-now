@@ -214,4 +214,5 @@ def main():
 if __name__ == '__main__':
 	##launch = launcher(1,"Sword_Smith_Now_logs.log","game_info.json",initial_gui=True)
 	##launch.load()
+	sys.argv.append("-d")
 	main()
