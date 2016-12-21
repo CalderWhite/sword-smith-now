@@ -324,6 +324,8 @@ class game_kernel(object):
 			pygame.time.delay(delay)
 			pygame.display.update()
 		# since this is just an animation of sorts, this function is actually done.
+		# delay for dramatic affect.
+		pygame.time.delay(1000)
 		pass
 	def run_start(self):
 		"""Displays the start page"""
