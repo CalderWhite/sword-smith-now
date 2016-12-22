@@ -113,9 +113,17 @@ class new_player(object):
 			Rixi = self.x + width/2 >= obj.x and self.x + width/2 <= obj.x + obj.width
 			# Middle (object is smaller than player)
 			Mixg =  self.x + width/2 > obj.x + obj.width and self.x - width/2 <= obj.x - obj.width
+			# ---------------------------------------------------------------------------------------
 			# y stuff
-			yi = newy + height/2 >= obj.y and newy + height/2 <= obj.y + obj.height
-			iyi = self.y + height/2 >= obj.y and self.y + height/2 <= obj.y + obj.height
+			# checking the bottom edge of the player (If hitting the top edge of the object)
+			Tyi = newy - height/2 <= obj.y and newy - height/2 >= obj.y - obj.height
+			Tiyi = self.y - height/2 <= obj.y and self.y - height/2 >= obj.y - obj.height
+			# checking the Top edge of the player (If hitting the bottom edge of the object)
+			Byi = newy + height/2 >= obj.y - obj.height and newy + height/2 <= obj.y# + obj.height
+			Biyi = self.y + height/2 >= obj.y - obj.height and self.y + height/2 <= obj.y#a + obj.height
+			# checking the middle (If both the top and bottom edge of the player are outside the object)
+			Myi = self.y + height/2 >= obj.y and self.y - height/2 <= obj.y - obj.height
+			Miyi = newy + height/2 >= obj.y and newy - height/2 <= obj.y - obj.height
 			# initial y is less than that the
 			ily = self.y <= obj.y
 			# newy is greater than the object's y
@@ -126,9 +134,10 @@ class new_player(object):
 			mdwn = newy - height/2 <= obj.y and self.y - height/2 >= obj.y
 			# moving left/right
 			mlft = newx - width/2 <= obj.x + obj.width and self.x - width/2 >= obj.x + obj.width
-			mrgt = newx + width/2 >= obj.x and self.x + width/2 >= obj.x
-			print(newx - width/2,obj.x + obj.width)
+			mrgt = newx + width/2 >= obj.x and self.x + width/2 <= obj.x
+			#print(newx - width/2,obj.x + obj.width)
 			#print(self.y,obj.y,obj.y - obj.height)
+			#print(Tyi and Tiyi,Byi and Biyi, Myi and Miyi)
 			#-------------------------------------
 			# first as if we are moving along the y axis
 			if Lixi and Lxi or Rixi and Rxi:
@@ -141,7 +150,7 @@ class new_player(object):
 					newy = obj.y + height/2
 					#print("Moving down...")
 			# now as if we were moving along the x axis
-			if iyi and yi:
+			if Tiyi or Biyi or Miyi:
 				if mrgt:
 					newx = obj.x - width/2
 				elif mlft:
@@ -251,9 +260,12 @@ class game_kernel(object):
 		self.log("Loading audio...")
 		self.audio = audio_manager(self)
 	def run(self):
-		self.log("Running credits...")
-		self.page = "init_credits"
-		self.init_credits()
+		if self.mode == 0:
+			self.log("Running credits...")
+			self.page = "init_credits"
+			self.init_credits()
+		elif self.mode == 1:
+			self.log("Skipping Credits for dev mode.")
 		self.run_start()
 	def quit(self):
 		"""Sets all looping variables to False, quits pygame and logs that the Game is stopping."""
