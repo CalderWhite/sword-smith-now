@@ -183,7 +183,7 @@ class gui(object):
 		parent.log("Loading chunks...",user="GUI")
 		self.load_chunks()
 		parent.log("Loading objects [trees,bushes, etc.]...")
-		self.chunk_objects = [chunkObject.rect([0,0,200,50],(255,0,0))]
+		self.chunk_objects = [chunkObject.rect([-100,0,100,100],(123,43,200))]
 		pass
 	def check_events(self):
 		for event in pygame.event.get():
@@ -228,9 +228,14 @@ class gui(object):
 			# add screen to adjust
 			xoff+= swidth/2 * -1
 			yoff+= sheight/2 * -1
+			
 			# add their positions and convert them from four quadrant to 3rd quardrent
-			xoff+= obj.x + int(self.chunks[0].get_size()[0] / 2)
-			yoff+= obj.y + int(self.chunks[0].get_size()[1] / 2) * -1
+			xoff+= int(self.chunks[0].get_size()[0] / 2)
+			yoff+= int(self.chunks[0].get_size()[1] / 2) * -1
+			z = xoff
+			xoff+=obj.x
+			yoff+=obj.y
+			print(z,xoff)
 			# add player positions
 			xoff+= self.parent.player.x
 			yoff+= self.parent.player.y * -1
