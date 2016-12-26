@@ -183,7 +183,7 @@ class gui(object):
 		parent.log("Loading chunks...",user="GUI")
 		self.load_chunks()
 		parent.log("Loading objects [trees,bushes, etc.]...")
-		self.chunk_objects = [chunkObject.rect([-200,0,100,100],(123,43,200))]
+		self.chunk_objects = [chunkObject.rect([-100,-100,100,100],(123,43,200)),chunkObject.rect([-100,200,100,100],(0,0,0))]
 		pass
 	def check_events(self):
 		for event in pygame.event.get():
@@ -223,27 +223,11 @@ class gui(object):
 		# All in all it's just converting from one coordinat system to another.
 		sheight,swidth = pygame.display.get_surface().get_size()
 		for obj in self.chunk_objects:
-			# firstly, set both offsets to zero.
-			xoff = int(self.chunks[0].get_size()[0] / 2) * -1
-			yoff = int(self.chunks[0].get_size()[1] / 2)
-			# add screen to adjust
-			xoff+= swidth/2 * -1
-			yoff+= sheight/2 * -1
-			
-			# add their positions and convert them from four quadrant to 3rd quardrent
-			xoff+= int(self.chunks[0].get_size()[0] / 2)
-			yoff+= int(self.chunks[0].get_size()[1] / 2) * -1
-			# I have no idea why it works when I don't add the object's x and y.
-			# Additionally, I'm far too tired to find out why. So for now it works.
-			# But if there are any bugs I'm the one to come crying to for not tracing back my own code.
-			# VVVVVVVVVVVVVVVVVVVVVVVvv
-			#xoff+=obj.x * -1
-			#yoff+=obj.y
-			
-			# add player positions
-			xoff+= self.parent.player.x
-			yoff+= self.parent.player.y * -1
-			obj.draw(self.screen,(xoff * -1,yoff * -1))
+			xoff = int(swidth/2) + self.parent.player.x * -1
+			yoff = int(sheight/2) + self.parent.player.y
+			xoff+= obj.x
+			yoff+= obj.y * -1
+			obj.draw(self.screen,(xoff,yoff))
 		pass
 class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
