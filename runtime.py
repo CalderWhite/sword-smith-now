@@ -183,7 +183,7 @@ class gui(object):
 		parent.log("Loading chunks...",user="GUI")
 		self.load_chunks()
 		parent.log("Loading objects [trees,bushes, etc.]...")
-		self.chunk_objects = [chunkObject.rect([-100,0,100,100],(123,43,200))]
+		self.chunk_objects = [chunkObject.rect([-200,0,100,100],(123,43,200))]
 		pass
 	def check_events(self):
 		for event in pygame.event.get():
@@ -214,6 +214,7 @@ class gui(object):
 		xo = (int(self.chunks[0].get_size()[0] / 2) + self.parent.player.x) - swidth / 2
 		yo = (int(self.chunks[0].get_size()[1] / 2 + (self.parent.player.y * -1))) - sheight / 2
 		crop.blit(self.parent.current_chunk,(0,0),(xo,yo,swidth,sheight))
+		#print(self.parent.player.x,self.parent.player.y)
 		self.screen.blit(crop,(0,0))
 	def render_objects(self):
 		"""Renders all the objects from self.chunk_objects. Which should contain chunkObject objects."""
@@ -232,10 +233,13 @@ class gui(object):
 			# add their positions and convert them from four quadrant to 3rd quardrent
 			xoff+= int(self.chunks[0].get_size()[0] / 2)
 			yoff+= int(self.chunks[0].get_size()[1] / 2) * -1
-			z = xoff
-			xoff+=obj.x
-			yoff+=obj.y
-			print(z,xoff)
+			# I have no idea why it works when I don't add the object's x and y.
+			# Additionally, I'm far too tired to find out why. So for now it works.
+			# But if there are any bugs I'm the one to come crying to for not tracing back my own code.
+			# VVVVVVVVVVVVVVVVVVVVVVVvv
+			#xoff+=obj.x * -1
+			#yoff+=obj.y
+			
 			# add player positions
 			xoff+= self.parent.player.x
 			yoff+= self.parent.player.y * -1
