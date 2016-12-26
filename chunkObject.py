@@ -14,5 +14,5 @@ class rect(object):
 	def get_rect(self):
 		return self.rectt
 	def draw(self,display,offset):
-		pygame.draw.rect(display,self.color,[self.x + offset[0],self.y + offset[1],self.width,self.height],self.border_width)
+		pygame.draw.rect(display,self.color,[offset[0],offset[1],self.width,self.height],self.border_width)
 		pass
