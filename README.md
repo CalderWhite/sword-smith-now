@@ -9,3 +9,4 @@ There hasn't been any beta testing yet, so this is just my personal data.
 | :------------- | :--------- | :------------- |
 | RAM  (free)    | 700MB      | 2GB            | 
 | CPU            | 1.6 GHz    | 1.9 GHz        |
+| DISK           | 90MB       | 90MB           |
