@@ -28,6 +28,9 @@ class launcher(object):
 			# 2 : cheats mode; nothing yet, going to be a version of dev mode to test bosses with hacks.
 			self.mode = mode
 			##print("Running log configuration.\nAll other logging/debugging messages will be sent to the specified log file once configured.")
+			# clear the log file
+			with open(log_file,'w') as f:
+				f.truncate()
 			logging.basicConfig(filename=log_file,level="INFO")
 			self.game_info_name = info_file
 			self.game_name = "GAME NAME IS UNKNOWN"
@@ -136,21 +139,32 @@ class launcher(object):
 		r = open(self.game_info_name,'r').read()
 		info = json.loads(r)
 		try:
-			x = info["modules"]
+			x = info["paths"]
 			x = info["name"]
 		except IndexError:
-			self.log("Couldn't find \"modules\" in game info file (%s)" % self.game_info_name,level="ERROR")
-			raise Exception("Couldn't find \"modules\" in game info file (%s)" % self.game_info_name)
+			self.log("Couldn't find \"paths\" in game info file (%s)" % self.game_info_name,level="ERROR")
+			raise Exception("Couldn't find \"paths\" in game info file (%s)" % self.game_info_name)
 		else:
 			self.game_name = info["name"]
 			if self.initial_gui:
 				self.gui.tk.title(self.game_name + " Launcher")
-			self.log("Checking required modules...")
-			for i in info["modules"]:
-				try:
-					__import__(i)
-				except:
-					self.log("No [%s] module, which is required." % i,level="ERROR")
+			self.log("Loading requirements list.")
+			r = open(info["paths"]["requirements"],'r').read()
+			requirez = json.loads(r)
+			if self.mode == 1:
+				self.log("Checking required modules for DEV MODE...")
+				for i in requirez["dev"]:
+					try:
+						__import__(i)
+					except:
+						self.log("No [%s] module, which is required." % i,level="ERROR")
+			else:
+				self.log("Checking required modules...")
+				for i in requirez["vanilla"]:
+					try:
+						__import__(i)
+					except:
+						self.log("No [%s] module, which is required." % i,level="ERROR")
 			self.log("All required modules present.")
 	def do_checks(self):
 		if self.mode == 0:

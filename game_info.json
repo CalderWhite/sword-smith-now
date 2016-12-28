@@ -1,9 +1,6 @@
 {
 	"name" : "Sword Smith Now",
-	"modules" : [
-		"pygame",
-		"tkinter",
-		"json",
-		"PIL"
-	]
+	"paths" : {
+		"requirements" : "./requirements.json"
+	}
 }

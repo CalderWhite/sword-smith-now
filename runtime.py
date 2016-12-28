@@ -1,4 +1,5 @@
-import pygame, time, random, sys, chunkObject
+import pygame, time, random, sys, chunkObject, json
+from GMK.items import mineral_constructor
 class font_collection(object):
 	def __init__(self):
 		"""This is really just an empty skeleton so I can organize my code."""
@@ -113,9 +114,17 @@ class new_player(object):
 			Rixi = self.x + width/2 >= obj.x and self.x + width/2 <= obj.x + obj.width
 			# Middle (object is smaller than player)
 			Mixg =  self.x + width/2 > obj.x + obj.width and self.x - width/2 <= obj.x - obj.width
+			# ---------------------------------------------------------------------------------------
 			# y stuff
-			yi = newy + height/2 >= obj.y and newy + height/2 <= obj.y + obj.height
-			iyi = self.y + height/2 >= obj.y and self.y + height/2 <= obj.y + obj.height
+			# checking the bottom edge of the player (If hitting the top edge of the object)
+			Tyi = newy - height/2 <= obj.y and newy - height/2 >= obj.y - obj.height
+			Tiyi = self.y - height/2 <= obj.y and self.y - height/2 >= obj.y - obj.height
+			# checking the Top edge of the player (If hitting the bottom edge of the object)
+			Byi = newy + height/2 >= obj.y - obj.height and newy + height/2 <= obj.y# + obj.height
+			Biyi = self.y + height/2 >= obj.y - obj.height and self.y + height/2 <= obj.y#a + obj.height
+			# checking the middle (If both the top and bottom edge of the player are outside the object)
+			Myi = self.y + height/2 >= obj.y and self.y - height/2 <= obj.y - obj.height
+			Miyi = newy + height/2 >= obj.y and newy - height/2 <= obj.y - obj.height
 			# initial y is less than that the
 			ily = self.y <= obj.y
 			# newy is greater than the object's y
@@ -126,9 +135,10 @@ class new_player(object):
 			mdwn = newy - height/2 <= obj.y and self.y - height/2 >= obj.y
 			# moving left/right
 			mlft = newx - width/2 <= obj.x + obj.width and self.x - width/2 >= obj.x + obj.width
-			mrgt = newx + width/2 >= obj.x and self.x + width/2 >= obj.x
-			print(newx - width/2,obj.x + obj.width)
+			mrgt = newx + width/2 >= obj.x and self.x + width/2 <= obj.x
+			#print(newx - width/2,obj.x + obj.width)
 			#print(self.y,obj.y,obj.y - obj.height)
+			#print(Tyi and Tiyi,Byi and Biyi, Myi and Miyi)
 			#-------------------------------------
 			# first as if we are moving along the y axis
 			if Lixi and Lxi or Rixi and Rxi:
@@ -141,7 +151,7 @@ class new_player(object):
 					newy = obj.y + height/2
 					#print("Moving down...")
 			# now as if we were moving along the x axis
-			if iyi and yi:
+			if Tiyi or Biyi or Miyi:
 				if mrgt:
 					newx = obj.x - width/2
 				elif mlft:
@@ -161,7 +171,8 @@ class gui(object):
 		self.parent = parent
 		parent.log("Initializing pygame...",user="GUI")
 		pygame.init()
-		self.screen = pygame.display.set_mode( (550,550))
+		# whatever you do, you MUST make the height and width of the display divisable by two
+		self.screen = pygame.display.set_mode( (600,600))
 		pygame.display.set_caption(parent.info["name"])
 		parent.log("Loading images....",user="GUI")
 		self.icon = pygame.image.load("images/icon.png")
@@ -174,7 +185,7 @@ class gui(object):
 		parent.log("Loading chunks...",user="GUI")
 		self.load_chunks()
 		parent.log("Loading objects [trees,bushes, etc.]...")
-		self.chunk_objects = [chunkObject.rect([0,0,200,50],(255,0,0))]
+		self.chunk_objects = [chunkObject.rect([-100,-100,100,100],(123,43,200)),chunkObject.rect([-100,200,100,100],(0,0,0))]
 		pass
 	def check_events(self):
 		for event in pygame.event.get():
@@ -205,6 +216,7 @@ class gui(object):
 		xo = (int(self.chunks[0].get_size()[0] / 2) + self.parent.player.x) - swidth / 2
 		yo = (int(self.chunks[0].get_size()[1] / 2 + (self.parent.player.y * -1))) - sheight / 2
 		crop.blit(self.parent.current_chunk,(0,0),(xo,yo,swidth,sheight))
+		#print(self.parent.player.x,self.parent.player.y)
 		self.screen.blit(crop,(0,0))
 	def render_objects(self):
 		"""Renders all the objects from self.chunk_objects. Which should contain chunkObject objects."""
@@ -213,20 +225,22 @@ class gui(object):
 		# All in all it's just converting from one coordinat system to another.
 		sheight,swidth = pygame.display.get_surface().get_size()
 		for obj in self.chunk_objects:
-			# firstly, set both offsets to zero.
-			xoff = int(self.chunks[0].get_size()[0] / 2) * -1
-			yoff = int(self.chunks[0].get_size()[1] / 2)
-			# add screen to adjust
-			xoff+= swidth/2 * -1
-			yoff+= sheight/2 * -1
-			# add their positions and convert them from four quadrant to 3rd quardrent
-			xoff+= obj.x + int(self.chunks[0].get_size()[0] / 2)
-			yoff+= obj.y + int(self.chunks[0].get_size()[1] / 2) * -1
-			# add player positions
-			xoff+= self.parent.player.x
-			yoff+= self.parent.player.y * -1
-			obj.draw(self.screen,(xoff * -1,yoff * -1))
+			xoff = int(swidth/2) + self.parent.player.x * -1
+			yoff = int(sheight/2) + self.parent.player.y
+			xoff+= obj.x
+			yoff+= obj.y * -1
+			obj.draw(self.screen,(xoff,yoff))
 		pass
+class item_manager(object):
+	def __init__(self,parent):
+		self.minerals = self.load_minerals("minerals.json")
+	def load_minerals(self,f):
+		r = open(f,'r').read()
+		j = json.loads(r)
+		m = {}
+		for i in j["all"]:
+			m[i] = mineral_constructor(i,j["all"][i]["color"])
+		return m
 class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
 		"""If in developer mode, logs a message to the launcher window that created that initialized this class."""
@@ -250,10 +264,18 @@ class game_kernel(object):
 		self.fonts = font_collection()
 		self.log("Loading audio...")
 		self.audio = audio_manager(self)
+		self.log("Loading item manager...")
+		self.item_manager = item_manager(self)
+	def kill_sound(self):
+		"""Mutes the game."""
+		self.audio.mute()
 	def run(self):
-		self.log("Running credits...")
-		self.page = "init_credits"
-		self.init_credits()
+		if self.mode == 0:
+			self.log("Running credits...")
+			self.page = "init_credits"
+			self.init_credits()
+		elif self.mode == 1:
+			self.log("Skipping Credits for dev mode.")
 		self.run_start()
 	def quit(self):
 		"""Sets all looping variables to False, quits pygame and logs that the Game is stopping."""
@@ -324,6 +346,8 @@ class game_kernel(object):
 			pygame.time.delay(delay)
 			pygame.display.update()
 		# since this is just an animation of sorts, this function is actually done.
+		# delay for dramatic affect.
+		pygame.time.delay(1000)
 		pass
 	def run_start(self):
 		"""Displays the start page"""
@@ -428,6 +452,7 @@ def main(parent):
 		elif parent.mode == 1:
 			parent.log("Beginning runtime boot.",user="GAME")
 			g = game_kernel(parent.info,dev_window=parent)
+			g.kill_sound()
 			g.run()
 			"""
 			try:

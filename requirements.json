@@ -1,0 +1,12 @@
+{
+	"vanilla" : [
+		"pygame",
+		"Pillow"
+	],
+	"dev" : {
+		"pygame" : "pygame",
+		"PIL" : "Pillow",
+		"bs4" : "bs4",
+		"requests" : "requests"
+	}
+}
