@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup as b
 from tqdm import tqdm
 class util(object):
     """This is not meant to be constructed. Just use the class's objects"""
-    def grab_mineral_index(print_status):
+    def grab_mineral_index(print_status=True):
         if print_status:
             print("[GET]ing wiki page...")
         res = requests.request("GET","https://en.wikipedia.org/wiki/List_of_minerals")
@@ -114,7 +114,7 @@ class util(object):
                 return z
             else:
                 return sortedCombos
-    def grab_relic_names(print_status=False,progress_bar=True):
+    def grab_relic_names(print_status=True,progress_bar=True):
         if print_status:
             print("[GET]ing wiki page...")
         res = requests.request("GET","https://en.wikipedia.org/wiki/List_of_mythological_objects")
@@ -185,14 +185,14 @@ class util(object):
             if progress_bar:
                 pbar.update(1)
         return newIndex
-    def generate_relic_buffs(d,print_status=False):
+    def generate_relic_buffs(d,print_status=True):
         # just for testing purposes:
         index = json.loads(open("x.json",'r').read())
 class mineral_constructor(object):
     def __init__(self,color,name):
         self.color = color
         self.name = name
-def generate_minerals(divisor=3,print_status=False):
+def generate_minerals(divisor=3,print_status=True):
     color_index = util.generate_colors(divisor,print_status=print_status)
     name_index = util.grab_mineral_index(print_status=print_status)
     minerals = []
@@ -217,7 +217,7 @@ def generate_minerals(divisor=3,print_status=False):
         mineral = mineral_constructor(color,name)
         minerals.append(mineral)
     return minerals
-def build_minerals(divisor=3,format="JSON",print_status=False):
+def build_minerals(divisor=3,format="JSON",print_status=True):
     index = generate_minerals(divisor=divisor,print_status=print_status)
     formats = ["JSON"]
     if format == "JSON":
