@@ -114,63 +114,74 @@ class util(object):
                 return z
             else:
                 return sortedCombos
-    def grab_relic_pages(print_status=False,progress_bar=True):
+    def grab_relic_names(print_status=False,progress_bar=True):
         if print_status:
             print("[GET]ing wiki page...")
         res = requests.request("GET","https://en.wikipedia.org/wiki/List_of_mythological_objects")
         s = b(res.text,"html.parser")
         x = s.find("div",{"id" : "mw-content-text"})
-        z = x.findAll("b")
-        # take out the trash
-        for i in range(12):
-            z.pop(len(z) - 1)
-        z.pop(0)
-        z.pop(0)
-        """
-        # for now we're going to generate a giant dict.
-        j = {
-            "index" : []
-        }
-        for i in z:
-            j["index"].append(i.text)
-        j = json.dumps(j, indent=4)
-        return j
-        """
-        index = []
-        for i in z:
-            index.append(i.text)
-        deleted = []
+        al = x.findAll("ul")
+        if print_status:
+            print("Discarding garbage...")
+        for i in range(21):
+            al.pop(0)
+        # remove the substances node
+        al.pop(86-21)
+        index = {}
+        for node in al:
+            try:
+                c = node.findAll("li")
+                for item in c:
+                    try:
+                        index[item.find("b").text] = item.text
+                    except:
+                        pass
+            except:
+                pass
+        # now filter the index
+        if print_status:
+            print("Filtering relics...")
         newIndex = {}
-        # All illegal words must be in lower case
-        illegal_words = ["weapon"," tree "]
-        illegal_names = ["sword","spear"]
+        # illegal words are words that if found in the definition, that item will be discarded
+        illegal_words = [
+            "sword",
+            "spear",
+            "tree",
+            "club",
+            "mace",
+            "staff",
+            "scythe",
+            "javelin",
+            "lance",
+            "harpoon",
+            "trident",
+            "bow",
+            "arrow",
+            "axe",
+            "hammer",
+            "ship",
+            "boat",
+            "chariot",
+            "jesus",
+            "book",
+            "food",
+            "substance"
+        ]
+        # excludes are items that are simply not allowed, and will be immediatly discarded
+        excludes = ["Cap of invisibility".lower(),"Golden Coat of Chainmail".lower()]
         if progress_bar:
             pbar = tqdm(total=len(index))
-        for i in index:
-            pbar.set_description("Index is %s long" % len(newIndex))
-            page = requests.request("GET","https://en.wikipedia.org/wiki/" + str(i))
-            if page.status_code == 200:
-                ns = b(page.text,"html.parser")
-                bad = False
+        for item in index:
+            if progress_bar:
+                pbar.set_description("Index contains %s relics" % len(newIndex))
+            if not excludes.__contains__(item.lower()):
+                passed = True
                 for wrd in illegal_words:
-                    if ns.text.lower().find(wrd) >= 0:
-                        deleted.append(i)
-                        bad = True
-                        if print_status:
-                            try:
-                                print("[%s] contains the illegal word [%s]" % (index.index(i),wrd))
-                            except:
-                                print("HIT ERROR PRINTING ITEM NUMBER [%s]" % (str(index.index(i))))
-                        break
-                if bad == False:
-                    newIndex[i] = page.text
-            else:
-                if print_status:
-                    try:
-                        print("GOT [%s] for item [%s]." % (page.status_code,index.index(i)))
-                    except:
-                        print("HIT ERROR PRINTING ITEM NUMBER [%s]" % (str(index.index(i))))
-                deleted.append(i)
+                    if index[item].lower().find(wrd) >= 0:
+                        ##print(wrd)
+                        passed = False
+                if passed:
+                    newIndex[item] = index[item]
             if progress_bar:
                 pbar.update(1)
         return newIndex
