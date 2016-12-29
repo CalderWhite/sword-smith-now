@@ -1,8 +1,9 @@
 from PIL import Image
 import math, json,requests, random
 from bs4 import BeautifulSoup as b
+from tqdm import tqdm
 class util(object):
-    """This is not meant to be constructed. Just use the class."""
+    """This is not meant to be constructed. Just use the class's objects"""
     def grab_mineral_index(print_status):
         if print_status:
             print("[GET]ing wiki page...")
@@ -12,6 +13,7 @@ class util(object):
         # we need to go through each tag, since there is trash beside some of the link tags
         if print_status:
             print("Scraping and indexing...")
+        # lazy to the max VVV
         index = {
             "a" : [],
             "b" : [],
@@ -112,6 +114,69 @@ class util(object):
                 return z
             else:
                 return sortedCombos
+    def grab_relic_pages(print_status=False,progress_bar=True):
+        if print_status:
+            print("[GET]ing wiki page...")
+        res = requests.request("GET","https://en.wikipedia.org/wiki/List_of_mythological_objects")
+        s = b(res.text,"html.parser")
+        x = s.find("div",{"id" : "mw-content-text"})
+        z = x.findAll("b")
+        # take out the trash
+        for i in range(12):
+            z.pop(len(z) - 1)
+        z.pop(0)
+        z.pop(0)
+        """
+        # for now we're going to generate a giant dict.
+        j = {
+            "index" : []
+        }
+        for i in z:
+            j["index"].append(i.text)
+        j = json.dumps(j, indent=4)
+        return j
+        """
+        index = []
+        for i in z:
+            index.append(i.text)
+        deleted = []
+        newIndex = {}
+        # All illegal words must be in lower case
+        illegal_words = ["weapon"," tree "]
+        illegal_names = ["sword","spear"]
+        if progress_bar:
+            pbar = tqdm(total=len(index))
+        for i in index:
+            pbar.set_description("Index is %s long" % len(newIndex))
+            page = requests.request("GET","https://en.wikipedia.org/wiki/" + str(i))
+            if page.status_code == 200:
+                ns = b(page.text,"html.parser")
+                bad = False
+                for wrd in illegal_words:
+                    if ns.text.lower().find(wrd) >= 0:
+                        deleted.append(i)
+                        bad = True
+                        if print_status:
+                            try:
+                                print("[%s] contains the illegal word [%s]" % (index.index(i),wrd))
+                            except:
+                                print("HIT ERROR PRINTING ITEM NUMBER [%s]" % (str(index.index(i))))
+                        break
+                if bad == False:
+                    newIndex[i] = page.text
+            else:
+                if print_status:
+                    try:
+                        print("GOT [%s] for item [%s]." % (page.status_code,index.index(i)))
+                    except:
+                        print("HIT ERROR PRINTING ITEM NUMBER [%s]" % (str(index.index(i))))
+                deleted.append(i)
+            if progress_bar:
+                pbar.update(1)
+        return newIndex
+    def generate_relic_buffs(d,print_status=False):
+        # just for testing purposes:
+        index = json.loads(open("x.json",'r').read())
 class mineral_constructor(object):
     def __init__(self,color,name):
         self.color = color
