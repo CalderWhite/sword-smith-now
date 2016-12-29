@@ -166,7 +166,8 @@ class util(object):
             "book",
             "food",
             "substance",
-            "christian"
+            "christian",
+            "weapon"
         ]
         # excludes are items that are simply not allowed, and will be immediatly discarded
         excludes = ["Cap of invisibility".lower(),"Golden Coat of Chainmail".lower()]
