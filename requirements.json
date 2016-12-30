@@ -8,6 +8,6 @@
 		"PIL" : "Pillow",
 		"bs4" : "bs4",
 		"requests" : "requests",
-		"tqdm"
+		"tqdm" : "tqdm"
 	}
 }
