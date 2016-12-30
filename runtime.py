@@ -326,20 +326,37 @@ class game_kernel(object):
 			ptext = self.fonts.pause_f.render("paused",False,(255,255,255))
 			px = swidth/2 - ptext.get_rect()[2]/2
 			py = 40
-			btns = []
+			buttons = []
+			# common height is a varaible that will set every button's height
+			cmnheight = 30
 			ebtn = guiObjects.button(
 				self.gui.screen,
 				(
 					int(swidth/2 - 400/2),
-					int(py + ptext.get_rect()[3] + 20),
+					int(py + ptext.get_rect()[3] + cmnheight),
 					400,
-					30
+					cmnheight
 				),
 				(128,128,128),
 				self.unpause,
 				text=self.fonts.pause_f.render("resume",False,(255,255,255)),
 				hover=(200,200,200)
 				)
+			buttons.append(ebtn)
+			qbtn = guiObjects.button(
+				self.gui.screen,
+				(
+					int(swidth/2 - 400/2),
+					int(py + ptext.get_rect()[3] + cmnheight * 2 + 10),
+					400,
+					cmnheight
+				),
+				(128,128,128),
+				self.quit,
+				text=self.fonts.pause_f.render("Quit Game",False,(255,255,255)),
+				hover=(200,200,200)
+				)
+			buttons.append(qbtn)
 			# the background that will be continuesly rendered
 			background = pygame.Surface((swidth,sheight))
 			# draw the last screen, before the game was paused. This gives the effect of a "pause"
@@ -359,11 +376,13 @@ class game_kernel(object):
 				# render the background first
 				self.gui.screen.blit(background,(0,0))
 				# ---------------------------------------------
-				# if mouse is over button
-				ebtn.try_hover()
-				ebtn.check_click()
-				# all buttons/page elements rendered here
-				ebtn.draw()
+				# all button functions here
+				for b in buttons:
+					# if mouse is over button
+					b.try_hover()
+					b.check_click()
+					# all buttons/page elements rendered here
+					b.draw()
 				# ---------------------------------------------
 				# render mouse last
 				x = mx - (self.gui.cursor.get_height() / 2)
