@@ -6,17 +6,25 @@ class gui(object):
 		sw = self.tk.winfo_screenwidth()
 		sh = self.tk.winfo_screenheight()
 		ww = 760
-		wh = 480
+		wh = 490
 		x = int(sw / 2) - int(ww/2)
 		y = int(sh / 2) - int(wh / 2)
 		self.tk.geometry("%sx%s+%s+%s" % (ww,wh,x,y))
 		self.tk.resizable(width=False, height=False)
 		self.tk.title("Launching...")
+		#log_frames 'n' stuff
+		self.nb = ttk.Notebook(self.tk)
+		self.nb.grid()
+		self.log_frame = ttk.Frame()
+		self.nb.add(self.log_frame,text="Log")
 		# text
-		self.log_field = tkinter.Text(self.tk,height=25,width=95 )
+		self.log_field = tkinter.Text(self.log_frame,height=25,width=95 )
 		self.log_text = ""
 		self.log_field.configure(state=tkinter.DISABLED)
 		self.log_field.grid(row=0)
+		# future field, Work in Progress
+		self.profile_frame = ttk.Frame()
+		self.nb.add(self.profile_frame,text="Profile")
 		##self.log_field.pack()
 		pass
 class launcher(object):
@@ -75,7 +83,7 @@ class launcher(object):
 			self.log("Running launcher in gui...")
 			s = ttk.Style()
 			s.configure('my.TButton', font=("Arial", 12,"bold"),padding=17,width=25,justify="center")
-			self.play_b = ttk.Button(self.gui.tk, text="Play", command=self.try_launch,style="my.TButton")
+			self.play_b = ttk.Button(self.gui.log_frame, text="Play", command=self.try_launch,style="my.TButton")
 			self.play_b.grid(row=1)
 			self.log("Time: " + str(datetime.datetime.now()))
 			self.log("Setting launcher icon.")
@@ -124,7 +132,7 @@ class launcher(object):
 		logging.log(logging.__getattribute__(level),msg)
 		if self.initial_gui:
 			self.gui.log_field.pack_forget()
-			self.gui.log_field = tkinter.Text(self.gui.tk,height=25,width=95 )
+			self.gui.log_field = tkinter.Text(self.gui.log_frame,height=25,width=95 )
 			self.gui.log_text = self.gui.log_text + "[" + user +  "]:[" + level + "]: " + msg + "\n"
 			##print(self.gui.log_text)
 			self.gui.log_field.insert(tkinter.END,self.gui.log_text)
