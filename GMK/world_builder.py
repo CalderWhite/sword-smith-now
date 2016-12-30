@@ -66,6 +66,10 @@ class builder(object):
 				img = index[matrix[yoff][xoff]]
 				base.paste(img,(x,y))
 		return base
+	def build(self):
+		m = self.generate_matrix()
+		img = self.level(m)
+		return img
 if __name__ == '__main__':
 	b = builder()
 	print("Building matrix...")

@@ -202,7 +202,7 @@ class gui(object):
 		if self.parent.mode == 1:
 			# only for dev mode
 			self.chunks = []
-			self.chunks.append(pygame.image.load("./saves/new_chunk.png"))
+			self.chunks.append(pygame.image.load("./saves/chunk_2.png"))
 	def render_floor(self):
 		"""renders floor (background)."""
 		sheight,swidth = pygame.display.get_surface().get_size()
@@ -276,7 +276,12 @@ class sword_crafter(object):
 		self.parent = parent
 		self.screen = self.parent.gui.screen
 	def run(self):
+		# first pause the game PROGRAM so everything stops
+		self.parent.pause(gui=False)
 		self.screen.fill((255,255,255))
+
+		# lastly pause again, but with the gui. This gives the effect that it was always paused and you are simply returning to it
+		self.parent.pause()
 class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
 		"""If in developer mode, logs a message to the launcher window that created that initialized this class."""
@@ -403,7 +408,7 @@ class game_kernel(object):
 		# when used in the proper way,this will end the game loop without crashing the program
 		self.paused = False
 		self.stop = True
-		self.page = "PAUSE_QUIT"
+		self.page = None
 	def run(self):
 		if self.mode == 0:
 			self.log("Running credits...")
