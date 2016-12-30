@@ -1,4 +1,4 @@
-import pygame, time, random, sys, chunkObject, json
+import pygame, time, random, sys, chunkObject, json, guiObjects
 import PIL.Image, PIL.ImageFilter
 from GMK.items import mineral_constructor
 class font_collection(object):
@@ -326,11 +326,20 @@ class game_kernel(object):
 			ptext = self.fonts.pause_f.render("paused",False,(255,255,255))
 			px = swidth/2 - ptext.get_rect()[2]/2
 			py = 40
-			ebtn = (int(swidth/2 - 400/2),int(py + ptext.get_rect()[3] + 20),400,30)
-			ebtn_c = (128,128,128)
-			ebtnt = self.fonts.pause_f.render("resume",False,(255,255,255))
-			ebtntx = ebtn[0] + (ebtn[2] - ebtnt.get_rect()[2]) / 2
-			ebtnty = ebtn[1] + (ebtn[3] - ebtnt.get_rect()[3]) / 2
+			btns = []
+			ebtn = guiObjects.button(
+				self.gui.screen,
+				(
+					int(swidth/2 - 400/2),
+					int(py + ptext.get_rect()[3] + 20),
+					400,
+					30
+				),
+				(128,128,128),
+				self.unpause,
+				text=self.fonts.pause_f.render("resume",False,(255,255,255)),
+				hover=(200,200,200)
+				)
 			# the background that will be continuesly rendered
 			background = pygame.Surface((swidth,sheight))
 			# draw the last screen, before the game was paused. This gives the effect of a "pause"
@@ -351,17 +360,10 @@ class game_kernel(object):
 				self.gui.screen.blit(background,(0,0))
 				# ---------------------------------------------
 				# if mouse is over button
-				##print(mx in range(ebtn[0],ebtn[2]),my in range(ebtn[1],ebtn[3]))
-				if mx in range(ebtn[0],ebtn[0] + ebtn[2] + 1) and my in range(ebtn[1],ebtn[3] + ebtn[1] + 1):
-					ebtn_c = (200,200,200)
-					if clicks[0]:
-						self.unpause()
-				else:
-					ebtn_c = (128,128,128)
+				ebtn.try_hover()
+				ebtn.check_click()
 				# all buttons/page elements rendered here
-				pygame.draw.rect(self.gui.screen,ebtn_c,ebtn)
-				# render button text OVER the just rendered rectangles
-				self.gui.screen.blit(ebtnt,(ebtntx,ebtnty))
+				ebtn.draw()
 				# ---------------------------------------------
 				# render mouse last
 				x = mx - (self.gui.cursor.get_height() / 2)
