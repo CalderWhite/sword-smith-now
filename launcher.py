@@ -1,5 +1,6 @@
 import logging,json, tkinter, time, threading, sys, datetime, imp, os, gc
 from tkinter import ttk
+
 class gui(object):
 	def __init__(self):
 		self.tk = tkinter.Tk()
@@ -25,6 +26,7 @@ class gui(object):
 		# future field, Work in Progress
 		self.profile_frame = ttk.Frame()
 		self.nb.add(self.profile_frame,text="Profile")
+
 		##self.log_field.pack()
 		pass
 class launcher(object):

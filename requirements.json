@@ -1,13 +1,15 @@
 {
-	"vanilla" : [
-		"pygame",
-		"Pillow"
-	],
+	"vanilla" : {
+		"pygame" : "pygame",
+		"PIL" : "Pillow",
+		"numpy" : "numpy"
+		},
 	"dev" : {
 		"pygame" : "pygame",
 		"PIL" : "Pillow",
 		"bs4" : "bs4",
 		"requests" : "requests",
-		"tqdm" : "tqdm"
+		"tqdm" : "tqdm",
+		"numpy" : "numpy"
 	}
 }

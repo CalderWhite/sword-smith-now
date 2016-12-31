@@ -1,4 +1,4 @@
-import pygame, time, random, sys, chunkObject, json, guiObjects
+import pygame, time, random, sys, chunkObject, json, guiObjects, numpy
 import PIL.Image, PIL.ImageFilter
 from GMK.items import mineral_constructor
 class font_collection(object):
@@ -38,6 +38,7 @@ class new_player(object):
 		self.hitbox = (60,120)
 		self.rect = (60,120)
 		self.parent = parent
+		self.possesions = self.possesion_class()
 	def check_movement(self):
 		keys = pygame.key.get_pressed()
 		if keys[pygame.K_LCTRL] or keys[pygame.K_RCTRL]:
@@ -167,6 +168,25 @@ class new_player(object):
 					break
 			pass
 		return (newx,newy)
+	class possesion_class(object):
+		"""This is just to organize. Use this class through the main class, instead of creating an instance."""
+		def __init__(self):
+			self.minerals = {}
+		def give(self,item_type,obj,quantity):
+			"""Types (as of now):
+			0 : mineral
+			"""
+			if item_type == 0:
+				if self.minerals.__contains__(obj.name):
+					self.minerals[obj.name].add(quantity)
+				else:
+					self.minerals[obj.name] = item_manager.mineral_counter(obj)
+					self.minerals[obj.name].add(quantity)
+	def give_all(self):
+		for m in self.parent.item_manager.minerals:
+			self.possesions.give(0,self.parent.item_manager.minerals[m],20)
+		for m in self.possesions.minerals:
+			print(m,self.possesions.minerals[m].count)
 class gui(object):
 	def __init__(self,parent):
 		"""Defines the function and boots at the same time. (Logs stuff and loads stuff)"""
@@ -189,14 +209,15 @@ class gui(object):
 		parent.log("Loading objects [trees,bushes, etc.]...")
 		self.chunk_objects = [chunkObject.rect([-100,-100,100,100],(123,43,200)),chunkObject.rect([-100,200,100,100],(0,0,0))]
 		pass
-	def check_events(self):
+	def check_events(self,key_bindings=True):
 		eventz = pygame.event.get()
 		for event in eventz:
 			if event.type == pygame.QUIT:
 				self.parent.quit()
 				break
 			elif event.type == pygame.KEYDOWN:
-				self.parent.key_bindings.check_all(event)
+				if key_bindings:
+					self.parent.key_bindings.check_all(event)
 	def load_chunks(self):
 		"""Experimental so far. Only works in dev mode"""
 		if self.parent.mode == 1:
@@ -236,13 +257,13 @@ class gui(object):
 			obj.draw(self.screen,(xoff,yoff))
 		pass
 	class util(object):
-		def blur_surf(surf,level=3):
+		def blur_surf(surf,radius=3):
 		    # create the original pygame surface
 		    #surf = pygame.image.fromstring(, size, mode)
 		    size = surf.get_size()
 		    raw = pygame.image.tostring(surf,"RGBA",False)
 		    # create a PIL image and blur it
-		    pil_blured = PIL.Image.frombytes("RGBA", size, raw).filter(PIL.ImageFilter.GaussianBlur(radius=level))
+		    pil_blured = PIL.Image.frombytes("RGBA", size, raw).filter(PIL.ImageFilter.GaussianBlur(radius=radius))
 
 		    # convert it back to a pygame surface
 		    filtered = pygame.image.fromstring(pil_blured.tobytes("raw", "RGBA"), size, "RGBA")
@@ -252,9 +273,20 @@ class key_bindings(object):
 		# right now, we won't be loading any key bindings from a user file.
 		# just using the default
 		self.parent = parent
-		self.bindings = {
-			pygame.K_ESCAPE : parent.toggle_pause
-		}
+		if parent.mode == 0:
+			self.bindings = {
+				pygame.K_ESCAPE : parent.toggle_pause
+			}
+		elif parent.mode == 1:
+			self.bindings = {
+				pygame.K_ESCAPE : parent.toggle_pause,
+				pygame.K_g : parent.player.give_all
+			}
+		elif parent.mode == 2:
+			self.bindings = {
+				pygame.K_ESCAPE : parent.toggle_pause,
+				pygame.K_g : parent.player.give_all
+			}
 	def check_all(self,event):
 		# run through key bindings
 		# run any functions/methods if that key is pressed
@@ -269,17 +301,87 @@ class item_manager(object):
 		j = json.loads(r)
 		m = {}
 		for i in j["all"]:
-			m[i] = mineral_constructor(i,j["all"][i]["color"])
+			m[i] = mineral_constructor(
+				j["all"][i]["color"],
+				i
+				)
 		return m
+	class mineral_counter(object):
+		def __init__(self,obj):
+			self.name = obj.name
+			self.color = obj.name
+			self.count = 0
+		def add(self,quantity):
+			self.count += quantity
 class sword_crafter(object):
-	def __init__(self,parent):
+	def __init__(self,parent,dimensions,scale=24,background=(170,170,170)):
 		self.parent = parent
 		self.screen = self.parent.gui.screen
+		self.scale = scale
+		self.background = background
+		self.weapon_cache = numpy.empty(dimensions,dtype=object)
+		for y in range(len(self.weapon_cache)):
+			for x in range(len(self.weapon_cache[y])):
+				self.weapon_cache[y][x] = None
+		self.matrix_cache = numpy.empty(dimensions,dtype=object)
+		self.matrixX = int(self.screen.get_width() / 30)##self.screen.get_width() / 2 - (dimensions[0] * scale)/ 2
+		self.matrixY = int(self.screen.get_height() / 20)##self.screen.get_height() / 2 - (dimensions[1] * scale)/ 2
+		for y in range(len(self.matrix_cache)):
+			for x in range(len(self.matrix_cache[y])):
+				self.matrix_cache[y][x] = background
+		self.surf = pygame.Surface((dimensions[0] * scale + dimensions[0] + 1,dimensions[1] * scale + dimensions[1] + 1))
+	def update_surf(self):
+		for y in range(len(self.matrix_cache)):
+			for x in range(len(self.matrix_cache[y])):
+				##self.surf.set_at((y * self.scale,x*self.scale),self.matrix_cache[y][x])
+				pygame.draw.rect(
+					self.surf,
+					self.matrix_cache[y][x],
+					(
+						# add x, add y to leave room for grid lines inbetween
+						x * self.scale + (x + 1),
+						y * self.scale + (y + 1),
+						self.scale,
+						self.scale
+					)
+					)
+		pass
+	def find_mouse_over_block(self):
+		# for now, we're doing this the hard way
+		for y in range(len(self.matrix_cache)):
+			for x in range(len(self.matrix_cache[y])):
+				x1 = x * self.scale + self.matrixX + x
+				x2 = x1 + self.scale
+				y1 = y * self.scale + self.matrixY + y
+				y2 = y1 + self.scale
+				mx,my = pygame.mouse.get_pos()
+				if mx > x1 and mx < x2 and my > y1 and my < y2:
+					return (x,y)
+		return None
+	def set_pixel(self,xy,color):
+		self.matrix_cache[xy[1]][xy[0]] = color
 	def run(self):
 		# first pause the game PROGRAM so everything stops
-		self.parent.pause(gui=False)
-		self.screen.fill((255,255,255))
-
+		self.parent.pause(gui=False) 
+		self.looping = True
+		pygame.mouse.set_visible(True)	
+		while self.looping:
+			self.parent.gui.check_events(key_bindings=False)
+			self.screen.fill((255,255,255))
+			block = self.find_mouse_over_block()
+			for y in range(len(self.matrix_cache)):
+				for x in range(len(self.matrix_cache[y])):
+					if self.weapon_cache[y][x] == None:
+						self.matrix_cache[y][x] = self.background
+					else:
+						self.matrix_cache[y][x] == self.weapon_cache[y][x]
+			if block != None:
+				self.set_pixel((block[0],block[1]),(self.background[0] + 20, self.background[1] + 20, self.background[2] + 20))
+			
+			self.update_surf()
+			self.screen.blit(self.surf,(self.matrixX,self.matrixY))
+			pygame.display.update()
+		pygame.mouse.set_visible(False)
 		# lastly pause again, but with the gui. This gives the effect that it was always paused and you are simply returning to it
 		self.parent.pause()
 class game_kernel(object):
@@ -301,14 +403,17 @@ class game_kernel(object):
 		self.gui = gui(self)
 		self.page = None
 		self.mouse = pygame.mouse
-		self.log("Loading key bindings...")
-		self.key_bindings = key_bindings(self)
 		self.log("Loading fonts...")
 		self.fonts = font_collection()
 		self.log("Loading audio...")
 		self.audio = audio_manager(self)
 		self.log("Loading item manager...")
 		self.item_manager = item_manager(self)
+		self.log("Loading player...")
+		self.player = new_player("Developer",self)
+		# keybindings last, since they'll use methods from the object above
+		self.log("Loading key bindings...")
+		self.key_bindings = key_bindings(self)
 	def kill_sound(self):
 		"""Mutes the game."""
 		self.audio.mute()
@@ -324,7 +429,7 @@ class game_kernel(object):
 			# waaaaayyy faster. If not for this pre rendering, it would lag like crazy
 			######
 			# old screen, blurred
-			old_screen = self.gui.util.blur_surf(self.gui.screen.copy())
+			old_screen = self.gui.util.blur_surf(self.gui.screen.copy(),radius=6)
 			# heght width
 			sheight,swidth = pygame.display.get_surface().get_size()
 			# really just a transparent grey image. Generated by PIL
@@ -544,7 +649,6 @@ class game_kernel(object):
 		"""Sets up some properties for self.run_realm_explorer()"""
 		if self.mode == 1:
 			self.current_chunk = self.gui.chunks[0]
-			self.player = new_player("Developer",self)
 	def run_realm_explorer(self):
 		"""Essentially the game loop."""
 		# clear all music
@@ -586,6 +690,9 @@ class game_kernel(object):
 				pygame.display.update()
 				self.gui.check_events()
 				#self.stop = True
+			if keys[pygame.K_e]:
+				crafter = sword_crafter(self,(16,16))
+				crafter.run()
 def main(parent):
 	if parent == None:
 		print("Program cannot run without a launcher.")
@@ -595,7 +702,6 @@ def main(parent):
 		elif parent.mode == 1:
 			parent.log("Beginning runtime boot.",user="GAME")
 			g = game_kernel(parent.info,dev_window=parent)
-			g.kill_sound()
 			g.run()
 			"""
 			try:
