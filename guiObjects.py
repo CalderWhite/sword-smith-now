@@ -51,7 +51,6 @@ class mineral_window(object):
 		self.scroll = 0
 		self.parent = parent
 		self.minerals = mineral_list
-		self.gui.add_event((pygame.MOUSEBUTTONDOWN,self.try_scroll))
 		self.generate_buttons()
 		self.xoff = (self.gui.screen.get_width() - self.surface.get_width()) / 2
 		self.yoff = (self.gui.screen.get_height() - self.surface.get_height()) / 2
@@ -132,7 +131,7 @@ class mineral_window(object):
 		if self.display:
 			surf.blit(self.surface,(self.xoff,self.yoff))
 class pixel_editor(object):
-	def __init__(self,parent,surf,dimensions,scale=24,background=(170,170,170)):
+	def __init__(self,parent,surf,dimensions,scale=18,background=(170,170,170)):
 		self.screen = surf
 		self.scale = scale
 		self.background = background
@@ -152,6 +151,7 @@ class pixel_editor(object):
 	def update(self):
 		for y in range(len(self.matrix_cache)):
 			for x in range(len(self.matrix_cache[y])):
+				##print(self.matrix_cache[y][x])
 				pygame.draw.rect(
 					self.surf,
 					self.matrix_cache[y][x],
@@ -190,15 +190,33 @@ class pixel_editor(object):
 		block = self.find_mouse_over_block()
 		if block != None:
 			if self.weapon_template[block[1]][block[0]]:
+				# brightens square when mouse is over
+				# also has an overflow system if one of the colors reaches 255
+				if self.weapon_cache[block[1]][block[0]] != None:
+					R = self.weapon_cache[block[1]][block[0]].color[0] + 40
+					G = self.weapon_cache[block[1]][block[0]].color[1] + 40
+					B = self.weapon_cache[block[1]][block[0]].color[2] + 40
+				else:
+					R = self.background[0] + 40
+					G = self.background[1] + 40
+					B = self.background[2] + 40
+				if R > 255:
+					G +=R - 255
+					R = 255
+				if G > 255:
+					B +=G - 255
+					G = 255
+				if B > 255:
+					B = 255
 				self.set_pixel(
 					(
 						block[0],
 						block[1]
 					),
 					(
-						self.background[0] + 20,
-						self.background[1] + 20,
-						self.background[2] + 20
+						R,
+						G,
+						B
 						)
 					)
 	def check_click(self):
@@ -218,8 +236,17 @@ class pixel_editor(object):
 		surface.blit(self.surf,(self.matrixX,self.matrixY))
 	def try_place(self,pos,mineral):
 		if self.weapon_template[pos[1]][pos[0]]:
-			self.weapon_cache[pos[1]][pos[0]] = mineral
+			if self.parent.figurative_minerals[mineral.name].count > 0:
+				if self.weapon_cache[pos[1]][pos[0]] != None:
+					self.parent.figurative_minerals[self.weapon_cache[pos[1]][pos[0]].name].count+=1
+				self.parent.figurative_minerals[mineral.name].count-=1
+				self.weapon_cache[pos[1]][pos[0]] = mineral
 	def clear(self):
 		for y in range(len(self.weapon_cache)):
 			for x in range(len(self.weapon_cache[y])):
-				self.weapon_cache[y][x] = None
+				if self.weapon_cache[y][x] != None:
+					# return that mineral to the user
+					self.parent.parent.player.possesions.give(0,self.weapon_cache[y][x],1)
+					# now reset that square/pixel
+					self.weapon_cache[y][x] = None
+				# if it is already <None>, it's fine. Leave it.

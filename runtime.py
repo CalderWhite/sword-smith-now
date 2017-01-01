@@ -184,7 +184,7 @@ class new_player(object):
 					self.minerals[obj.name].add(quantity)
 	def give_all(self):
 		for m in self.parent.item_manager.minerals:
-			self.possesions.give(0,self.parent.item_manager.minerals[m],20)
+			self.possesions.give(0,self.parent.item_manager.minerals[m],999)
 class gui(object):
 	def __init__(self,parent):
 		"""Defines the function and boots at the same time. (Logs stuff and loads stuff)"""
@@ -323,9 +323,13 @@ class sword_crafter(object):
 		self.gui = parent.gui
 		##self.parent.player.possesions.give(0,self.parent.item_manager.minerals["Calderite"],1)
 		self.parent.player.give_all()
+		self.figurative_minerals = self.parent.player.possesions.minerals
 		self.pixel_window = guiObjects.pixel_editor(self,self.gui.screen,dimensions)
-		self.min_window = guiObjects.mineral_window(self,self.gui,list(self.parent.player.possesions.minerals.values()))
+		self.min_window = guiObjects.mineral_window(self,self.gui,list(self.figurative_minerals.values()))
 		self.min_window.hide()
+	def check_mouse(self,event):
+		self.min_window.try_scroll(event)
+		self.pixel_window.check_click()
 	def run(self):
 		# first pause the game PROGRAM so everything stops
 		self.parent.pause(gui=False) 
@@ -361,6 +365,7 @@ class sword_crafter(object):
 			hover=(170,170,170)
 			)
 		buttons.append(cbtn)
+		self.gui.add_event((pygame.MOUSEBUTTONDOWN,self.check_mouse))
 		while self.looping:
 			self.parent.gui.check_events(key_bindings=False)
 			keys = pygame.key.get_pressed()
@@ -368,10 +373,10 @@ class sword_crafter(object):
 				self.min_window.show()
 			else:
 				self.min_window.hide()
+			self.min_window.minerals = list(self.figurative_minerals.values())
 			self.gui.screen.fill((255,255,255))
 			self.pixel_window.refresh()
 			self.pixel_window.try_hover()
-			self.pixel_window.check_click()
 			self.pixel_window.update()
 			self.pixel_window.draw(self.gui.screen)
 			self.min_window.update()
@@ -387,7 +392,23 @@ class sword_crafter(object):
 		self.parent.pause()
 	def save_weapon(self):
 		# firstly, grab array from from weapon cache
-		arr = self.pixel_window.weapon_cache
+		"""
+		# this sets the template
+		arr = []
+		for y in range(len(self.pixel_window.weapon_cache)):
+			arr.append([])
+			for x in range(len(self.pixel_window.weapon_cache[y])):
+				if self.pixel_window.weapon_cache[y][x] != None:
+					arr[y].append(True)
+				else:
+					arr[y].append(False)
+		w = open("weapon_generated.json",'w')
+		w.write(
+			json.dumps(arr)
+			)
+		w.close()
+		"""
+		arr = []
 class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
 		"""If in developer mode, logs a message to the launcher window that created that initialized this class."""
@@ -524,7 +545,7 @@ class game_kernel(object):
 	def unpause(self):
 		self.paused = False
 	def start_crafter(self):
-		crafter = sword_crafter(self,(16,16))
+		crafter = sword_crafter(self,(24,24))
 		crafter.run()
 	def toggle_pause(self):
 		if not self.paused:
