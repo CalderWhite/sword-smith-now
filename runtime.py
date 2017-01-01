@@ -1,4 +1,4 @@
-import pygame, time, random, sys, chunkObject, json, guiObjects, numpy
+import pygame, time, random, sys, chunkObject, json, guiObjects
 import PIL.Image, PIL.ImageFilter
 from GMK.items import mineral_constructor
 class font_collection(object):
@@ -185,8 +185,6 @@ class new_player(object):
 	def give_all(self):
 		for m in self.parent.item_manager.minerals:
 			self.possesions.give(0,self.parent.item_manager.minerals[m],20)
-		for m in self.possesions.minerals:
-			print(m,self.possesions.minerals[m].count)
 class gui(object):
 	def __init__(self,parent):
 		"""Defines the function and boots at the same time. (Logs stuff and loads stuff)"""
@@ -208,6 +206,7 @@ class gui(object):
 		self.load_chunks()
 		parent.log("Loading objects [trees,bushes, etc.]...")
 		self.chunk_objects = [chunkObject.rect([-100,-100,100,100],(123,43,200)),chunkObject.rect([-100,200,100,100],(0,0,0))]
+		self.custom_events = {}
 		pass
 	def check_events(self,key_bindings=True):
 		eventz = pygame.event.get()
@@ -218,6 +217,11 @@ class gui(object):
 			elif event.type == pygame.KEYDOWN:
 				if key_bindings:
 					self.parent.key_bindings.check_all(event)
+			for ce in self.custom_events:
+				if event.type == ce:
+					self.custom_events[ce](event)
+	def add_event(self,t):
+		self.custom_events[t[0]] = t[1]
 	def load_chunks(self):
 		"""Experimental so far. Only works in dev mode"""
 		if self.parent.mode == 1:
@@ -309,81 +313,81 @@ class item_manager(object):
 	class mineral_counter(object):
 		def __init__(self,obj):
 			self.name = obj.name
-			self.color = obj.name
+			self.color = obj.color
 			self.count = 0
 		def add(self,quantity):
 			self.count += quantity
 class sword_crafter(object):
-	def __init__(self,parent,dimensions,scale=24,background=(170,170,170)):
+	def __init__(self,parent,dimensions):
 		self.parent = parent
-		self.screen = self.parent.gui.screen
-		self.scale = scale
-		self.background = background
-		self.weapon_cache = numpy.empty(dimensions,dtype=object)
-		for y in range(len(self.weapon_cache)):
-			for x in range(len(self.weapon_cache[y])):
-				self.weapon_cache[y][x] = None
-		self.matrix_cache = numpy.empty(dimensions,dtype=object)
-		self.matrixX = int(self.screen.get_width() / 30)##self.screen.get_width() / 2 - (dimensions[0] * scale)/ 2
-		self.matrixY = int(self.screen.get_height() / 20)##self.screen.get_height() / 2 - (dimensions[1] * scale)/ 2
-		for y in range(len(self.matrix_cache)):
-			for x in range(len(self.matrix_cache[y])):
-				self.matrix_cache[y][x] = background
-		self.surf = pygame.Surface((dimensions[0] * scale + dimensions[0] + 1,dimensions[1] * scale + dimensions[1] + 1))
-	def update_surf(self):
-		for y in range(len(self.matrix_cache)):
-			for x in range(len(self.matrix_cache[y])):
-				##self.surf.set_at((y * self.scale,x*self.scale),self.matrix_cache[y][x])
-				pygame.draw.rect(
-					self.surf,
-					self.matrix_cache[y][x],
-					(
-						# add x, add y to leave room for grid lines inbetween
-						x * self.scale + (x + 1),
-						y * self.scale + (y + 1),
-						self.scale,
-						self.scale
-					)
-					)
-		pass
-	def find_mouse_over_block(self):
-		# for now, we're doing this the hard way
-		for y in range(len(self.matrix_cache)):
-			for x in range(len(self.matrix_cache[y])):
-				x1 = x * self.scale + self.matrixX + x
-				x2 = x1 + self.scale
-				y1 = y * self.scale + self.matrixY + y
-				y2 = y1 + self.scale
-				mx,my = pygame.mouse.get_pos()
-				if mx > x1 and mx < x2 and my > y1 and my < y2:
-					return (x,y)
-		return None
-	def set_pixel(self,xy,color):
-		self.matrix_cache[xy[1]][xy[0]] = color
+		self.gui = parent.gui
+		##self.parent.player.possesions.give(0,self.parent.item_manager.minerals["Calderite"],1)
+		self.parent.player.give_all()
+		self.pixel_window = guiObjects.pixel_editor(self,self.gui.screen,dimensions)
+		self.min_window = guiObjects.mineral_window(self,self.gui,list(self.parent.player.possesions.minerals.values()))
+		self.min_window.hide()
 	def run(self):
 		# first pause the game PROGRAM so everything stops
 		self.parent.pause(gui=False) 
 		self.looping = True
-		pygame.mouse.set_visible(True)	
+		pygame.mouse.set_visible(True)
+		buttons = []
+		bfont = pygame.font.SysFont("Arial",14)
+		sbtn = guiObjects.button(
+			self.gui.screen,
+			(
+				self.gui.screen.get_width() - 50 - 20,
+				100,
+				50,
+				20
+			),
+			(150,150,150),
+			self.save_weapon,
+			text=bfont.render("save",False,(0,0,0)),
+			hover=(170,170,170)
+			)
+		buttons.append(sbtn)
+		cbtn = guiObjects.button(
+			self.gui.screen,
+			(
+				self.gui.screen.get_width() - 50 - 20,
+				130,
+				50,
+				20
+			),
+			(150,150,150),
+			self.pixel_window.clear,
+			text=bfont.render("clear",False,(0,0,0)),
+			hover=(170,170,170)
+			)
+		buttons.append(cbtn)
 		while self.looping:
 			self.parent.gui.check_events(key_bindings=False)
-			self.screen.fill((255,255,255))
-			block = self.find_mouse_over_block()
-			for y in range(len(self.matrix_cache)):
-				for x in range(len(self.matrix_cache[y])):
-					if self.weapon_cache[y][x] == None:
-						self.matrix_cache[y][x] = self.background
-					else:
-						self.matrix_cache[y][x] == self.weapon_cache[y][x]
-			if block != None:
-				self.set_pixel((block[0],block[1]),(self.background[0] + 20, self.background[1] + 20, self.background[2] + 20))
-			
-			self.update_surf()
-			self.screen.blit(self.surf,(self.matrixX,self.matrixY))
+			keys = pygame.key.get_pressed()
+			if keys[pygame.K_e]:
+				self.min_window.show()
+			else:
+				self.min_window.hide()
+			self.gui.screen.fill((255,255,255))
+			self.pixel_window.refresh()
+			self.pixel_window.try_hover()
+			self.pixel_window.check_click()
+			self.pixel_window.update()
+			self.pixel_window.draw(self.gui.screen)
+			self.min_window.update()
+			self.min_window.draw(self.gui.screen)
+			# draw buttons
+			for b in buttons:
+				b.try_hover()
+				b.draw()
+				b.check_click()
 			pygame.display.update()
 		pygame.mouse.set_visible(False)
 		# lastly pause again, but with the gui. This gives the effect that it was always paused and you are simply returning to it
 		self.parent.pause()
+	def save_weapon(self):
+		# firstly, grab array from from weapon cache
+		arr = self.pixel_window.weapon_cache
 class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
 		"""If in developer mode, logs a message to the launcher window that created that initialized this class."""
@@ -435,6 +439,7 @@ class game_kernel(object):
 			# really just a transparent grey image. Generated by PIL
 			greyout = pygame.image.fromstring(PIL.Image.new("RGBA",(swidth,sheight),(50,50,50 ,128)).tobytes(),(sheight,swidth),"RGBA")
 			ptext = self.fonts.pause_f.render("Paused",False,(255,255,255))
+			etext = self.fonts.pause_f.render("resume",False,(255,255,255))
 			px = swidth/2 - ptext.get_rect()[2]/2
 			py = 40
 			buttons = []
@@ -450,7 +455,7 @@ class game_kernel(object):
 				),
 				(128,128,128),
 				self.unpause,
-				text=self.fonts.pause_f.render("resume",False,(255,255,255)),
+				text=etext,
 				hover=(200,200,200)
 				)
 			buttons.append(ebtn)
@@ -468,6 +473,20 @@ class game_kernel(object):
 				hover=(200,200,200)
 				)
 			buttons.append(qbtn)
+			cbtn = guiObjects.button(
+				self.gui.screen,
+				(
+					int(swidth/2 - 400/2),
+					int(py + ptext.get_rect()[3] + etext.get_rect()[3] +  cmnheight * 3 - 5),
+					400,
+					cmnheight
+				),
+				(128,128,128),
+				self.start_crafter,
+				text=self.fonts.pause_f.render("Start Crafter",False,(255,255,255)),
+				hover=(200,200,200)
+				)
+			buttons.append(cbtn)
 			# the background that will be continuesly rendered
 			background = pygame.Surface((swidth,sheight))
 			# draw the last screen, before the game was paused. This gives the effect of a "pause"
@@ -504,6 +523,9 @@ class game_kernel(object):
 				pygame.display.update()
 	def unpause(self):
 		self.paused = False
+	def start_crafter(self):
+		crafter = sword_crafter(self,(16,16))
+		crafter.run()
 	def toggle_pause(self):
 		if not self.paused:
 			self.pause()
@@ -689,10 +711,6 @@ class game_kernel(object):
 				# finally, update
 				pygame.display.update()
 				self.gui.check_events()
-				#self.stop = True
-			if keys[pygame.K_e]:
-				crafter = sword_crafter(self,(16,16))
-				crafter.run()
 def main(parent):
 	if parent == None:
 		print("Program cannot run without a launcher.")
