@@ -1,5 +1,70 @@
 import pygame,numpy, templates
 pygame.init()
+class confirm(object):
+	def __init__(self,surf,rect,msg,onclick):
+		self.onclick = onclick
+		self.surface = surf
+		self.surf = pygame.Surface((rect[2],rect[3]))
+		self.surf.fill((100,100,100))
+		self.pos = (rect[0],rect[1])
+		self.onclick = onclick
+		tx = (self.surf.get_width() - msg.get_rect()[2]) / 2
+		ty = surf.get_width() * 0.05
+		f = pygame.font.SysFont('Arial',12)
+		self.surf.blit(msg,(tx,ty))
+		b1t = f.render("Ok",False,(0,0,0))
+		self.b1x = int(self.surf.get_width() / 2 - b1t.get_rect()[2] / 2 - 20)
+		self.b1y = int(self.surf.get_height() * 0.80)
+		self.b1 = button(
+			self.surf,
+			(
+				self.b1x,
+				self.b1y,
+				b1t.get_rect()[2] + 20,
+				b1t.get_rect()[3] + 10
+			),
+			(128,128,128),
+			self.clickT,
+			text=b1t,
+			hover=(140,140,140)
+			)
+		b2t = f.render("Cancel",False,(0,0,0))
+		self.b2x = int(self.surf.get_width() / 2 + b2t.get_rect()[2] / 2 + 20)
+		self.b2y = int(self.surf.get_height() * 0.80)
+		self.b2 = button(
+			self.surf,
+			(
+				self.b2x,
+				self.b2y,
+				b2t.get_rect()[2] + 20,
+				b2t.get_rect()[3] + 10
+			),
+			(128,128,128),
+			self.clickF,
+			text=b2t,
+			hover=(140,140,140)
+			)
+	def clickT(self):
+		self.onclick(True)
+	def clickF(self):
+		self.onclick(False)
+	def check_click(self):
+		nbx = pygame.mouse.get_pos()[0] - 50## - self.b1x - self.pos[0]
+		nby = pygame.mouse.get_pos()[1] - 200## - self.b1y - self.pos[1]
+		nb2x = pygame.mouse.get_pos()[0] - 50## - self.b2x - self.pos[0]
+		nb2y = pygame.mouse.get_pos()[1] - 200## - self.b2y - self.pos[1]
+		self.b1.check_click(mouse_pos=(nbx,nby))
+		self.b2.check_click(mouse_pos=(nb2x,nb2y))
+	def draw(self):
+		self.surface.blit(self.surf,self.pos)
+		nbx = pygame.mouse.get_pos()[0] - 50## - self.b1x - self.pos[0]
+		nby = pygame.mouse.get_pos()[1] - 200## - self.b1y - self.pos[1]
+		nb2x = pygame.mouse.get_pos()[0] - 50## - self.b2x - self.pos[0]
+		nb2y = pygame.mouse.get_pos()[1] - 200## - self.b2y - self.pos[1]
+		self.b1.try_hover(mouse_pos=(nbx,nby))
+		self.b2.try_hover(mouse_pos=(nb2x,nb2y))
+		self.b1.draw()
+		self.b2.draw()
 class button(object):
 	def __init__(self,surf,rect,color,onclick,text=None,hover=None,text_align="center",padding=0,right_text=None):
 		self.rect = rect
@@ -21,26 +86,34 @@ class button(object):
 			self.rty = self.rect[1] + self.rect[3] - (self.rect[3] / 2) - self.right_text.get_rect()[3] / 2
 		self.hover = hover
 	def draw(self):
-		pygame.draw.rect(self.surf,self.color,self.rect)
+		try:
+			pygame.draw.rect(self.surf,self.color,self.rect)
+		except:
+			print("GOT ERROR FOR COLOR:")
+			print(self.color)
 		if self.text != None:
 			self.surf.blit(self.text,(self.tx,self.ty))
 		if self.right_text != None:
 			self.surf.blit(self.right_text,(self.rtx,self.rty))
-	def try_hover(self):
-		if self.get_hover():
+	def try_hover(self,mouse_pos=None):
+		if self.get_hover(mouse_pos=mouse_pos):
 			if self.hover != None:
 				self.color = self.hover
 		else:
 			self.color = self.normColor
-	def get_hover(self):
-		mx,my = pygame.mouse.get_pos()
+	def get_hover(self,mouse_pos=None):
+		if mouse_pos == None:
+			mx,my = pygame.mouse.get_pos()
+		else:
+			mx,my = mouse_pos
+		##print(self.text,mx in range(self.rect[0],self.rect[0] + self.rect[2] + 1) and my in range(self.rect[1],self.rect[3] + self.rect[1] + 1))
 		if mx in range(self.rect[0],self.rect[0] + self.rect[2] + 1) and my in range(self.rect[1],self.rect[3] + self.rect[1] + 1):
 			return True
 		else:
 			return False
 		pass
-	def check_click(self):
-		if self.get_hover():
+	def check_click(self,mouse_pos=None):
+		if self.get_hover(mouse_pos=mouse_pos):
 			if pygame.mouse.get_pressed()[0]:
 				self.onclick()
 class mineral_window(object):

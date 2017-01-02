@@ -6,6 +6,7 @@ class font_collection(object):
 		"""This is really just an empty skeleton so I can organize my code."""
 		self.title_mc = pygame.font.Font("fonts/Minecrafter_3.ttf",24)
 		self.pause_f = pygame.font.Font("fonts/PressStart2P.ttf",24)
+		self.courb = pygame.font.Font("fonts/courbd.ttf",16)
 	def add(self,name,filename,size):
 		"""Honestly, I don't even know if this method is neccesary."""
 		self.__setattr__(name,pygame.font.Font(filename,size))
@@ -182,9 +183,15 @@ class new_player(object):
 				else:
 					self.minerals[obj.name] = item_manager.mineral_counter(obj)
 					self.minerals[obj.name].add(quantity)
-	def give_all(self):
+		def take(self,item_type,obj,quantity):
+			if item_type == 0:
+				if self.minerals.__contains__(obj.name):
+					self.minerals[obj.name].remove(quantity)
+				else:
+					print("ERROR: ITEM WAS ATTEMPTED TO BETAKEN FROM USER BUT USER HAS NONE OF THAT ITEM")
+	def give_all(self,quantity=999):
 		for m in self.parent.item_manager.minerals:
-			self.possesions.give(0,self.parent.item_manager.minerals[m],999)
+			self.possesions.give(0,self.parent.item_manager.minerals[m],quantity)
 class gui(object):
 	def __init__(self,parent):
 		"""Defines the function and boots at the same time. (Logs stuff and loads stuff)"""
@@ -317,12 +324,14 @@ class item_manager(object):
 			self.count = 0
 		def add(self,quantity):
 			self.count += quantity
+		def remove(self,quantity):
+			self.count -= quantity
 class sword_crafter(object):
 	def __init__(self,parent,dimensions):
 		self.parent = parent
 		self.gui = parent.gui
 		##self.parent.player.possesions.give(0,self.parent.item_manager.minerals["Calderite"],1)
-		self.parent.player.give_all()
+		##self.parent.player.give_all()
 		self.figurative_minerals = self.parent.player.possesions.minerals
 		self.pixel_window = guiObjects.pixel_editor(self,self.gui.screen,dimensions)
 		self.min_window = guiObjects.mineral_window(self,self.gui,list(self.figurative_minerals.values()))
@@ -330,6 +339,26 @@ class sword_crafter(object):
 	def check_mouse(self,event):
 		self.min_window.try_scroll(event)
 		self.pixel_window.check_click()
+	def try_save(self,status):
+		if status:
+			self.save_weapon()
+		else:
+			pass
+		# destroy object once it has been clicked
+		self.confirms.pop("build_confirm")
+	def show_conf(self):
+		confirm = guiObjects.confirm(
+			self.gui.screen,
+			(
+				int((self.gui.screen.get_width() - 500) / 2),
+				int((self.gui.screen.get_width() - 200) / 2),
+				500,
+				200
+			),
+			self.parent.fonts.courb.render("Are you sure? You will loose:",False,(0,0,0)),
+			self.try_save
+			)
+		self.confirms["build_confirm"] = confirm
 	def run(self):
 		# first pause the game PROGRAM so everything stops
 		self.parent.pause(gui=False) 
@@ -346,7 +375,7 @@ class sword_crafter(object):
 				20
 			),
 			(150,150,150),
-			self.save_weapon,
+			self.show_conf,
 			text=bfont.render("save",False,(0,0,0)),
 			hover=(170,170,170)
 			)
@@ -366,6 +395,7 @@ class sword_crafter(object):
 			)
 		buttons.append(cbtn)
 		self.gui.add_event((pygame.MOUSEBUTTONDOWN,self.check_mouse))
+		self.confirms = {}
 		while self.looping:
 			self.parent.gui.check_events(key_bindings=False)
 			keys = pygame.key.get_pressed()
@@ -373,19 +403,32 @@ class sword_crafter(object):
 				self.min_window.show()
 			else:
 				self.min_window.hide()
+			# refresh minerals according to the player's possesions
 			self.min_window.minerals = list(self.figurative_minerals.values())
+			# clear screen
 			self.gui.screen.fill((255,255,255))
+			# refresh the pixel window
 			self.pixel_window.refresh()
+			# if the mouse is over one of the pixel/squares in the pixel window, make it lighter
 			self.pixel_window.try_hover()
+			# update the pixel window before rendering
 			self.pixel_window.update()
+			# render pixel window
 			self.pixel_window.draw(self.gui.screen)
+			# update mineral window before attempting to render it
 			self.min_window.update()
+			# attempt to draw the mineral window to the screen
 			self.min_window.draw(self.gui.screen)
 			# draw buttons
 			for b in buttons:
 				b.try_hover()
 				b.draw()
 				b.check_click()
+			# render confirms
+			ck = list(self.confirms.keys())
+			for c in ck:
+				self.confirms[c].draw()
+				self.confirms[c].check_click()
 			pygame.display.update()
 		pygame.mouse.set_visible(False)
 		# lastly pause again, but with the gui. This gives the effect that it was always paused and you are simply returning to it
@@ -409,6 +452,30 @@ class sword_crafter(object):
 		w.close()
 		"""
 		arr = []
+		for y in range(len(self.pixel_window.weapon_cache)):
+			arr.append([])
+			for x in range(len(self.pixel_window.weapon_cache[y])):
+				if self.pixel_window.weapon_cache[y][x] != None:
+					clr = self.pixel_window.weapon_cache[y][x].color
+					arr[y].append(
+						(
+							clr[0],
+							clr[1],
+							clr[2],
+							0
+						)
+						)
+					self.parent.player.possesions.take(0,self.pixel_window.weapon_cache[y][x],1)
+				else:
+					arr[y].append(
+						(
+							0,
+							0,
+							0,
+							255
+						)
+						)	
+		self.looping = False
 class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
 		"""If in developer mode, logs a message to the launcher window that created that initialized this class."""
