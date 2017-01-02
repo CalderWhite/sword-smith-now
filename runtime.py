@@ -612,8 +612,11 @@ class game_kernel(object):
 	def unpause(self):
 		self.paused = False
 	def start_crafter(self):
-		crafter = sword_crafter(self,(24,24))
-		crafter.run()
+		if not len(self.player.possesions.minerals) > 0:
+			print("Oops! You don't have any minerals. Try finding some, then come back.")
+		else
+			crafter = sword_crafter(self,(24,24))
+			crafter.run()
 	def toggle_pause(self):
 		if not self.paused:
 			self.pause()
