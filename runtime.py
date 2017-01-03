@@ -1,4 +1,4 @@
-import pygame, time, random, sys, chunkObject, json, guiObjects
+import pygame, time, random, sys, chunkObject, json, guiObjects, os
 import PIL.Image, PIL.ImageFilter
 from GMK.items import mineral_constructor
 class font_collection(object):
@@ -200,14 +200,15 @@ class gui(object):
 		pygame.init()
 		# whatever you do, you MUST make the height and width of the display divisable by two
 		self.screen = pygame.display.set_mode( (600,600))
-		pygame.display.set_caption(parent.info["name"])
+		pygame.display.set_caption(parent.parent.game_name)
 		parent.log("Loading images....",user="GUI")
 		self.icon = pygame.image.load("images/icon.png")
 		self.icon = pygame.transform.scale(self.icon, (32,32) )
 		parent.log("Setting window icon...",user="GUI")
 		pygame.display.set_icon(self.icon)
 		parent.log("Loading and setting cursor...",user="GUI")
-		self.cursor = pygame.image.load("images/cursor1.png").convert_alpha()
+		self.load_cursors()
+		self.set_cursor("regular")
 		pygame.mouse.set_visible(False);
 		parent.log("Loading chunks...",user="GUI")
 		self.load_chunks()
@@ -227,6 +228,14 @@ class gui(object):
 			for ce in self.custom_events:
 				if event.type == ce:
 					self.custom_events[ce](event)
+	def load_cursors(self):
+		self.cursors = {}
+		d = os.listdir("images/cursors")
+		for c in d:
+			if c != "Thumbs.db":
+				self.cursors[c.split(".")[0]] = pygame.image.load("images/cursors/" + c).convert_alpha()
+	def set_cursor(self,name):
+		self.cursor = self.cursors[name]
 	def add_event(self,t):
 		self.custom_events[t[0]] = t[1]
 	def load_chunks(self):
@@ -336,8 +345,11 @@ class sword_crafter(object):
 		self.pixel_window = guiObjects.pixel_editor(self,self.gui.screen,dimensions)
 		self.min_window = guiObjects.mineral_window(self,self.gui,list(self.figurative_minerals.values()))
 		self.min_window.hide()
+		self.load_window = guiObjects.weapon_load_window(self,self.gui.screen)
+		self.load_window.hide()
 	def check_mouse(self,event):
 		self.min_window.try_scroll(event)
+		self.load_window.check_click()
 		self.pixel_window.check_click()
 	def try_save(self,status):
 		if status:
@@ -346,6 +358,8 @@ class sword_crafter(object):
 			pass
 		# destroy object once it has been clicked
 		self.confirms.pop("build_confirm")
+	def load_popup(self):
+		self.load_window.show()
 	def show_conf(self):
 		confirm = guiObjects.confirm(
 			self.gui.screen,
@@ -359,13 +373,29 @@ class sword_crafter(object):
 			self.try_save
 			)
 		self.confirms["build_confirm"] = confirm
+	def exit(self):
+		self.looping = False
+		pass
 	def run(self):
 		# first pause the game PROGRAM so everything stops
 		self.parent.pause(gui=False) 
 		self.looping = True
-		pygame.mouse.set_visible(True)
 		buttons = []
 		bfont = pygame.font.SysFont("Arial",14)
+		lbtn = guiObjects.button(
+			self.gui.screen,
+			(
+				self.gui.screen.get_width() - 50 - 20,
+				70,
+				50,
+				20
+			),
+			(150,150,150),
+			self.load_popup,
+			text=bfont.render("Load",False,(0,0,0)),
+			hover=(170,170,170)
+			)
+		buttons.append(lbtn)
 		sbtn = guiObjects.button(
 			self.gui.screen,
 			(
@@ -376,7 +406,7 @@ class sword_crafter(object):
 			),
 			(150,150,150),
 			self.show_conf,
-			text=bfont.render("save",False,(0,0,0)),
+			text=bfont.render("Build",False,(0,0,0)),
 			hover=(170,170,170)
 			)
 		buttons.append(sbtn)
@@ -390,14 +420,30 @@ class sword_crafter(object):
 			),
 			(150,150,150),
 			self.pixel_window.clear,
-			text=bfont.render("clear",False,(0,0,0)),
+			text=bfont.render("Clear",False,(0,0,0)),
 			hover=(170,170,170)
 			)
 		buttons.append(cbtn)
+		clbtn = guiObjects.button(
+			self.gui.screen,
+			(
+				self.gui.screen.get_width() - 50 - 20,
+				160,
+				50,
+				20
+			),
+			(150,150,150),
+			self.exit,
+			text=bfont.render("Exit",False,(0,0,0)),
+			hover=(170,170,170)
+			)
+		buttons.append(clbtn)
 		self.gui.add_event((pygame.MOUSEBUTTONDOWN,self.check_mouse))
 		self.confirms = {}
+		self.gui.set_cursor("editor")
 		while self.looping:
 			self.parent.gui.check_events(key_bindings=False)
+			mx,my = pygame.mouse.get_pos()
 			keys = pygame.key.get_pressed()
 			if keys[pygame.K_e]:
 				self.min_window.show()
@@ -419,6 +465,10 @@ class sword_crafter(object):
 			self.min_window.update()
 			# attempt to draw the mineral window to the screen
 			self.min_window.draw(self.gui.screen)
+			# update before attempting to draw
+			self.load_window.update()
+			# attempt to draw it
+			self.load_window.draw()
 			# draw buttons
 			for b in buttons:
 				b.try_hover()
@@ -429,8 +479,12 @@ class sword_crafter(object):
 			for c in ck:
 				self.confirms[c].draw()
 				self.confirms[c].check_click()
+			# render mouse last
+			x = mx - (self.gui.cursor.get_height() / 2)
+			y = my - (self.gui.cursor.get_width() / 2)
+			self.gui.screen.blit(self.gui.cursor,(x,y))
 			pygame.display.update()
-		pygame.mouse.set_visible(False)
+		self.gui.set_cursor("regular")
 		# lastly pause again, but with the gui. This gives the effect that it was always paused and you are simply returning to it
 		self.parent.pause()
 	def save_weapon(self):
@@ -451,6 +505,7 @@ class sword_crafter(object):
 			)
 		w.close()
 		"""
+		# operating on the array
 		arr = []
 		for y in range(len(self.pixel_window.weapon_cache)):
 			arr.append([])
@@ -462,9 +517,10 @@ class sword_crafter(object):
 							clr[0],
 							clr[1],
 							clr[2],
-							0
+							255
 						)
 						)
+					# take mineral from the user
 					self.parent.player.possesions.take(0,self.pixel_window.weapon_cache[y][x],1)
 				else:
 					arr[y].append(
@@ -472,9 +528,15 @@ class sword_crafter(object):
 							0,
 							0,
 							0,
-							255
+							0
 						)
 						)	
+		# now the actual saving
+		img = PIL.Image.new("RGBA",(len(arr),len(arr[0])),(0,0,0,255))
+		for y in range(len(arr)):
+			for x in range(len(arr[y])):
+				img.putpixel((x,y),arr[y][x])
+		img.save("user/weapons/weapon_1.png")
 		self.looping = False
 class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
@@ -482,7 +544,7 @@ class game_kernel(object):
 		if self.mode == 1:
 			# will only log stuff if in developer mode
 			self.dev.log(msg,level=level,user=user)
-	def __init__(self,info,dev_window=None,mode=0):
+	def __init__(self,parent,dev_window=None,mode=0):
 		"""Loads a bit of stuff and logs, however it does not run any boot scripts. That method can be run by self.run_start()."""
 		self.mode = mode
 		self.paused = False
@@ -490,7 +552,7 @@ class game_kernel(object):
 		if dev_window != None:
 			self.mode = 1
 			self.dev = dev_window
-		self.info = info
+		self.parent = parent
 		self.log("Building gui...")
 		self.gui = gui(self)
 		self.page = None
@@ -614,7 +676,7 @@ class game_kernel(object):
 	def start_crafter(self):
 		if not len(self.player.possesions.minerals) > 0:
 			print("Oops! You don't have any minerals. Try finding some, then come back.")
-		else
+		else:
 			crafter = sword_crafter(self,(24,24))
 			crafter.run()
 	def toggle_pause(self):
@@ -809,21 +871,21 @@ def main(parent):
 		if parent.mode == 0:
 			pass
 		elif parent.mode == 1:
-			parent.log("Beginning runtime boot.",user="GAME")
-			g = game_kernel(parent.info,dev_window=parent)
-			g.run()
-			"""
-			try:
-				g = game_kernel(parent.info,dev_window=parent)
-				g.run_start()
-			except:
-				e = sys.exc_info()
-				parent.log("Exception:",level="CRITICAL",user="GAME")
-				parent.log(str(e[1]),level="CRITICAL",user="GAME")
-				parent.log("File: [%s]" % (str(e[2].tb_frame.f_code.co_filename)),level="CRITICAL",user="GAME")
-				parent.log("Line number: [" + str(e[2].tb_lineno) + "]",level="CRITICAL",user="GAME")
-				pygame.quit()
-			"""
+			if parent.run_with_errors:
+				try:
+					g = game_kernel(parent,dev_window=parent)
+					g.run_start()
+				except:
+					e = sys.exc_info()
+					parent.log("Exception:",level="CRITICAL",user="GAME")
+					parent.log(str(e[1]),level="CRITICAL",user="GAME")
+					parent.log("File: [%s]" % (str(e[2].tb_frame.f_code.co_filename)),level="CRITICAL",user="GAME")
+					parent.log("Line number: [" + str(e[2].tb_lineno) + "]",level="CRITICAL",user="GAME")
+					pygame.quit()
+			else:
+				parent.log("Beginning runtime boot.",user="GAME")
+				g = game_kernel(parent,dev_window=parent)
+				g.run()
 			pygame.quit()
 			print("Done")
 		elif parent.mode == 2:

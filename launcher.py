@@ -155,7 +155,10 @@ class launcher(object):
 			self.log("Couldn't find \"paths\" in game info file (%s)" % self.game_info_name,level="ERROR")
 			raise Exception("Couldn't find \"paths\" in game info file (%s)" % self.game_info_name)
 		else:
-			self.game_name = info["name"]
+			try:
+				self.game_name = info["name"] + " " + info["version"]
+			except:
+				self.game_name = info["name"] + " Alpha <0.3.0"
 			if self.initial_gui:
 				self.gui.tk.title(self.game_name + " Launcher")
 			self.log("Loading requirements list.")
@@ -226,17 +229,20 @@ def main():
 		log = "Sword_Smith_Now_logs.log"
 		info = "game_info.json"
 		display = True
+		r = True
 		if dash.__contains__("-t") or ddash.__contains__("--terminal-only"):
 			display = False
 		if dash.__contains__("-d") or ddash.__contains__("--dev-mode"):
 			m = 1
 		if dash.__contains__("-c") or ddash.__contains__("--cheats"):
 			m = 2
+		if ddash.__contains__("-r") or ddash.__contains__("--run-without-errors"):
+			r=False
 		l = launcher(m,log,info,initial_gui=display)
+		l.run_with_errors = r
 		l.load()
 	
 if __name__ == '__main__':
 	##launch = launcher(1,"Sword_Smith_Now_logs.log","game_info.json",initial_gui=True)
 	##launch.load()
-	sys.argv.append("-d")
 	main()

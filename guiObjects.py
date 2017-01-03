@@ -26,7 +26,8 @@ class confirm(object):
 			(128,128,128),
 			self.clickT,
 			text=b1t,
-			hover=(140,140,140)
+			hover=(140,140,140),
+			outer_offset=self.pos
 			)
 		b2t = f.render("Cancel",False,(0,0,0))
 		self.b2x = int(self.surf.get_width() / 2 + b2t.get_rect()[2] / 2 + 20)
@@ -42,37 +43,31 @@ class confirm(object):
 			(128,128,128),
 			self.clickF,
 			text=b2t,
-			hover=(140,140,140)
+			hover=(140,140,140),
+			outer_offset=self.pos
 			)
 	def clickT(self):
 		self.onclick(True)
 	def clickF(self):
 		self.onclick(False)
 	def check_click(self):
-		nbx = pygame.mouse.get_pos()[0] - 50## - self.b1x - self.pos[0]
-		nby = pygame.mouse.get_pos()[1] - 200## - self.b1y - self.pos[1]
-		nb2x = pygame.mouse.get_pos()[0] - 50## - self.b2x - self.pos[0]
-		nb2y = pygame.mouse.get_pos()[1] - 200## - self.b2y - self.pos[1]
-		self.b1.check_click(mouse_pos=(nbx,nby))
-		self.b2.check_click(mouse_pos=(nb2x,nb2y))
+		self.b1.check_click()
+		self.b2.check_click()
 	def draw(self):
 		self.surface.blit(self.surf,self.pos)
-		nbx = pygame.mouse.get_pos()[0] - 50## - self.b1x - self.pos[0]
-		nby = pygame.mouse.get_pos()[1] - 200## - self.b1y - self.pos[1]
-		nb2x = pygame.mouse.get_pos()[0] - 50## - self.b2x - self.pos[0]
-		nb2y = pygame.mouse.get_pos()[1] - 200## - self.b2y - self.pos[1]
-		self.b1.try_hover(mouse_pos=(nbx,nby))
-		self.b2.try_hover(mouse_pos=(nb2x,nb2y))
+		self.b1.try_hover()
+		self.b2.try_hover()
 		self.b1.draw()
 		self.b2.draw()
 class button(object):
-	def __init__(self,surf,rect,color,onclick,text=None,hover=None,text_align="center",padding=0,right_text=None):
+	def __init__(self,surf,rect,color,onclick,text=None,hover=None,text_align="center",padding=0,right_text=None,outer_offset=None):
 		self.rect = rect
 		self.normColor = color
 		self.color = color
 		self.surf = surf
 		self.onclick = onclick
 		self.right_text = right_text
+		self.outer_offset = outer_offset
 		# center text
 		self.text = text
 		if self.text != None:
@@ -95,27 +90,79 @@ class button(object):
 			self.surf.blit(self.text,(self.tx,self.ty))
 		if self.right_text != None:
 			self.surf.blit(self.right_text,(self.rtx,self.rty))
-	def try_hover(self,mouse_pos=None):
-		if self.get_hover(mouse_pos=mouse_pos):
+	def try_hover(self):
+		if self.get_hover():
 			if self.hover != None:
 				self.color = self.hover
 		else:
 			self.color = self.normColor
-	def get_hover(self,mouse_pos=None):
-		if mouse_pos == None:
-			mx,my = pygame.mouse.get_pos()
+	def get_hover(self):
+		mx,my = pygame.mouse.get_pos()
+		if self.outer_offset == None:
+			if mx in range(self.rect[0],self.rect[0] + self.rect[2] + 1) and my in range(self.rect[1],self.rect[3] + self.rect[1] + 1):
+				return True
+			else:
+				return False
 		else:
-			mx,my = mouse_pos
-		##print(self.text,mx in range(self.rect[0],self.rect[0] + self.rect[2] + 1) and my in range(self.rect[1],self.rect[3] + self.rect[1] + 1))
-		if mx in range(self.rect[0],self.rect[0] + self.rect[2] + 1) and my in range(self.rect[1],self.rect[3] + self.rect[1] + 1):
-			return True
-		else:
-			return False
+			x1 = int(self.rect[0] + self.outer_offset[0])
+			x2 = int(self.rect[0] + self.rect[2] + self.outer_offset[0])
+			y1 = int(self.rect[1] + self.outer_offset[1])
+			y2 = int(self.rect[1] + self.rect[3] + self.outer_offset[1])
+			if mx in range(x1,x2 + 1) and my in range(y1,y2 + 1):
+				return True
+			else:
+				return False
 		pass
-	def check_click(self,mouse_pos=None):
-		if self.get_hover(mouse_pos=mouse_pos):
+	def check_click(self):
+		if self.get_hover():
 			if pygame.mouse.get_pressed()[0]:
 				self.onclick()
+class weapon_load_window(object):
+	def __init__(self,parent,surface):
+		self.parent = parent
+		self.surface = surface
+		self.surf = pygame.Surface((300,300))
+		self.xoff = (self.parent.gui.screen.get_width() - self.surf.get_width()) / 2
+		self.yoff = (self.parent.gui.screen.get_width() - self.surf.get_height()) / 2
+		self.display = True
+		self.buttons = []
+		bfont = pygame.font.SysFont("Arial",14)
+		b1t = bfont.render("Load",False,(0,0,0))
+		b1 = button(
+			self.surf,
+			(
+				(self.surf.get_width() - (b1t.get_rect()[2] + 6)) / 2,
+				self.surf.get_height() - (b1t.get_rect()[3] + 6) - 10,
+				b1t.get_rect()[2] + 6,
+				b1t.get_rect()[3] + 6,
+			),
+			(200,200,200),
+			self.select_current,
+			text=b1t,
+			hover=(230,230,230),
+			outer_offset=(self.xoff,self.yoff)
+			)
+		self.buttons.append(b1)
+	def select_current(self):
+		pass
+	def show(self):
+		self.display = True
+	def hide(self):
+		self.display = False
+	def update(self):
+		for b in self.buttons:
+			b.try_hover()
+	def check_click(self):
+		for b in self.buttons:
+			b.check_click()
+	def draw(self):
+		if self.display:
+			# clear surf
+			self.surf.fill((250,250,250))
+			# render buttons
+			for b in self.buttons:
+				b.draw()
+			self.surface.blit(self.surf,(self.xoff,self.yoff))
 class mineral_window(object):
 	def __init__(self,parent,gui,mineral_list):
 		self.gui = gui
@@ -176,6 +223,7 @@ class mineral_window(object):
 					right_text=cfont.render(str(m.count),False,(0,0,0))
 					))
 	def p(self):
+		# this is a pass function, since all the list items are actually buttons. (To cut down code size)
 		pass
 	def show(self):
 		self.display = True
