@@ -1,4 +1,4 @@
-# sword-smith-now
+# Sword Smith Now
 The sky's the limit, when you can mold anything to your desire. Started December 8th, 2016
 
 ## Minimum requirements
