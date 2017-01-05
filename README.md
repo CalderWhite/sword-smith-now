@@ -1,5 +1,8 @@
 # Sword Smith Now
-The sky's the limit, when you can mold anything to your desire. Started December 8th, 2016
+The sky's the limit, when you can mold anything to your desire. Started December 8th, 2016    
+## sdk
+There is, an existing ssn-sdk (Sword Smith Now Software Development Kit)    
+However, there isn't a lot of available information yet. ![link](https://github.com/CalderWhite/ssn-sdk)
 
 ## Minimum requirements
 So far, here's what I've come up with.    
