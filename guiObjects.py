@@ -1,11 +1,12 @@
-import pygame,numpy, templates
+import pygame,numpy, templates, os
 pygame.init()
 class confirm(object):
-	def __init__(self,surf,rect,msg,onclick):
+	def __init__(self,parent,surf,rect,msg,onclick):
 		self.onclick = onclick
 		self.surface = surf
+		self.parent = parent
 		self.surf = pygame.Surface((rect[2],rect[3]))
-		self.surf.fill((100,100,100))
+		self.surf.fill((200,200,200))
 		self.pos = (rect[0],rect[1])
 		self.onclick = onclick
 		tx = (self.surf.get_width() - msg.get_rect()[2]) / 2
@@ -13,7 +14,7 @@ class confirm(object):
 		f = pygame.font.SysFont('Arial',12)
 		self.surf.blit(msg,(tx,ty))
 		b1t = f.render("Ok",False,(0,0,0))
-		self.b1x = int(self.surf.get_width() / 2 - b1t.get_rect()[2] / 2 - 20)
+		self.b1x = int( (self.surf.get_width() - b1t.get_rect()[2]) / 2 - 20)
 		self.b1y = int(self.surf.get_height() * 0.80)
 		self.b1 = button(
 			self.surf,
@@ -47,20 +48,29 @@ class confirm(object):
 			outer_offset=self.pos
 			)
 	def clickT(self):
+		self.parent.current_page = "pixel_editor"
 		self.onclick(True)
 	def clickF(self):
+		self.parent.current_page = "pixel_editor"
 		self.onclick(False)
 	def check_click(self):
 		self.b1.check_click()
 		self.b2.check_click()
-	def draw(self):
-		self.surface.blit(self.surf,self.pos)
+	def update(self):
 		self.b1.try_hover()
 		self.b2.try_hover()
 		self.b1.draw()
 		self.b2.draw()
+	def draw(self):
+		pygame.draw.rect(
+			self.surf,
+			(0,0,0),
+			(0,0,self.surf.get_width(),self.surf.get_height()),
+			1
+			)
+		self.surface.blit(self.surf,self.pos)
 class button(object):
-	def __init__(self,surf,rect,color,onclick,text=None,hover=None,text_align="center",padding=0,right_text=None,outer_offset=None):
+	def __init__(self,surf,rect,color,onclick,text=None,hover=None,text_align="center",padding=0,right_text=None,outer_offset=None,text_vertical=None):
 		self.rect = rect
 		self.normColor = color
 		self.color = color
@@ -76,6 +86,8 @@ class button(object):
 				self.tx = rect[0] + (rect[2] - text.get_rect()[2]) / 2
 			elif text_align == "left":
 				self.tx = rect[0] + padding
+			if text_vertical != None:
+				self.ty = rect[1] + rect[3] - text.get_rect()[3] - 10
 		if self.right_text != None:
 			self.rtx = self.rect[0] + self.rect[2] - self.right_text.get_rect()[2] - padding
 			self.rty = self.rect[1] + self.rect[3] - (self.rect[3] / 2) - self.right_text.get_rect()[3] / 2
@@ -121,47 +133,150 @@ class weapon_load_window(object):
 	def __init__(self,parent,surface):
 		self.parent = parent
 		self.surface = surface
-		self.surf = pygame.Surface((300,300))
+		self.surf = pygame.Surface((500,500))
 		self.xoff = (self.parent.gui.screen.get_width() - self.surf.get_width()) / 2
 		self.yoff = (self.parent.gui.screen.get_width() - self.surf.get_height()) / 2
 		self.display = True
 		self.buttons = []
+		self.old_color = [None]
 		bfont = pygame.font.SysFont("Arial",14)
 		b1t = bfont.render("Load",False,(0,0,0))
 		b1 = button(
 			self.surf,
 			(
-				(self.surf.get_width() - (b1t.get_rect()[2] + 6)) / 2,
+				(self.surf.get_width() - (b1t.get_rect()[2] + 6)) / 2 - b1t.get_rect()[2] - 10,
 				self.surf.get_height() - (b1t.get_rect()[3] + 6) - 10,
 				b1t.get_rect()[2] + 6,
 				b1t.get_rect()[3] + 6,
 			),
 			(200,200,200),
-			self.select_current,
+			self.parent.load_select,
 			text=b1t,
 			hover=(230,230,230),
 			outer_offset=(self.xoff,self.yoff)
 			)
 		self.buttons.append(b1)
+		b2t = bfont.render("Cancel",False,(0,0,0))
+		b2t = button(
+			self.surf,
+			(
+				(self.surf.get_width() - (b2t.get_rect()[2] + 6)) / 2 + b2t.get_rect()[2] + 10,
+				self.surf.get_height() - (b2t.get_rect()[3] + 6) - 10,
+				b2t.get_rect()[2] + 6,
+				b2t.get_rect()[3] + 6,
+			),
+			(200,200,200),
+			self.hide,
+			text=b2t,
+			hover=(230,230,230),
+			outer_offset=(self.xoff,self.yoff)
+			)
+		self.buttons.append(b2t)
+		self.items = self.build_weapon_index()
+		for i in self.selection:
+			self.selection[i].draw()
 	def select_current(self):
-		pass
+		c = None
+		for i in self.selection:
+			if self.selection[i].get_hover():
+				if self.old_color[0] != None:
+					self.old_color[1].normColor = self.old_color[0]
+					self.old_color[1].hover = self.old_color[2]
+				c = i
+				self.old_color = [self.selection[i].normColor,self.selection[i],self.selection[i].hover]
+				self.selection[i].normColor = (self.selection[i].hover[0] + 10,self.selection[i].hover[1] + 10,self.selection[i].hover[2] + 10)
+				self.selection[i].hover = (self.selection[i].hover[0] + 10,self.selection[i].hover[1] + 10,self.selection[i].hover[2] + 10)
+		self.parent.current = c
 	def show(self):
+		self.parent.current_page = "popup"
 		self.display = True
 	def hide(self):
 		self.display = False
+		self.parent.current_page = "pixel_editor"
+	def build_weapon_index(self):
+		l = os.listdir("./user/weapons")
+		self.mini_surf = pygame.Surface((420,400))
+		self.mini_surf.fill((210,210,210))
+		row = 0
+		column = 0
+		items = []
+		buttons = {}
+		f = pygame.font.SysFont('Arial',11)##pygame.font.Font("./fonts/courbd.ttf",14)
+		for i in l:
+			if i != "Thumbs.db":
+				if len(i.split(".")[0]) > 16:
+					n = i.split(".")[0][:16] + "..."
+				else:
+					n = i.split(".")[0]
+				bx = column * 130 + (column + 1) * 10
+				by = row * 100 + (row + 1) * 30
+				bw = 120
+				bh = 100
+				b = button(
+					self.mini_surf,
+					(
+						bx,
+						by,
+						bw,
+						bh
+					),
+					(170,170,170),
+					self.select_current,
+					text=f.render(n,False,(0,0,0)),
+					hover=(180,180,180),
+					outer_offset=(self.xoff + 50,self.yoff + 50),
+					text_vertical="bottom"
+				)
+				img = pygame.image.load("user/weapons/" + i).convert_alpha()
+				img = pygame.transform.scale(img,(48,48))
+				items.append(
+					(
+						img,
+						(
+							bx + (bw - img.get_width()) / 2,
+							by + (bh - img.get_height()) / 2
+						)
+					)
+					)
+				buttons[i] = b
+				# update row and column
+				column+=1
+				if column == 3:
+					row += 1
+					column = 0
+		self.selection = buttons
+		return items
 	def update(self):
-		for b in self.buttons:
-			b.try_hover()
+		if self.display:
+			for b in self.buttons:
+				b.try_hover()
+			for b in self.selection:
+				self.selection[b].try_hover()
 	def check_click(self):
-		for b in self.buttons:
-			b.check_click()
+		if self.display:
+			for b in self.buttons:
+				b.check_click()
+			for b in self.selection:
+				self.selection[b].check_click()
 	def draw(self):
 		if self.display:
 			# clear surf
-			self.surf.fill((250,250,250))
+			self.surf.fill((240,240,240))
 			# render buttons
 			for b in self.buttons:
 				b.draw()
+			for b in self.selection:
+				self.selection[b].draw()
+			for i in self.items:
+				self.mini_surf.blit(i[0],i[1])
+			# draw border
+			pygame.draw.rect(
+				self.surf,
+				(0,0,0),
+				(0,0,self.surf.get_width(),self.surf.get_height()),
+				1
+				)
+			self.surf.blit(self.mini_surf,(50,50))
 			self.surface.blit(self.surf,(self.xoff,self.yoff))
 class mineral_window(object):
 	def __init__(self,parent,gui,mineral_list):
@@ -356,12 +471,13 @@ class pixel_editor(object):
 	def draw(self,surface):
 		surface.blit(self.surf,(self.matrixX,self.matrixY))
 	def try_place(self,pos,mineral):
-		if self.weapon_template[pos[1]][pos[0]]:
-			if self.parent.figurative_minerals[mineral.name].count > 0:
-				if self.weapon_cache[pos[1]][pos[0]] != None:
-					self.parent.figurative_minerals[self.weapon_cache[pos[1]][pos[0]].name].count+=1
-				self.parent.figurative_minerals[mineral.name].count-=1
-				self.weapon_cache[pos[1]][pos[0]] = mineral
+		if self.parent.current_page == "pixel_editor":
+			if self.weapon_template[pos[1]][pos[0]]:
+				if self.parent.figurative_minerals[mineral.name].count > 0:
+					if self.weapon_cache[pos[1]][pos[0]] != None:
+						self.parent.figurative_minerals[self.weapon_cache[pos[1]][pos[0]].name].count+=1
+					self.parent.figurative_minerals[mineral.name].count-=1
+					self.weapon_cache[pos[1]][pos[0]] = mineral
 	def clear(self):
 		for y in range(len(self.weapon_cache)):
 			for x in range(len(self.weapon_cache[y])):

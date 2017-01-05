@@ -1,4 +1,4 @@
-import pygame, time, random, sys, chunkObject, json, guiObjects, os
+import pygame, time, random, sys, chunkObject, json, guiObjects, os, numpy
 import PIL.Image, PIL.ImageFilter
 from GMK.items import mineral_constructor
 class font_collection(object):
@@ -339,6 +339,7 @@ class sword_crafter(object):
 	def __init__(self,parent,dimensions):
 		self.parent = parent
 		self.gui = parent.gui
+		self.current = None
 		##self.parent.player.possesions.give(0,self.parent.item_manager.minerals["Calderite"],1)
 		##self.parent.player.give_all()
 		self.figurative_minerals = self.parent.player.possesions.minerals
@@ -360,8 +361,29 @@ class sword_crafter(object):
 		self.confirms.pop("build_confirm")
 	def load_popup(self):
 		self.load_window.show()
+	def load_select(self):
+		if self.current != None:
+			img = numpy.array(PIL.Image.open("user/weapons/" + self.current))
+			min_arr = []
+			##print(img[0][22],img[22][0])
+			for y in img:
+				z = []
+				for x in y:
+					xobj = None
+					if list(x) != [0,0,0,0]:
+						for i in self.parent.item_manager.minerals:
+							# instead of writing "== x" I have to write "== x[0]..."
+							# since x is RGBA, and the .color property is RGB
+							if self.parent.item_manager.minerals[i].color == [x[0],x[1],x[2]]:
+								xobj = self.parent.item_manager.minerals[i]
+					z.append(xobj)
+				min_arr.append(z)
+			self.pixel_window.weapon_cache = min_arr
+			self.load_window.hide()
 	def show_conf(self):
+		self.current_page = "popup"
 		confirm = guiObjects.confirm(
+			self,
 			self.gui.screen,
 			(
 				int((self.gui.screen.get_width() - 500) / 2),
@@ -380,6 +402,7 @@ class sword_crafter(object):
 		# first pause the game PROGRAM so everything stops
 		self.parent.pause(gui=False) 
 		self.looping = True
+		self.current_page = "pixel_editor"
 		buttons = []
 		bfont = pygame.font.SysFont("Arial",14)
 		lbtn = guiObjects.button(
@@ -465,23 +488,25 @@ class sword_crafter(object):
 			self.min_window.update()
 			# attempt to draw the mineral window to the screen
 			self.min_window.draw(self.gui.screen)
-			# update before attempting to draw
-			self.load_window.update()
-			# attempt to draw it
-			self.load_window.draw()
 			# draw buttons
 			for b in buttons:
 				b.try_hover()
 				b.draw()
 				b.check_click()
+			self.load_window.check_click()
 			# render confirms
 			ck = list(self.confirms.keys())
 			for c in ck:
+				self.confirms[c].update()
 				self.confirms[c].draw()
 				self.confirms[c].check_click()
 			# render mouse last
 			x = mx - (self.gui.cursor.get_height() / 2)
 			y = my - (self.gui.cursor.get_width() / 2)
+			# update before attempting to draw
+			self.load_window.update()
+			# attempt to draw it
+			self.load_window.draw()
 			self.gui.screen.blit(self.gui.cursor,(x,y))
 			pygame.display.update()
 		self.gui.set_cursor("regular")
@@ -530,7 +555,7 @@ class sword_crafter(object):
 							0,
 							0
 						)
-						)	
+						)
 		# now the actual saving
 		img = PIL.Image.new("RGBA",(len(arr),len(arr[0])),(0,0,0,255))
 		for y in range(len(arr)):
@@ -705,9 +730,6 @@ class game_kernel(object):
 		if self.__dict__.__contains__("stop"):
 			self.stop == True
 		pygame.quit()
-	def game_loop(self):
-		"""Unused at this point. Really self.run_realm_explorer() is the game loop."""
-		pass
 	def init_credits(self):
 		self.page = "init_credits"
 		# text we're going to blit

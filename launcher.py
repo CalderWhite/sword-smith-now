@@ -38,11 +38,12 @@ class launcher(object):
 			# 2 : cheats mode; nothing yet, going to be a version of dev mode to test bosses with hacks.
 			self.mode = mode
 			##print("Running log configuration.\nAll other logging/debugging messages will be sent to the specified log file once configured.")
+			self.game_info_name = "ssn/" + info_file
+			self.get_game_file()
 			# clear the log file
 			with open(log_file,'w') as f:
 				f.truncate()
 			logging.basicConfig(filename=log_file,level="INFO")
-			self.game_info_name = info_file
 			self.game_name = "GAME NAME IS UNKNOWN"
 			self.initial_gui = initial_gui
 			self.allow_run = None
@@ -57,8 +58,8 @@ class launcher(object):
 			# reload runtime so that all code changes are implimented
 			import runtime
 			runtime = imp.reload(runtime)
-			r = open(self.game_info_name,'r').read()
-			self.info = json.loads(r)
+			##r = open(self.game_info_name,'r').read()
+			##self.info = json.loads(r)
 			runtime.main(self)
 			self.log("Game has stopped.")
 			self.log("Collecting the garbage...")
@@ -130,6 +131,17 @@ class launcher(object):
 	def waiting_loop(self):
 		"""Just wait for some user input"""
 		self.gui.tk.mainloop()
+	def get_game_file(self):
+		##self.log("Loading the game info file [%s]..." % (self.game_info_name))
+		r = open(self.game_info_name,'r').read()
+		info = json.loads(r)
+		try:
+			x = info["paths"]["."]
+		except:
+			raise Exception("Game info [paths][.] is missing.")
+		else:
+			self.info = info
+			os.chdir(info["paths"]["."])
 	def log(self,msg,level="INFO",user="LAUNCHER"):
 		logging.log(logging.__getattribute__(level),msg)
 		if self.initial_gui:
@@ -146,8 +158,7 @@ class launcher(object):
 		pass
 	def module_checklist(self):
 		self.log("Loading the game info file [%s]..." % (self.game_info_name))
-		r = open(self.game_info_name,'r').read()
-		info = json.loads(r)
+		info = self.info
 		try:
 			x = info["paths"]
 			x = info["name"]
@@ -236,7 +247,7 @@ def main():
 			m = 1
 		if dash.__contains__("-c") or ddash.__contains__("--cheats"):
 			m = 2
-		if ddash.__contains__("-r") or ddash.__contains__("--run-without-errors"):
+		if dash.__contains__("-r") or ddash.__contains__("--run-without-errors"):
 			r=False
 		l = launcher(m,log,info,initial_gui=display)
 		l.run_with_errors = r
