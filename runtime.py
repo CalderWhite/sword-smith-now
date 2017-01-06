@@ -7,6 +7,7 @@ class font_collection(object):
 		self.title_mc = pygame.font.Font("fonts/Minecrafter_3.ttf",24)
 		self.pause_f = pygame.font.Font("fonts/PressStart2P.ttf",24)
 		self.courb = pygame.font.Font("fonts/courbd.ttf",16)
+		self.arial = pygame.font.SysFont("Arial",12)
 	def add(self,name,filename,size):
 		"""Honestly, I don't even know if this method is neccesary."""
 		self.__setattr__(name,pygame.font.Font(filename,size))
@@ -199,7 +200,8 @@ class gui(object):
 		parent.log("Initializing pygame...",user="GUI")
 		pygame.init()
 		# whatever you do, you MUST make the height and width of the display divisable by two
-		self.screen = pygame.display.set_mode( (600,600))
+		self.real_window = pygame.display.set_mode((600,600),pygame.RESIZABLE)
+		self.screen = pygame.Surface((600,600))##pygame.display.set_mode( (600,600))
 		pygame.display.set_caption(parent.parent.game_name)
 		parent.log("Loading images....",user="GUI")
 		self.icon = pygame.image.load("images/icon.png")
@@ -228,12 +230,24 @@ class gui(object):
 			for ce in self.custom_events:
 				if event.type == ce:
 					self.custom_events[ce](event)
+			if event.type == pygame.VIDEORESIZE:
+				self.real_window = pygame.display.set_mode(event.dict['size'],pygame.HWSURFACE|pygame.DOUBLEBUF|pygame.RESIZABLE)
 	def load_cursors(self):
 		self.cursors = {}
 		d = os.listdir("images/cursors")
 		for c in d:
 			if c != "Thumbs.db":
 				self.cursors[c.split(".")[0]] = pygame.image.load("images/cursors/" + c).convert_alpha()
+	def update(self):
+		self.real_window.fill((0,0,0))
+		w,h = pygame.display.get_surface().get_size()
+		self.real_window.blit(
+			self.screen,
+			(
+				int((w - self.screen.get_width()) / 2),
+				int((h - self.screen.get_height()) / 2)
+			)
+			)
 	def set_cursor(self,name):
 		self.cursor = self.cursors[name]
 	def add_event(self,t):
@@ -246,8 +260,8 @@ class gui(object):
 			self.chunks.append(pygame.image.load("./saves/chunk_2.png"))
 	def render_floor(self):
 		"""renders floor (background)."""
-		sheight,swidth = pygame.display.get_surface().get_size()
-		crop = pygame.Surface(pygame.display.get_surface().get_size())
+		sheight,swidth = self.screen.get_size()
+		crop = pygame.Surface(self.screen.get_size())
 		# invert the y in offsets so we get a four quadrent coordinet system
 		# we also add half the sheight and swidth of the chunk to create the four quadrent system
 		# ---------------------------------------------------------------------------------------------
@@ -268,7 +282,7 @@ class gui(object):
 		# honestly, I had to play around with the positioning equation for a while, so
 		# some if it I can't explain, but most of it is straight forward.
 		# All in all it's just converting from one coordinat system to another.
-		sheight,swidth = pygame.display.get_surface().get_size()
+		sheight,swidth = self.screen.get_size()
 		for obj in self.chunk_objects:
 			xoff = int(swidth/2) + self.parent.player.x * -1
 			yoff = int(sheight/2) + self.parent.player.y
@@ -361,6 +375,24 @@ class sword_crafter(object):
 		self.confirms.pop("build_confirm")
 	def load_popup(self):
 		self.load_window.show()
+	def ask_loop(self,question):
+		self.ask_looping = True
+		old_screen = self.parent.gui.util.blur_surf(self.gui.screen.copy())
+		window = guiObjects.ask_window(
+			self,
+			self.gui.screen,
+			old_screen,
+			question,
+			)
+		for i in self.current.split(".")[0]:
+			window.text.append(i)
+		while self.ask_looping:
+			window.check_events()
+			window.update()
+			window.draw()
+			self.gui.update()
+			pygame.display.update()
+		return "".join(window.text)
 	def load_select(self):
 		if self.current != None:
 			img = numpy.array(PIL.Image.open("user/weapons/" + self.current))
@@ -464,6 +496,28 @@ class sword_crafter(object):
 		self.gui.add_event((pygame.MOUSEBUTTONDOWN,self.check_mouse))
 		self.confirms = {}
 		self.gui.set_cursor("editor")
+		# lengthy code... for now
+		# refresh minerals according to the player's possesions
+		self.min_window.minerals = list(self.figurative_minerals.values())
+		# clear screen
+		self.gui.screen.fill((255,255,255))
+		# refresh the pixel window
+		self.pixel_window.refresh()
+		# if the mouse is over one of the pixel/squares in the pixel window, make it lighter
+		self.pixel_window.try_hover()
+		# update the pixel window before rendering
+		self.pixel_window.update()
+		# render pixel window
+		self.pixel_window.draw(self.gui.screen)
+		# update mineral window before attempting to render it
+		self.min_window.update()
+		# attempt to draw the mineral window to the screen
+		self.min_window.draw(self.gui.screen)
+		# draw buttons
+		for b in buttons:
+			b.draw()
+		old_screen = self.gui.util.blur_surf(self.gui.screen.copy())
+		# actual loop
 		while self.looping:
 			self.parent.gui.check_events(key_bindings=False)
 			mx,my = pygame.mouse.get_pos()
@@ -475,7 +529,8 @@ class sword_crafter(object):
 			# refresh minerals according to the player's possesions
 			self.min_window.minerals = list(self.figurative_minerals.values())
 			# clear screen
-			self.gui.screen.fill((255,255,255))
+			if len(self.confirms) < 1:
+				self.gui.screen.fill((255,255,255))
 			# refresh the pixel window
 			self.pixel_window.refresh()
 			# if the mouse is over one of the pixel/squares in the pixel window, make it lighter
@@ -493,7 +548,22 @@ class sword_crafter(object):
 				b.try_hover()
 				b.draw()
 				b.check_click()
+			# render the current weapon being edited
+			ct = self.parent.fonts.arial.render(str(self.current).split(".")[0],False,(0,0,0))
+			self.gui.screen.blit(
+				ct,
+				(
+					self.gui.screen.get_width() * 0.05,
+					self.gui.screen.get_width() * 0.05
+				)
+				)
+			if pygame.mouse.get_pressed()[0]:
+				self.load_window.check_click()
+				self.pixel_window.check_click()
 			self.load_window.check_click()
+			if len(self.confirms) > 0:
+				self.gui.screen.fill((255,255,255))
+				self.gui.screen.blit(old_screen,(0,0))
 			# render confirms
 			ck = list(self.confirms.keys())
 			for c in ck:
@@ -508,6 +578,7 @@ class sword_crafter(object):
 			# attempt to draw it
 			self.load_window.draw()
 			self.gui.screen.blit(self.gui.cursor,(x,y))
+			self.gui.update()
 			pygame.display.update()
 		self.gui.set_cursor("regular")
 		# lastly pause again, but with the gui. This gives the effect that it was always paused and you are simply returning to it
@@ -530,6 +601,7 @@ class sword_crafter(object):
 			)
 		w.close()
 		"""
+		name = self.ask_loop("Please enter a name:")
 		# operating on the array
 		arr = []
 		for y in range(len(self.pixel_window.weapon_cache)):
@@ -561,7 +633,11 @@ class sword_crafter(object):
 		for y in range(len(arr)):
 			for x in range(len(arr[y])):
 				img.putpixel((x,y),arr[y][x])
-		img.save("user/weapons/weapon_1.png")
+		# first delete the old one, if there is one
+		if self.current != None:
+			os.remove("user/weapons/%s" % self.current)
+		# now save the file, since we don't have the resources to save the data in an encrypted way.
+		img.save("user/weapons/%s.png" % name)
 		self.looping = False
 class game_kernel(object):
 	def log(self,msg,level="INFO",user="GAME"):
@@ -610,7 +686,7 @@ class game_kernel(object):
 			# old screen, blurred
 			old_screen = self.gui.util.blur_surf(self.gui.screen.copy(),radius=6)
 			# heght width
-			sheight,swidth = pygame.display.get_surface().get_size()
+			sheight,swidth = self.gui.screen.get_size()
 			# really just a transparent grey image. Generated by PIL
 			greyout = pygame.image.fromstring(PIL.Image.new("RGBA",(swidth,sheight),(50,50,50 ,128)).tobytes(),(sheight,swidth),"RGBA")
 			ptext = self.fonts.pause_f.render("Paused",False,(255,255,255))
@@ -695,6 +771,7 @@ class game_kernel(object):
 				y = my - (self.gui.cursor.get_width() / 2)
 				self.gui.screen.blit(self.gui.cursor,(x,y))
 				# update finally
+				self.gui.update()
 				pygame.display.update()
 	def unpause(self):
 		self.paused = False
@@ -757,6 +834,7 @@ class game_kernel(object):
 			ts.set_alpha(i)
 			self.gui.screen.blit(ts,t1_pos)
 			pygame.time.delay(delay)
+			self.gui.update()
 			pygame.display.update()
 		# delay so we can read it for a while
 		# also to accomodate for the music rounding
@@ -767,6 +845,7 @@ class game_kernel(object):
 			ts.set_alpha(255 - i)
 			self.gui.screen.blit(ts,t1_pos)
 			pygame.time.delay(delay)
+			self.gui.update()
 			pygame.display.update()
 		# second message
 		ts.fill((0,0,0))
@@ -777,6 +856,7 @@ class game_kernel(object):
 			ts.set_alpha(i)
 			self.gui.screen.blit(ts,t2_pos)
 			pygame.time.delay(delay)
+			self.gui.update()
 			pygame.display.update()
 		# delay so we can read it for a while
 		# also to accomodate for the music rounding
@@ -787,6 +867,7 @@ class game_kernel(object):
 			ts.set_alpha(255 - i)
 			self.gui.screen.blit(ts,t2_pos)
 			pygame.time.delay(delay)
+			self.gui.update()
 			pygame.display.update()
 		# since this is just an animation of sorts, this function is actually done.
 		# delay for dramatic affect.
@@ -810,7 +891,7 @@ class game_kernel(object):
 			if self.stop == False:
 				self.gui.screen.fill( (255,255,255) )
 				mx,my = self.mouse.get_pos()
-				height,width = pygame.display.get_surface().get_size()
+				height,width = self.gui.screen.get_size()
 				# load all the rectangles
 				# load all the text
 				# play button/text
@@ -841,6 +922,7 @@ class game_kernel(object):
 				y = my - (self.gui.cursor.get_width() / 2)
 				self.gui.screen.blit(self.gui.cursor,(x,y))
 				# refresh
+				self.gui.update()
 				pygame.display.update()
 	def realm_explorer_init(self):
 		"""Sets up some properties for self.run_realm_explorer()"""
@@ -864,7 +946,7 @@ class game_kernel(object):
 				self.gui.screen.fill( (255,255,255) )
 				# load values
 				mx,my = self.mouse.get_pos()
-				sheight,swidth = pygame.display.get_surface().get_size()
+				sheight,swidth = self.gui.screen.get_size()
 				# modify player's position accordingly
 				# speed modification
 				self.player.check_movement()
@@ -884,6 +966,7 @@ class game_kernel(object):
 				y = my - (self.gui.cursor.get_width() / 2)
 				self.gui.screen.blit(self.gui.cursor,(x,y))
 				# finally, update
+				self.gui.update()
 				pygame.display.update()
 				self.gui.check_events()
 def main(parent):

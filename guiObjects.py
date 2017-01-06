@@ -1,5 +1,68 @@
 import pygame,numpy, templates, os
 pygame.init()
+class ask_window(object):
+	def __init__(self,parent,screen,background_img,qtxt):
+		self.background = background_img
+		self.screen = screen
+		self.parent = parent
+		self.next_key = False
+		self.f = pygame.font.Font("fonts/PressStart2P.ttf",16)
+		self.qtxt = self.f.render(qtxt,True,(255,255,255))
+		self.surf = pygame.Surface(
+				(
+					self.qtxt.get_rect()[2] + 20,
+					self.qtxt.get_rect()[3] * 2 + 40
+				)
+			)
+		self.pos = (
+			int((self.screen.get_width() - self.surf.get_width()) / 2),
+			int((self.screen.get_height() - self.surf.get_height()) / 2)
+			)
+		self.text = []
+	def check_keys(self,e):
+		if pygame.key.name(e.key) == "backspace":
+			try:
+				self.text.pop(-1)
+			except IndexError:
+				pass
+		if len(self.text) < 18:
+			if pygame.key.name(e.key) == "return":
+				self.parent.ask_looping = False
+			elif pygame.key.name(e.key) == "space":
+				self.text.append("_")
+			elif self.next_key and len(pygame.key.name(e.key)) == 1:
+				self.text.append(chr(e.key).upper())
+				self.next_key = False
+			elif len(pygame.key.name(e.key)) == 1:
+				self.text.append(chr(e.key))
+			if pygame.K_LSHIFT == e.key:
+				self.next_key = True
+	def update(self):
+		self.surf.fill((0,0,0))
+		self.surf.blit(
+			self.qtxt,
+			(
+				int((self.surf.get_width() - self.qtxt.get_rect()[2]) / 2),
+				int((self.surf.get_width() - self.qtxt.get_rect()[2]) / 2)
+			)
+			)
+		itxt = self.f.render("".join(self.text),False,(255,255,255))
+		self.surf.blit(
+			itxt,
+			(
+				int((self.surf.get_width() - itxt.get_rect()[2]) / 2),
+				int((self.surf.get_height() - itxt.get_rect()[3]) / 2) + 5
+			)
+			)
+	def check_events(self):
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				self.parent.quit()
+			if event.type == pygame.KEYDOWN:
+				self.check_keys(event)
+	def draw(self):
+		self.screen.blit(self.background,(0,0))
+		self.screen.blit(self.surf,self.pos)
 class confirm(object):
 	def __init__(self,parent,surf,rect,msg,onclick):
 		self.onclick = onclick
@@ -373,8 +436,8 @@ class pixel_editor(object):
 		self.background = background
 		self.parent = parent
 		self.surf = pygame.Surface((dimensions[0] * scale + dimensions[0] + 1,dimensions[1] * scale + dimensions[1] + 1))
-		self.matrixX = int(self.screen.get_width() / 30)##self.screen.get_width() / 2 - (dimensions[0] * scale)/ 2
-		self.matrixY = int(self.screen.get_height() / 20)##self.screen.get_height() / 2 - (dimensions[1] * scale)/ 2
+		self.matrixX = int(self.screen.get_width() * 0.05)##int(self.screen.get_width() / 30)##self.screen.get_width() / 2 - (dimensions[0] * scale)/ 2
+		self.matrixY = int(self.screen.get_height() * 0.10)##int(self.screen.get_height() / 20)##self.screen.get_height() / 2 - (dimensions[1] * scale)/ 2
 		self.matrix_cache = numpy.empty(dimensions,dtype=object)
 		for y in range(len(self.matrix_cache)):
 			for x in range(len(self.matrix_cache[y])):
