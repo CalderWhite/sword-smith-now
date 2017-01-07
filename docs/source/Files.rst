@@ -5,7 +5,9 @@ This page will go over all the files and their contents.
 
 Numbered as follows, ``<File>`` . ``<Class>`` . ``<attribute>``
 
-If there is any further help required, contact calderwhite1@gmail.com (Head Developer)
+.. _Calder White: mailto:calderwhite1%40gmail.com
+
+If there is any further help required, contact `Calder White`_ (Head Developer)
 
 1. launcher.py
 --------------
@@ -213,4 +215,65 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 			.. _take : #new_player.possesions_class.give
 
-			Please refer to `take`_ for information. Instead of adding the quantity, it takes away the quantity. All checks to see if there is in fact an ``obj`` to take away must be done before this method. For this method will not check that, and consequently hit a critical ``KeyError`` .
+			Please refer to `take`_ for information. Instead of adding the quantity, it takes away the quantity. 
+			All checks to see if there is in fact an ``obj`` to take away must be done before this method.
+			For this method will not check that, and consequently hit a critical ``KeyError`` .
+	.. method:: give_all(quantity=999)
+		
+		Gives the player ``quantity`` amount of each mineral. Used for developement only.
+		
+.. class:: gui(parent)
+
+	Manages anything to do with the display. To get to the window, you must go through this class
+	
+	*parent* : Must be a *game_kernel*
+	
+	.. method:: check_events(keybindings=True)
+		
+		Checks pygame events, to keep the operating system happy. Additionally,
+		if keybindings is ``True``, it will check all the keybindings in ``parent.key_bindings``
+		on a ``pygame.KEYDOWN`` event.
+		
+		It will also check through the gui's custom_events
+		property (``dict``). The key is the event, and the value is the callback. For more info
+		go to `add_event`'s documentation.
+		
+		Just recently, this method also resizes the display on ``pygame.VIDEORESIZE``
+		
+	.. method:: load_cursors()
+		
+		Adds all of the images in ``./images/cursors`` to ``gui.cursors`` dictionary.
+		The key is the name of the file (minus file suffixes) and the value is the ``pygame.image.load``
+		object of the image.
+	
+	.. method:: update()
+		
+		Blits its screen property to the center of the ACTUAL pygame display.
+		This is so the user can resize the pygame display window, and the game's width will remain the same.
+		This also allows room of styling outside the game window.
+	
+	.. method:: set_cursor(name)
+		
+		Sets the ``gui.cursor`` to ``gui.cursors[name]``.
+	
+	.. method:: add_event(t)
+		
+		*t* : Must be a ``tuple`` in the format: ``(pygame event, callback)``
+		
+		.. note:: The callback will be supplied with an event object
+		
+		Adds event to ``gui.custom_events``
+		
+		Example::
+		
+			def check_mouse(event):
+				if event.button == 5 or event.button == 4:
+					print("Scrolled!")
+				pass
+			gui.add_event(
+				(
+				pygame.MOUSEBUTTONDOWN,
+				check_mouse
+				)
+			)
+	
