@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Files &mdash; Sword Smith Now 0.3.0-alpha documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Sword Smith Now 0.3.0-alpha documentation" href="index.html"/>
+        <link rel="prev" title="Welcome to Sword Smith Now’s documentation!" href="index.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Sword Smith Now
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0-alpha
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#launcher-py">1. launcher.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functions">1.1 Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">1.2 Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#runtime-py">2. runtime.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">2.1 Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">1.2 Classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sword Smith Now</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Files.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="files">
+<h1>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h1>
+<p>This page will go over all the files and their contents.</p>
+<p>Numbered as follows, <code class="docutils literal"><span class="pre">&lt;File&gt;</span></code> . <code class="docutils literal"><span class="pre">&lt;Class&gt;</span></code> . <code class="docutils literal"><span class="pre">&lt;attribute&gt;</span></code></p>
+<p>If there is any further help required, contact <a class="reference external" href="mailto:calderwhite1&#37;&#52;&#48;gmail&#46;com">calderwhite1<span>&#64;</span>gmail<span>&#46;</span>com</a> (Head Developer)</p>
+<div class="section" id="launcher-py">
+<h2>1. launcher.py<a class="headerlink" href="#launcher-py" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">launcher.py</span></code> file will launch the game.</p>
+<div class="section" id="functions">
+<h3>1.1 Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="main">
+<code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main" title="Permalink to this definition">¶</a></dt>
+<dd><p>When run, <code class="docutils literal"><span class="pre">main</span></code> will use the options from <code class="docutils literal"><span class="pre">sys.argv</span></code> to run the launcher in a command line fashion.</p>
+<p>Help with the command line can be found by running</p>
+<p><strong>Windows</strong></p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">py</span> <span class="pre">launcher.py</span> <span class="pre">--help</span></code></div></blockquote>
+<p><strong>Other</strong></p>
+<blockquote>
+<div><code class="docutils literal"><span class="pre">python3</span> <span class="pre">launcher.py</span> <span class="pre">--help</span></code></div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="classes">
+<h3>1.2 Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="launcher">
+<em class="property">class </em><code class="descname">launcher</code><span class="sig-paren">(</span><em>mode</em>, <em>log_file</em>, <em>info_file</em>, <em>initial_gui=False</em>, <em>run_with_errors=True</em><span class="sig-paren">)</span><a class="headerlink" href="#launcher" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>mode</em> The mode defines what mode the game is running in.</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="13%" />
+<col width="88%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Mode</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>Consumer mode</td>
+</tr>
+<tr class="row-odd"><td>1</td>
+<td>Developer mode. Certain features enabled.</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>Cheats mode. all dev mode cheats enabled</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<p><em>log_file</em> The launcher will send all the logs to a file with this name. The location of that file will be in the installation location</p>
+<p><em>info_file</em> The launcher will search the <code class="docutils literal"><span class="pre">ssn</span></code> directory inside the current directory (<cite>./ssn</cite>) for a file with the name of info_file</p>
+<p><em>initial_gui</em></p>
+<blockquote>
+<div><p><strong>True</strong> : When the launcher is loaded, it will create a gui.</p>
+<p><strong>False</strong> : When the launcher is loaded, it will prompt the user in the terminal for a yes or no answer, whether to launch.</p>
+</div></blockquote>
+<p><em>run_with_errors</em></p>
+<blockquote>
+<div><p><strong>True</strong> : The launcher will loop, even after the program has hit a critical error. It will also log information on the error.</p>
+<p><strong>False</strong> : The launcher will <code class="docutils literal"><span class="pre">exit</span></code> when it hits a critical error, and it will not log the error that was hit.</p>
+</div></blockquote>
+<dl class="method">
+<dt id="launcher.try_launch">
+<code class="descname">try_launch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#launcher.try_launch" title="Permalink to this definition">¶</a></dt>
+<dd><p>reloads the import of the runtime module, and attempts to call the <a class="reference external" href="#id1">runtime.main</a> method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="launcher.load">
+<code class="descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#launcher.load" title="Permalink to this definition">¶</a></dt>
+<dd><p>If <code class="docutils literal"><span class="pre">launcher.initial_gui</span></code>, it runs the launcher gui, and executes different methods according to <code class="docutils literal"><span class="pre">launcher.mode</span></code></p>
+<p>Else, (<code class="docutils literal"><span class="pre">launcher.initial_gui</span></code> is False) it asks the user if it would like to launch, through the terminal/command prompt. Afterwards, it executes the same methods as if <code class="docutils literal"><span class="pre">launcher.initial_gui</span></code> was True, accroding to <code class="docutils literal"><span class="pre">launcher.mode</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="launcher.waiting_loop">
+<code class="descname">waiting_loop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#launcher.waiting_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs the tkinter mainloop.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="launcher.get_game_file">
+<code class="descname">get_game_file</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#launcher.get_game_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Searchs <code class="docutils literal"><span class="pre">./ssn</span></code> for <code class="docutils literal"><span class="pre">self.info_file</span></code> and lods it into memory.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="launcher.log">
+<code class="descname">log</code><span class="sig-paren">(</span><em>msg</em>, <em>level=&quot;INFO&quot;</em>, <em>user=&quot;LAUNCHER&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#launcher.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uses <a class="reference external" href="https://docs.python.org/3.5/library/logging.html">logging</a> module to write to a log file, formatted as follows:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="n">level</span><span class="p">]:</span><span class="n">msg</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="launcher.module_checklist">
+<code class="descname">module_checklist</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#launcher.module_checklist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tries to import all the modules in <code class="docutils literal"><span class="pre">requirements.json</span></code>, according to the mode. <code class="docutils literal"><span class="pre">&quot;vanilla&quot;</span></code> if the mode is 0 or 2. <code class="docutils literal"><span class="pre">&quot;dev&quot;</span></code> if the mode is 1 (developer mode).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="launcher.do_checks">
+<code class="descname">do_checks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#launcher.do_checks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Executes certain methods according to mode</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="gui">
+<em class="property">class </em><code class="descname">gui</code><a class="headerlink" href="#gui" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up, and contains the tkinter display.</p>
+<p><em>tk</em> : The gui&#8217;s <code class="docutils literal"><span class="pre">Tk()</span></code> class.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="runtime-py">
+<h2>2. runtime.py<a class="headerlink" href="#runtime-py" title="Permalink to this headline">¶</a></h2>
+<p>The <code class="docutils literal"><span class="pre">runtime.py</span></code>  file is the main file of the game. It consists of all the core game classes, and one function : <code class="docutils literal"><span class="pre">main</span></code> .</p>
+<div class="section" id="id1">
+<h3>2.1 Functions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt>
+<code class="descname">main</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span></dt>
+<dd><p><em>parent</em></p>
+<blockquote>
+<div>Please refer to the <a class="reference external" href="#launcher">launcher.launcher</a> for a documentation on what this parent object should consist of. The parent must consist of (at least) a log method, mode int and run_with_errors boolean.</div></blockquote>
+</dd></dl>
+
+</div>
+<div class="section" id="id2">
+<h3>1.2 Classes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="font_collection">
+<em class="property">class </em><code class="descname">font_collection</code><a class="headerlink" href="#font_collection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads and contains fonts.</p>
+<dl class="method">
+<dt id="font_collection.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>name</em>, <em>filename</em>, <em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#font_collection.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an attribute to itself with the name as <code class="xref py py-mod docutils literal"><span class="pre">name</span></code>, the font file from <code class="xref py py-mod docutils literal"><span class="pre">filename</span></code> and the font size from <code class="xref py py-mod docutils literal"><span class="pre">size</span></code>.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="audio_manager">
+<em class="property">class </em><code class="descname">audio_manager</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="headerlink" href="#audio_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Contains and manages audio. Requires a parent, which must be in the template of <cite>game_kernel</cite>.</p>
+<dl class="method">
+<dt id="audio_manager.log">
+<code class="descname">log</code><span class="sig-paren">(</span><em>msg</em>, <em>level=&quot;INFO&quot;</em>, <em>user=&quot;AUDIO&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#audio_manager.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forwards input to the parent&#8217;s log method.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="audio_manager.mute">
+<code class="descname">mute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#audio_manager.mute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops all music and sets <code class="docutils literal"><span class="pre">audio_manager.mute</span></code> to <code class="docutils literal"><span class="pre">True</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="audio_manager.unmute">
+<code class="descname">unmute</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#audio_manager.unmute" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets <code class="docutils literal"><span class="pre">audio_manager.mute</span></code> to <code class="docutils literal"><span class="pre">True</span></code>. <strong>IT DOES NOT RESUME ANY MUSIC THAT WAS PLAYING WHEN LAST MUTED</strong></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="audio_manager.play_and_load_music">
+<code class="descname">play_and_load_music</code><span class="sig-paren">(</span><em>filename</em>, <em>loops=0</em><span class="sig-paren">)</span><a class="headerlink" href="#audio_manager.play_and_load_music" title="Permalink to this definition">¶</a></dt>
+<dd><p>If not muted, it loads <code class="docutils literal"><span class="pre">filename</span></code> from the current directory, and the plays it for <code class="docutils literal"><span class="pre">loops</span></code> amount of loops (-1 loops to play infinitly)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="audio_manager.load_audio">
+<code class="descname">load_audio</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#audio_manager.load_audio" title="Permalink to this definition">¶</a></dt>
+<dd><p>Does nothing, currently.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="new_player">
+<em class="property">class </em><code class="descname">new_player</code><span class="sig-paren">(</span><em>name</em>, <em>parent</em><span class="sig-paren">)</span><a class="headerlink" href="#new_player" title="Permalink to this definition">¶</a></dt>
+<dd><p>The player manages its own collisions, possesions and movement.</p>
+<dl class="method">
+<dt id="new_player.check_movement">
+<code class="descname">check_movement</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#new_player.check_movement" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if the movement keys are pressed. If so, it then proceeds to check if the attempted movement has any collisions. If everything checks out, it adds the movement to the player&#8217;s current xy coordinates.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="new_player.check_collision">
+<code class="descname">check_collision</code><span class="sig-paren">(</span><em>xoff</em>, <em>yoff</em><span class="sig-paren">)</span><a class="headerlink" href="#new_player.check_collision" title="Permalink to this definition">¶</a></dt>
+<dd><p>checks if the player&#8217;s current coordinates added with the xoff and yoff collide either into the edge of the chunk, or the edge of a chunk_object. If so, it returns the position the player will <strong>stop at</strong>, if not, it returns the new position of the player.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="new_player.possesions_class">
+<em class="property">class </em><code class="descname">possesions_class</code><a class="headerlink" href="#new_player.possesions_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>This class contains all of the player&#8217;s possesion utilities. From minerals to items, it does it. It is initialized as <code class="docutils literal"><span class="pre">possesions</span></code> in the <cite>game_kernel</cite>.</p>
+<p><em>minerals</em> : A dictionary of all the minerals the player has. All the keys are the names, and the values are <cite>item_manager.mineral_counter</cite> &#8216;s.</p>
+<dl class="method">
+<dt id="new_player.possesions_class.give">
+<code class="descname">give</code><span class="sig-paren">(</span><em>item_type</em>, <em>obj</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#new_player.possesions_class.give" title="Permalink to this definition">¶</a></dt>
+<dd><p>The item type tells the method what to do with the information given.</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="42%" />
+<col width="58%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">item_type</th>
+<th class="head">Desc.</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>0</td>
+<td>minerals</td>
+</tr>
+</tbody>
+</table>
+<p><strong>For minerals:</strong></p>
+<blockquote>
+<div><p><code class="docutils literal"><span class="pre">obj</span></code> must be a <cite>item_manager.mineral_counter</cite> .</p>
+<p>This method will add to an existing <cite>mineral_counter</cite> the quantity or create a <cite>mineral_counter</cite> with the quantity provided.</p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># We&#39;re assuming that item_manager is already defined.</span>
+<span class="c1"># If you wish to learn about it, it&#39;s easy to find its documentation by typing its name into the search bar. (item_manager)</span>
+<span class="n">player</span><span class="o">.</span><span class="n">possesions</span><span class="o">.</span><span class="n">give</span><span class="p">(</span>
+        <span class="mi">0</span><span class="p">,</span>                                      <span class="c1"># minerals</span>
+        <span class="n">item_manager</span><span class="o">.</span><span class="n">minerals</span><span class="p">[</span><span class="s2">&quot;mercury&quot;</span><span class="p">],</span>       <span class="c1"># selecting mercury from the item_manager&#39;s index</span>
+        <span class="mi">1</span>                                       <span class="c1"># quantity</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="new_player.possesions_class.take">
+<code class="descname">take</code><span class="sig-paren">(</span><em>item_type</em>, <em>obj</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#new_player.possesions_class.take" title="Permalink to this definition">¶</a></dt>
+<dd><p>Please refer to <a class="reference external" href="#new_player.possesions_class.give">take</a> for information. Instead of adding the quantity, it takes away the quantity. All checks to see if there is in fact an <code class="docutils literal"><span class="pre">obj</span></code> to take away must be done before this method. For this method will not check that, and consequently hit a critical <code class="docutils literal"><span class="pre">KeyError</span></code> .</p>
+</dd></dl>
+
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="index.html" class="btn btn-neutral" title="Welcome to Sword Smith Now’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Calder White.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0-alpha',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
