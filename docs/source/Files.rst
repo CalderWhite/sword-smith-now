@@ -45,15 +45,15 @@ The ``launcher.py`` file will launch the game.
 	
 	..
 
-		+------+------------------------------------------+
-		| Mode | Description                              |
-		+======+==========================================+
-		|  0   | Consumer mode                            |
-		+------+------------------------------------------+
-		|  1   | Developer mode. Certain features enabled.|
-		+------+------------------------------------------+
-		|  2   | Cheats mode. all dev mode cheats enabled |
-		+------+------------------------------------------+
+		+------+------------------------------------------+-----------------+
+		| Mode | Description                              | Supported in    |
+		+======+==========================================+=================+
+		|  0   | Consumer mode                            |  NOT SUPPORTED  |
+		+------+------------------------------------------+-----------------+
+		|  1   | Developer mode. Certain features enabled.| <= v0.1.0-alpha |
+		+------+------------------------------------------+-----------------+
+		|  2   | Cheats mode. all dev mode cheats enabled |  NOT SUPPORTED  |
+		+------+------------------------------------------+-----------------+
 
 	*log_file* The launcher will send all the logs to a file with this name. The location of that file will be in the installation location
 
@@ -111,7 +111,7 @@ The ``launcher.py`` file will launch the game.
 
 		Executes certain methods according to mode
 
-.. class:: gui()
+.. class:: launcher.gui()
 	
 	Sets up, and contains the tkinter display.
 
@@ -225,11 +225,13 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 		
 		Gives the player ``quantity`` amount of each mineral. Used for developement only.
 		
-.. class:: gui(parent)
+.. class:: runtime.gui(parent)
 
 	Manages anything to do with the display. To get to the window, you must go through this class
 	
 	*parent* : Must be a *game_kernel*
+	
+	*screen* : A pygame surface. Dimensions: (600,600)
 	
 	.. method:: check_events(keybindings=True)
 		
@@ -239,13 +241,13 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 		
 		It will also check through the gui's custom_events
 		property (``dict``). The key is the event, and the value is the callback. For more info
-		go to `gui.add_event`_'s documentation.
+		go to `runtime.gui.add_event`_'s documentation.
 		
 		Just recently, this method also resizes the display on ``pygame.VIDEORESIZE``
 		
 	.. method:: load_cursors()
 		
-		Adds all of the images in ``./images/cursors`` to ``gui.cursors`` dictionary.
+		Adds all of the images in ``./images/cursors`` to ``runtime.gui.cursors`` dictionary.
 		The key is the name of the file (minus file suffixes) and the value is the ``pygame.image.load``
 		object of the image.
 	
@@ -257,7 +259,7 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 	
 	.. method:: set_cursor(name)
 		
-		Sets the ``gui.cursor`` to ``gui.cursors[name]``.
+		Sets the ``runtime.gui.cursor`` to ``runtime.gui.cursors[name]``.
 	
 	.. method:: add_event(t)
 		
@@ -265,7 +267,7 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 		
 		.. note:: The callback will be supplied with an event object
 		
-		Adds event to ``gui.custom_events``
+		Adds event to ``runtime.gui.custom_events``
 		
 		Example::
 		
@@ -310,17 +312,72 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 		.. method::remove(quantity)
 			Decreases the object's ``count`` property by ``quantity``.
 
-.. class:: sword_crafter(parent,dimensions):
+.. class:: sword_crafter(parent,dimensions)
 	
 	sword_crafter is an autonomous object that will start when ``sword_crafter.run`` is called.
 	Essentially, it takes over the gui display when it's running. The sword crafter is used to 
 	edit the user's sword in a friendly environment.
 	
 	.. warning::
+	
 		The surface of the sword_crafter cannot be customized. Since it takes a parent argument,
 		it feeds all of it's gui output directly to ``parent.screen``.
 	
 	.. method:: check_mouse(event)
 		
+		Run a couple of the sword_crafter's children's check_mouse methods.
 		
+	.. method:: try_save(status)
+		
+		If status, run `sword_crafter.save_weapon`_ . It should be noted
+		that the status parameter is coming from a confirm box.
+		
+	.. method:: load_popup()
+		
+		Shows popup window. This is a method for the purpose of being a callback. To some button.
+		
+	.. method:: ask_loop(question)
+		
+		Takes over the main loop for a while, to wait for user response of ``question``. 
+		This message uses ``guiObjects.ask_window`` .
+		
+	.. method:: show_conf()
+		
+		.. _runtime.gui.screen: #runtime.gui
+		
+		Creates a certain confirm window in the center of the `runtime.gui.screen`_ .
+	
+	.. method:: exit()
+		
+		Sets the ``looping`` property to ``False``, therefore ending the
+		`sword_crafter.run`_ loop without exiting.
+		
+	.. method:: run()
+		
+		The run method is split into two sections: setup and loop.
+		
+		Though the class already has an ``init`` method, there is still setup that may only be done when the ``run`` method is called.
+		After the setup, a loop is run while ``sword_crafter.looping``.
+	
+	.. method:: save_weapon()
+		
+		Since Sword Smith Now is having trouble with encryption modules, so we are forced to
+		just save the files in the png video format (0 security preveting game hacking...)
+
+.. class:: game_kernel(parent,dev_window=None,mode=0)
+	
+	.. _launcher.mode: #launcher
+	
+	.. warning::
+		In Alpha 0.3.0 dev mode is the only mode supported. Please refer to `launcher.mode`_.
+		
+	This class serves as the parent class, and manages all of the other classes, as the name suggests.
+	This is also where the main game loop is stored and run.
+	
+	*parent* : This must fit the critera of `launcher`_. Usually this parameter is supplied by the main function.
+	
+	
+	.. method:: log(msg,level="INFO",user="GAME")
+		
+		Forwards log input to ``parent.log``
 	
