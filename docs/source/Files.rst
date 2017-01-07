@@ -3,8 +3,6 @@ Files
 
 This page will go over all the files and their contents.
 
-Numbered as follows, ``<File>`` . ``<Class>`` . ``<attribute>``
-
 .. _Calder White: mailto:calderwhite1%40gmail.com
 
 If there is any further help required, contact `Calder White`_ (Head Developer)
@@ -41,6 +39,11 @@ The ``launcher.py`` file will launch the game.
 .. class:: launcher(mode,log_file,info_file,initial_gui=False,run_with_errors=True)
 
 	*mode* The mode defines what mode the game is running in.
+	
+	.. warning::
+		In Alpha 0.3.0 The only supported ``mode`` is ``1``.
+	
+	..
 
 		+------+------------------------------------------+
 		| Mode | Description                              |
@@ -54,7 +57,7 @@ The ``launcher.py`` file will launch the game.
 
 	*log_file* The launcher will send all the logs to a file with this name. The location of that file will be in the installation location
 
-	*info_file* The launcher will search the ``ssn`` directory inside the current directory (`./ssn`) for a file with the name of info_file
+	*info_file* The launcher will search the ``ssn`` directory inside the current directory (``./ssn``) for a file with the name of info_file
 
 	*initial_gui*
 
@@ -143,7 +146,7 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 .. class:: audio_manager(parent)
 
-	Contains and manages audio. Requires a parent, which must be in the template of `game_kernel`.
+	Contains and manages audio. Requires a parent, which must be in the template of *game_kernel*.
 
 	.. method:: log(msg,level="INFO",user="AUDIO")
 
@@ -179,9 +182,10 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 	.. class:: possesions_class()
 
-		This class contains all of the player's possesion utilities. From minerals to items, it does it. It is initialized as ``possesions`` in the `game_kernel`.
+		This class contains all of the player's possesion utilities. From minerals to items, it does it. It is initialized as ``possesions`` in the *game_kernel*.
 
-		*minerals* : A dictionary of all the minerals the player has. All the keys are the names, and the values are `item_manager.mineral_counter` 's.
+		*minerals* : A dictionary of all the minerals the player has.
+		All the keys are the names, and the values are `item_manager.mineral_counter`_ 's.
 
 		.. method:: give(item_type,obj,quantity)
 
@@ -197,9 +201,9 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 			..
 
-				``obj`` must be a `item_manager.mineral_counter` .
+				``obj`` must be a `item_manager.mineral_counter`_ .
 
-				This method will add to an existing `mineral_counter` the quantity or create a `mineral_counter` with the quantity provided.
+				This method will add to an existing ``mineral_counter`` the quantity or create a ``mineral_counter`` with the quantity provided.
 
 				Example::
 
@@ -213,11 +217,10 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 		.. method:: take(item_type,obj,quantity)
 
-			.. _take : #new_player.possesions_class.give
-
-			Please refer to `take`_ for information. Instead of adding the quantity, it takes away the quantity. 
+			Please refer to `new_player.possesions_class.give`_ for information. Instead of adding the quantity, it takes away the quantity. 
 			All checks to see if there is in fact an ``obj`` to take away must be done before this method.
 			For this method will not check that, and consequently hit a critical ``KeyError`` .
+			
 	.. method:: give_all(quantity=999)
 		
 		Gives the player ``quantity`` amount of each mineral. Used for developement only.
@@ -236,7 +239,7 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 		
 		It will also check through the gui's custom_events
 		property (``dict``). The key is the event, and the value is the callback. For more info
-		go to `add_event`'s documentation.
+		go to `gui.add_event`_'s documentation.
 		
 		Just recently, this method also resizes the display on ``pygame.VIDEORESIZE``
 		
@@ -276,4 +279,48 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 				check_mouse
 				)
 			)
+	
+	.. method:: load_chunks()
+		
+		.. warning:: 
+			This method will only work in developer mode, and does not serve its full
+			purpose. Instead it simply loads a predetermined chunk from an image.
+		
+		Loads chunk file.
+	
+.. class:: item_manager
+
+	Manages items.
+	
+	.. _item_manager.load_minerals: #item_manager.load_minerals
+	
+	*minerals* : dictionary of all minerals, returned by `item_manager.load_minerals`_
+	
+	.. load_minerals()
+		Returns the minerals json file (``minerals.json``).
+	
+	.. class:: mineral_counter(obj)
+		
+		Grabs the ``name`` and ``color`` property from ``obj`` , and the adds its own
+		``count`` property
+		
+		.. method::add(quantity)
+			Increases the object's ``count`` property by ``quantity``.
+			
+		.. method::remove(quantity)
+			Decreases the object's ``count`` property by ``quantity``.
+
+.. class:: sword_crafter(parent,dimensions):
+	
+	sword_crafter is an autonomous object that will start when ``sword_crafter.run`` is called.
+	Essentially, it takes over the gui display when it's running. The sword crafter is used to 
+	edit the user's sword in a friendly environment.
+	
+	.. warning::
+		The surface of the sword_crafter cannot be customized. Since it takes a parent argument,
+		it feeds all of it's gui output directly to ``parent.screen``.
+	
+	.. method:: check_mouse(event)
+		
+		
 	
