@@ -30,13 +30,14 @@ class gui(object):
 		##self.log_field.pack()
 		pass
 class launcher(object):
-	def __init__(self,mode,log_file,info_file,initial_gui=False):
+	def __init__(self,mode,log_file,info_file,initial_gui=False,run_with_errors=True):
 		if mode == 0 or mode == 1 or mode == 2:
 			# mode index:
 			# 0 : normal mode; nothing special.
 			# 1 : developer mode; will check modules, as if it were being run by the python interperator instead of .exe format.
 			# 2 : cheats mode; nothing yet, going to be a version of dev mode to test bosses with hacks.
 			self.mode = mode
+			self.run_with_errors = run_with_errors
 			##print("Running log configuration.\nAll other logging/debugging messages will be sent to the specified log file once configured.")
 			self.game_info_name = "ssn/" + info_file
 			self.get_game_file()
@@ -249,8 +250,7 @@ def main():
 			m = 2
 		if dash.__contains__("-r") or ddash.__contains__("--run-without-errors"):
 			r=False
-		l = launcher(m,log,info,initial_gui=display)
-		l.run_with_errors = r
+		l = launcher(m,log,info,initial_gui=display,run_with_errors=r)
 		l.load()
 	
 if __name__ == '__main__':
