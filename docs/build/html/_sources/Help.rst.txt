@@ -28,3 +28,13 @@ Example::
 	filename    classname
 
 Even though you'd normally call it without the filename, the filename is just there do differentiate from another file's class with the same name.
+
+2.1.1.2 Organization
+^^^^^^^^^^^^^^^^^^^^
+
+Just so it's in writing, ``>`` usually denotes a subsection of another container.
+
+Example::
+	
+	launcher>functions
+

@@ -7,6 +7,38 @@ This page will go over all the files and their contents.
 
 If you need help reading these documents, the help document is `here`_.
 
+3 - Contents
+------------
+
+File Contents (in alphabetical order):
+
+.. _launcher.py: #id1
+.. _launcher>functions: #functions
+.. _launcher>classes: #classes
+.. _gui: #launcher.gui
+.. _runtime.py: #id2
+.. _runtime>functions: #id3
+.. _runtime.main: #id3
+.. _runtime>classes: #id4
+
+- `launcher.py`_
+	- `launcher>functions`_
+		- `main`_
+	- `launcher>classes`_
+		- `gui`_
+		- `launcher`_
+- `runtime.py`_
+	- `runtime>functions`_
+		- `runtime.main`_
+	- `runtime>classes`_
+		- `audio_manager`_
+		- `font_collection`_
+		- `game_kernel`_
+		- `item_manager`_
+		- `new_player`_
+		- `runtime.gui`_
+		- `sword_crafter`_
+
 3.1 launcher.py
 ---------------
 
@@ -75,8 +107,6 @@ The ``launcher.py`` file will launch the game.
 
 		**False** \: The launcher will ``exit`` when it hits a critical error, and it will not log the error that was hit.
 
-	.. _runtime.main : #id1
-
 	.. method:: launcher.try_launch()
 
 		reloads the import of the runtime module, and attempts to call the `runtime.main`_ method.
@@ -126,6 +156,8 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 ~~~~~~~~~~~~~~~
 
 .. function:: main(parent)
+	
+	main forwards all the options from the parent object to the `game_kernel` class, and runs it.
 
 	*parent*
 
@@ -445,3 +477,5 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 		This is the main game loop. Essentially, this manages the game during gameplay.
 		It checks all the events, sound, player movement, etc.
 
+3.2 guiObjects.py
+-----------------
