@@ -70,7 +70,7 @@ The ``launcher.py`` file will launch the game.
 
 .. class:: launcher(mode,log_file,info_file,initial_gui=False,run_with_errors=True)
 
-	*mode* The mode defines what mode the game is running in.
+	*mode* \: The mode defines what mode the game is running in.
 	
 	.. warning::
 		In Alpha 0.3.0 The only supported ``mode`` is ``1``.
@@ -87,11 +87,11 @@ The ``launcher.py`` file will launch the game.
 		|  2   | Cheats mode. all dev mode cheats enabled |  NOT SUPPORTED  |
 		+------+------------------------------------------+-----------------+
 
-	*log_file* The launcher will send all the logs to a file with this name. The location of that file will be in the installation location
+	*log_file* \: The launcher will send all the logs to a file with this name. The location of that file will be in the installation location
 
-	*info_file* The launcher will search the ``ssn`` directory inside the current directory (``./ssn``) for a file with the name of info_file
+	*info_file* \: The launcher will search the ``ssn`` directory inside the current directory (``./ssn``) for a file with the name of info_file
 
-	*initial_gui*
+	*initial_gui* \:
 
 	..
 
@@ -145,7 +145,7 @@ The ``launcher.py`` file will launch the game.
 	
 	Sets up, and contains the tkinter display.
 
-	*tk* : The gui's ``Tk()`` class.
+	*tk* \: The gui's ``Tk()`` class.
 
 3.2 runtime.py
 --------------
@@ -157,9 +157,9 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 .. function:: main(parent)
 	
-	main forwards all the options from the parent object to the `game_kernel` class, and runs it.
+	main forwards all the options from the parent object to the `game_kernel`_ class, and runs it.
 
-	*parent*
+	*parent* \:
 
 		.. _launcher.launcher: #launcher
 
@@ -216,7 +216,7 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 		This class contains all of the player's possesion utilities. From minerals to items, it does it. It is initialized as ``possesions`` in the *game_kernel*.
 
-		*minerals* : A dictionary of all the minerals the player has.
+		*minerals* \: A dictionary of all the minerals the player has.
 		All the keys are the names, and the values are `item_manager.mineral_counter`_ 's.
 
 		.. method:: give(item_type,obj,quantity)
@@ -233,7 +233,7 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 			..
 
-				``obj`` must be a `item_manager.mineral_counter`_ .
+				``obj`` \: must be a `item_manager.mineral_counter`_ .
 
 				This method will add to an existing ``mineral_counter`` the quantity or create a ``mineral_counter`` with the quantity provided.
 
@@ -436,10 +436,10 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 		As long as the player has minerals (`player.possesions.minerals`_) it will create a `sword_crafter`_ object and `run it`_ .
 
 	.. method:: toggle_pause()
-
+	
 		Inverts the current state of pausing.
-		If the game is paused, it calls `game_kernel.unpause`.
-		Vice versa it calls `game_kernel.pause` with the **default arguments**.
+		If the game is paused, it calls `game_kernel.unpause`_.
+		Vice versa it calls `game_kernel.pause`_ with the **default arguments**.
 
 	.. method:: pause_quit()
 
@@ -479,3 +479,129 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 3.2 guiObjects.py
 -----------------
+
+.. danger:: 
+	
+	guiObjects is a very unorganized file that will probably be restructured
+	by Beta, so don't count on it being the same then.
+
+guiObjects is a file containing all the window related gui classes/widgets.
+
+.. class:: ask_window(parent,screen,background_img,qtxt)
+
+	.. image:: comp.svg
+
+	ask_window should be used by functions such as `sword_crafter.ask_loop`_, since they will handle the game loop.
+	
+	When shown, the ask window covers the entire screen, which is why it should have its own loop.
+
+	.. _runtime.gui.screen: #runtime.gui
+	.. _PIL: https://pillow.readthedocs.io/en/4.0.x/
+	
+	*parent* \:  should have the same gui related properties as `sword_crafter`_
+	
+	*screen* \: Should be a pygame surface. (This should probably be `runtime.gui.screen`_)
+	
+	*background_img* \: Should be a pygame surface.  The ask window wil blur this surface using a `PIL`_ filter, and then render it behind the popup window.
+	
+	*qtxt* \: A string that will be rendered by a font, as the question.
+	
+	.. method:: check_keys(e)
+		
+		*e* \: pygame.event object, the key kind.
+		
+		Checks if allowed characters are pressed. If so, append them to ``ask_window.text``.
+		
+	.. method::	update()
+		
+		redraw the display.
+	
+	.. method:: check_events()
+		
+		A custom version of `runtime.gui.check_events`_, with keypress.
+		
+	.. method:: draw()
+		
+		Draw its surface to the main display.
+
+.. class:: confirm(parent,surf,rect,msg,onclick)
+
+	.. image:: incomp.svg
+	
+	.. Danger::
+		THIS CLASS CAN **ONLY** BE USED WITH `sword_crafter`_
+		
+	Essentially a confirm popup.
+	
+	*parent* \: must be a `sword_crafter`_.
+	
+	*surf* \: The main surface. (should be `runtime.gui.screen`_)
+	
+	*rect* \: Works in regularly compared to pygame and tkinter rectangles. (x,y,width,height)
+	
+	*msg* \: The question that will be asked.
+	
+	*onclick* \: The callback for the user's answer.
+	
+	.. note:: The onclick callback will be supplied with one parameter : True or False. Depending on the user's descion.
+	
+	.. method:: clickT()
+		
+		Calls the callback with ``True`` as the parameter.
+		
+	.. method:: clickF()
+		
+		Calls the callback with ``False`` as the parameter.
+	
+	.. method:: check_click()
+		
+		Check if the user has clicked on any of the buttons.
+		
+	.. method:: update()
+		
+		Redraw to its own surface
+	
+	.. method:: draw()
+		
+		Draw the object's surface to the main surface. (``surf``)
+
+.. class:: button(surf,color,onclick,text=None,hover=None,text_align="center",padding=0,right_text=None,outer_offset=None,text_vertical=None)
+	
+	.. image:: comp.svg
+	
+	*surf* : The surface where the button will be drawn.
+	
+	*color* : The background color of the button. (Should be in rgb format ``(R,G,B)``).
+	
+	*onclick** : The callback run, when the button is clicked.
+	
+	*text* : If supplied, it should be a ``pygame.font.Font.render`` object. This will be displayed on the button.
+	
+	*hover* : The color the button turns when hovered over. (RGB format)
+	
+	*text_align* : options: ``"center"``, ``"left"``. The text will be positioned according to this parameter.
+	
+	*padding* : The amount of pixels add/subtracted from the text's calculated position.
+	
+	.. warning:: padding is an unstable feature, and is recommended not to be touched. However, it is not deprecated, and still in use.
+	
+	*right_text* : Extra text that will be rendered from the right and out. Should be a ``pygame.font.Font.render`` object.
+	
+	*outer_offset* : The offset surf is from the main surface.
+		For Example, if a button was being draw on a surface that is not the main screen,
+		 it requires an out_offset parameter to tell it **exactly** where it is on the entire page, not just the surface it's being drawn to.
+		 
+	*text_vertical* : Documentation unavailable.
+	
+	.. method:: draw()
+		
+		Draw button to its surface (``surf``)
+	
+	.. method:: try_hover()
+		
+		If the mouse is hovering over the button, and there is a hover color for said button,
+		change the background color of said button temporaroly.
+	
+	.. method:: get_hover()
+		
+		
