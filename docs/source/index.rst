@@ -6,12 +6,16 @@
 Welcome to Sword Smith Now's documentation!
 ===========================================
 
-Sword Smith Now last updated Jan 06, 2017. 
+Sword Smith Now last updated Jan 07, 2017. 
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
+
+   Installation
+
+   Help
 
    Files
 

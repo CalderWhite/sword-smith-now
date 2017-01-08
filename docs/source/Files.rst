@@ -1,19 +1,19 @@
-Files
-=====
+3. Files
+========
 
 This page will go over all the files and their contents.
 
-.. _Calder White: mailto:calderwhite1%40gmail.com
+.. _here: Help.html
 
-If there is any further help required, contact `Calder White`_ (Head Developer)
+If you need help reading these documents, the help document is `here`_.
 
-1. launcher.py
---------------
+3.1 launcher.py
+---------------
 
 The ``launcher.py`` file will launch the game.
 
-1.1 Functions
-~~~~~~~~~~~~~
+3.1.1 Functions
+~~~~~~~~~~~~~~~
 
 .. function:: main()
 
@@ -33,8 +33,8 @@ The ``launcher.py`` file will launch the game.
 
 		``python3 launcher.py --help``
 
-1.2 Classes
-~~~~~~~~~~~
+3.1.2 Classes
+~~~~~~~~~~~~~
 
 .. class:: launcher(mode,log_file,info_file,initial_gui=False,run_with_errors=True)
 
@@ -50,7 +50,7 @@ The ``launcher.py`` file will launch the game.
 		+======+==========================================+=================+
 		|  0   | Consumer mode                            |  NOT SUPPORTED  |
 		+------+------------------------------------------+-----------------+
-		|  1   | Developer mode. Certain features enabled.| <= v0.1.0-alpha |
+		|  1   | Developer mode. Certain features enabled.| >= v0.1.0-alpha |
 		+------+------------------------------------------+-----------------+
 		|  2   | Cheats mode. all dev mode cheats enabled |  NOT SUPPORTED  |
 		+------+------------------------------------------+-----------------+
@@ -99,7 +99,7 @@ The ``launcher.py`` file will launch the game.
 
 	.. method:: log(msg,level="INFO",user="LAUNCHER")
 
-		Uses `logging`_ module to write to a log file, formatted as follows::
+		Uses python's `logging`_ module to write to a log file, formatted as follows::
 
 			[user][level]:msg
 
@@ -117,13 +117,13 @@ The ``launcher.py`` file will launch the game.
 
 	*tk* : The gui's ``Tk()`` class.
 
-2. runtime.py
--------------
+3.2 runtime.py
+--------------
 
 The ``runtime.py``  file is the main file of the game. It consists of all the core game classes, and one function : ``main`` .
 
-2.1 Functions
-~~~~~~~~~~~~~
+3.2.1 Functions
+~~~~~~~~~~~~~~~
 
 .. function:: main(parent)
 
@@ -133,8 +133,8 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 		Please refer to the `launcher.launcher`_ for a documentation on what this parent object should consist of. The parent must consist of (at least) a log method, mode int and run_with_errors boolean.
 
-1.2 Classes
-~~~~~~~~~~~~~~~~~~~~~~~
+3.2.2 Classes
+~~~~~~~~~~~~~
 
 .. class:: font_collection()
 
@@ -379,5 +379,69 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 	
 	.. method:: log(msg,level="INFO",user="GAME")
 		
-		Forwards log input to ``parent.log``
+		Forwards log input to ``parent.log`` (`launcher.log`_)
 	
+	.. method:: kill_sound()
+
+		Mutes its audio manager. (`audio_manager.mute`_)
+
+	.. method:: pause(gui=True)
+
+		Sets ``paused`` to ``True``. (Whether gui is ``True`` or ``False``)
+
+		Additionally, if ``gui == True`` it will take over the loop of the game, and run its own while loop. It will display a pause screen, with some buttons.
+
+	.. method:: unpause()
+
+		Sets the ``game_kernel.paused`` to ``False``. As of now nothing special, but there may be additions in regards to resuming processes, in the future.
+
+	.. method:: start_crafter()
+
+		.. _run it: #sword_crafter.run
+
+		.. _player.possesions.minerals: #new_player.possesions_class
+
+		As long as the player has minerals (`player.possesions.minerals`_) it will create a `sword_crafter`_ object and `run it`_ .
+
+	.. method:: toggle_pause()
+
+		Inverts the current state of pausing.
+		If the game is paused, it calls `game_kernel.unpause`.
+		Vice versa it calls `game_kernel.pause` with the **default arguments**.
+
+	.. method:: pause_quit()
+
+		Sets all of the ``game_kernel``'s looping variables to a value that will make the game stop.
+		(Essentially this stops the game from looping, without exiting python3)
+
+	.. method:: run()
+
+		.. _mode: #launcher
+
+		Runs different methods to start the game, depending on the game's `mode`_
+
+	.. method:: quit()
+
+		Stops the game from looping, and exits **pygame**, not python.
+
+	.. method:: init_credits()
+
+		Displays the pre-game credits, in a finite (set) amount of time.
+
+	.. method:: run_start()
+
+		Displays the start page. Has its own loop. It will also play the start page music.
+
+	.. method:: realm_explorer_init()
+
+		.. _Developer mode: #launcher
+
+		Sets the current chunk, for starting the game.
+		At the moment it only runs in `Developer mode`_, and it doesn't do any processing to set the current chunk.
+		It simply selects the first chunk out of ``runtime.gui.chunks``.
+
+	.. method:: run_realm_explorer()
+
+		This is the main game loop. Essentially, this manages the game during gameplay.
+		It checks all the events, sound, player movement, etc.
+

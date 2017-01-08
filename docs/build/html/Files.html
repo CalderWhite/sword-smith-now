@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Files &mdash; Sword Smith Now 0.3.0-alpha documentation</title>
+  <title>3. Files &mdash; Sword Smith Now 0.3.0-alpha documentation</title>
   
 
   
@@ -34,7 +34,7 @@
               href="genindex.html"/>
         <link rel="search" title="Search" href="search.html"/>
     <link rel="top" title="Sword Smith Now 0.3.0-alpha documentation" href="index.html"/>
-        <link rel="prev" title="Welcome to Sword Smith Now’s documentation!" href="index.html"/> 
+        <link rel="prev" title="2. Help" href="Help.html"/> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -85,15 +85,17 @@
             
             
                 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Files</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#launcher-py">1. launcher.py</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#functions">1.1 Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#classes">1.2 Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help.html">2. Help</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#launcher-py">3.1 launcher.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functions">3.1.1 Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">3.1.2 Classes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#runtime-py">2. runtime.py</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id1">2.1 Functions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">1.2 Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#runtime-py">3.2 runtime.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">3.2.1 Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id2">3.2.2 Classes</a></li>
 </ul>
 </li>
 </ul>
@@ -142,7 +144,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Files</li>
+      <li>3. Files</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -162,15 +164,14 @@
            <div itemprop="articleBody">
             
   <div class="section" id="files">
-<h1>Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h1>
+<h1>3. Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h1>
 <p>This page will go over all the files and their contents.</p>
-<p>Numbered as follows, <code class="docutils literal"><span class="pre">&lt;File&gt;</span></code> . <code class="docutils literal"><span class="pre">&lt;Class&gt;</span></code> . <code class="docutils literal"><span class="pre">&lt;attribute&gt;</span></code></p>
-<p>If there is any further help required, contact <a class="reference external" href="mailto:calderwhite1&#37;&#52;&#48;gmail&#46;com">calderwhite1<span>&#64;</span>gmail<span>&#46;</span>com</a> (Head Developer)</p>
+<p>If you need help reading these documents, the help document is <a class="reference external" href="Help.html">here</a>.</p>
 <div class="section" id="launcher-py">
-<h2>1. launcher.py<a class="headerlink" href="#launcher-py" title="Permalink to this headline">¶</a></h2>
+<h2>3.1 launcher.py<a class="headerlink" href="#launcher-py" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal"><span class="pre">launcher.py</span></code> file will launch the game.</p>
 <div class="section" id="functions">
-<h3>1.1 Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
+<h3>3.1.1 Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="main">
 <code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#main" title="Permalink to this definition">¶</a></dt>
@@ -186,37 +187,46 @@
 
 </div>
 <div class="section" id="classes">
-<h3>1.2 Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
+<h3>3.1.2 Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="launcher">
 <em class="property">class </em><code class="descname">launcher</code><span class="sig-paren">(</span><em>mode</em>, <em>log_file</em>, <em>info_file</em>, <em>initial_gui=False</em>, <em>run_with_errors=True</em><span class="sig-paren">)</span><a class="headerlink" href="#launcher" title="Permalink to this definition">¶</a></dt>
 <dd><p><em>mode</em> The mode defines what mode the game is running in.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">In Alpha 0.3.0 The only supported <code class="docutils literal"><span class="pre">mode</span></code> is <code class="docutils literal"><span class="pre">1</span></code>.</p>
+</div>
 <blockquote>
 <div><table border="1" class="docutils">
 <colgroup>
-<col width="13%" />
-<col width="88%" />
+<col width="9%" />
+<col width="65%" />
+<col width="26%" />
 </colgroup>
 <thead valign="bottom">
 <tr class="row-odd"><th class="head">Mode</th>
 <th class="head">Description</th>
+<th class="head">Supported in</th>
 </tr>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>0</td>
 <td>Consumer mode</td>
+<td>NOT SUPPORTED</td>
 </tr>
 <tr class="row-odd"><td>1</td>
 <td>Developer mode. Certain features enabled.</td>
+<td>&gt;= v0.1.0-alpha</td>
 </tr>
 <tr class="row-even"><td>2</td>
 <td>Cheats mode. all dev mode cheats enabled</td>
+<td>NOT SUPPORTED</td>
 </tr>
 </tbody>
 </table>
 </div></blockquote>
 <p><em>log_file</em> The launcher will send all the logs to a file with this name. The location of that file will be in the installation location</p>
-<p><em>info_file</em> The launcher will search the <code class="docutils literal"><span class="pre">ssn</span></code> directory inside the current directory (<cite>./ssn</cite>) for a file with the name of info_file</p>
+<p><em>info_file</em> The launcher will search the <code class="docutils literal"><span class="pre">ssn</span></code> directory inside the current directory (<code class="docutils literal"><span class="pre">./ssn</span></code>) for a file with the name of info_file</p>
 <p><em>initial_gui</em></p>
 <blockquote>
 <div><p><strong>True</strong> : When the launcher is loaded, it will create a gui.</p>
@@ -255,7 +265,7 @@
 <dl class="method">
 <dt id="launcher.log">
 <code class="descname">log</code><span class="sig-paren">(</span><em>msg</em>, <em>level=&quot;INFO&quot;</em>, <em>user=&quot;LAUNCHER&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#launcher.log" title="Permalink to this definition">¶</a></dt>
-<dd><p>Uses <a class="reference external" href="https://docs.python.org/3.5/library/logging.html">logging</a> module to write to a log file, formatted as follows:</p>
+<dd><p>Uses python&#8217;s <a class="reference external" href="https://docs.python.org/3.5/library/logging.html">logging</a> module to write to a log file, formatted as follows:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="p">[</span><span class="n">user</span><span class="p">][</span><span class="n">level</span><span class="p">]:</span><span class="n">msg</span>
 </pre></div>
 </div>
@@ -276,8 +286,8 @@
 </dd></dl>
 
 <dl class="class">
-<dt id="gui">
-<em class="property">class </em><code class="descname">gui</code><a class="headerlink" href="#gui" title="Permalink to this definition">¶</a></dt>
+<dt id="launcher.gui">
+<em class="property">class </em><code class="descclassname">launcher.</code><code class="descname">gui</code><a class="headerlink" href="#launcher.gui" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets up, and contains the tkinter display.</p>
 <p><em>tk</em> : The gui&#8217;s <code class="docutils literal"><span class="pre">Tk()</span></code> class.</p>
 </dd></dl>
@@ -285,10 +295,10 @@
 </div>
 </div>
 <div class="section" id="runtime-py">
-<h2>2. runtime.py<a class="headerlink" href="#runtime-py" title="Permalink to this headline">¶</a></h2>
+<h2>3.2 runtime.py<a class="headerlink" href="#runtime-py" title="Permalink to this headline">¶</a></h2>
 <p>The <code class="docutils literal"><span class="pre">runtime.py</span></code>  file is the main file of the game. It consists of all the core game classes, and one function : <code class="docutils literal"><span class="pre">main</span></code> .</p>
 <div class="section" id="id1">
-<h3>2.1 Functions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<h3>3.2.1 Functions<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt>
 <code class="descname">main</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span></dt>
@@ -299,7 +309,7 @@
 
 </div>
 <div class="section" id="id2">
-<h3>1.2 Classes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<h3>3.2.2 Classes<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="font_collection">
 <em class="property">class </em><code class="descname">font_collection</code><a class="headerlink" href="#font_collection" title="Permalink to this definition">¶</a></dt>
@@ -315,7 +325,7 @@
 <dl class="class">
 <dt id="audio_manager">
 <em class="property">class </em><code class="descname">audio_manager</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="headerlink" href="#audio_manager" title="Permalink to this definition">¶</a></dt>
-<dd><p>Contains and manages audio. Requires a parent, which must be in the template of <cite>game_kernel</cite>.</p>
+<dd><p>Contains and manages audio. Requires a parent, which must be in the template of <em>game_kernel</em>.</p>
 <dl class="method">
 <dt id="audio_manager.log">
 <code class="descname">log</code><span class="sig-paren">(</span><em>msg</em>, <em>level=&quot;INFO&quot;</em>, <em>user=&quot;AUDIO&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#audio_manager.log" title="Permalink to this definition">¶</a></dt>
@@ -367,8 +377,9 @@
 <dl class="class">
 <dt id="new_player.possesions_class">
 <em class="property">class </em><code class="descname">possesions_class</code><a class="headerlink" href="#new_player.possesions_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>This class contains all of the player&#8217;s possesion utilities. From minerals to items, it does it. It is initialized as <code class="docutils literal"><span class="pre">possesions</span></code> in the <cite>game_kernel</cite>.</p>
-<p><em>minerals</em> : A dictionary of all the minerals the player has. All the keys are the names, and the values are <cite>item_manager.mineral_counter</cite> &#8216;s.</p>
+<dd><p>This class contains all of the player&#8217;s possesion utilities. From minerals to items, it does it. It is initialized as <code class="docutils literal"><span class="pre">possesions</span></code> in the <em>game_kernel</em>.</p>
+<p><em>minerals</em> : A dictionary of all the minerals the player has.
+All the keys are the names, and the values are <a class="reference internal" href="#item_manager.mineral_counter">item_manager.mineral_counter</a> &#8216;s.</p>
 <dl class="method">
 <dt id="new_player.possesions_class.give">
 <code class="descname">give</code><span class="sig-paren">(</span><em>item_type</em>, <em>obj</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#new_player.possesions_class.give" title="Permalink to this definition">¶</a></dt>
@@ -391,8 +402,8 @@
 </table>
 <p><strong>For minerals:</strong></p>
 <blockquote>
-<div><p><code class="docutils literal"><span class="pre">obj</span></code> must be a <cite>item_manager.mineral_counter</cite> .</p>
-<p>This method will add to an existing <cite>mineral_counter</cite> the quantity or create a <cite>mineral_counter</cite> with the quantity provided.</p>
+<div><p><code class="docutils literal"><span class="pre">obj</span></code> must be a <a class="reference internal" href="#item_manager.mineral_counter">item_manager.mineral_counter</a> .</p>
+<p>This method will add to an existing <code class="docutils literal"><span class="pre">mineral_counter</span></code> the quantity or create a <code class="docutils literal"><span class="pre">mineral_counter</span></code> with the quantity provided.</p>
 <p>Example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># We&#39;re assuming that item_manager is already defined.</span>
 <span class="c1"># If you wish to learn about it, it&#39;s easy to find its documentation by typing its name into the search bar. (item_manager)</span>
@@ -409,9 +420,272 @@
 <dl class="method">
 <dt id="new_player.possesions_class.take">
 <code class="descname">take</code><span class="sig-paren">(</span><em>item_type</em>, <em>obj</em>, <em>quantity</em><span class="sig-paren">)</span><a class="headerlink" href="#new_player.possesions_class.take" title="Permalink to this definition">¶</a></dt>
-<dd><p>Please refer to <a class="reference external" href="#new_player.possesions_class.give">take</a> for information. Instead of adding the quantity, it takes away the quantity. All checks to see if there is in fact an <code class="docutils literal"><span class="pre">obj</span></code> to take away must be done before this method. For this method will not check that, and consequently hit a critical <code class="docutils literal"><span class="pre">KeyError</span></code> .</p>
+<dd><p>Please refer to <a class="reference internal" href="#new_player.possesions_class.give">new_player.possesions_class.give</a> for information. Instead of adding the quantity, it takes away the quantity.
+All checks to see if there is in fact an <code class="docutils literal"><span class="pre">obj</span></code> to take away must be done before this method.
+For this method will not check that, and consequently hit a critical <code class="docutils literal"><span class="pre">KeyError</span></code> .</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="method">
+<dt id="give_all">
+<code class="descname">give_all</code><span class="sig-paren">(</span><em>quantity=999</em><span class="sig-paren">)</span><a class="headerlink" href="#give_all" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gives the player <code class="docutils literal"><span class="pre">quantity</span></code> amount of each mineral. Used for developement only.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="runtime.gui">
+<em class="property">class </em><code class="descclassname">runtime.</code><code class="descname">gui</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manages anything to do with the display. To get to the window, you must go through this class</p>
+<p><em>parent</em> : Must be a <em>game_kernel</em></p>
+<p><em>screen</em> : A pygame surface. Dimensions: (600,600)</p>
+<dl class="method">
+<dt id="runtime.gui.check_events">
+<code class="descname">check_events</code><span class="sig-paren">(</span><em>keybindings=True</em><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui.check_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks pygame events, to keep the operating system happy. Additionally,
+if keybindings is <code class="docutils literal"><span class="pre">True</span></code>, it will check all the keybindings in <code class="docutils literal"><span class="pre">parent.key_bindings</span></code>
+on a <code class="docutils literal"><span class="pre">pygame.KEYDOWN</span></code> event.</p>
+<p>It will also check through the gui&#8217;s custom_events
+property (<code class="docutils literal"><span class="pre">dict</span></code>). The key is the event, and the value is the callback. For more info
+go to <a class="reference internal" href="#runtime.gui.add_event">runtime.gui.add_event</a>&#8216;s documentation.</p>
+<p>Just recently, this method also resizes the display on <code class="docutils literal"><span class="pre">pygame.VIDEORESIZE</span></code></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="runtime.gui.load_cursors">
+<code class="descname">load_cursors</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui.load_cursors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds all of the images in <code class="docutils literal"><span class="pre">./images/cursors</span></code> to <code class="docutils literal"><span class="pre">runtime.gui.cursors</span></code> dictionary.
+The key is the name of the file (minus file suffixes) and the value is the <code class="docutils literal"><span class="pre">pygame.image.load</span></code>
+object of the image.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="runtime.gui.update">
+<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Blits its screen property to the center of the ACTUAL pygame display.
+This is so the user can resize the pygame display window, and the game&#8217;s width will remain the same.
+This also allows room of styling outside the game window.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="runtime.gui.set_cursor">
+<code class="descname">set_cursor</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui.set_cursor" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the <code class="docutils literal"><span class="pre">runtime.gui.cursor</span></code> to <code class="docutils literal"><span class="pre">runtime.gui.cursors[name]</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="runtime.gui.add_event">
+<code class="descname">add_event</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui.add_event" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>t</em> : Must be a <code class="docutils literal"><span class="pre">tuple</span></code> in the format: <code class="docutils literal"><span class="pre">(pygame</span> <span class="pre">event,</span> <span class="pre">callback)</span></code></p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The callback will be supplied with an event object</p>
+</div>
+<p>Adds event to <code class="docutils literal"><span class="pre">runtime.gui.custom_events</span></code></p>
+<p>Example:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">check_mouse</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span> <span class="o">==</span> <span class="mi">5</span> <span class="ow">or</span> <span class="n">event</span><span class="o">.</span><span class="n">button</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Scrolled!&quot;</span><span class="p">)</span>
+        <span class="k">pass</span>
+<span class="n">gui</span><span class="o">.</span><span class="n">add_event</span><span class="p">(</span>
+        <span class="p">(</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">MOUSEBUTTONDOWN</span><span class="p">,</span>
+        <span class="n">check_mouse</span>
+        <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="runtime.gui.load_chunks">
+<code class="descname">load_chunks</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui.load_chunks" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">This method will only work in developer mode, and does not serve its full
+purpose. Instead it simply loads a predetermined chunk from an image.</p>
+</div>
+<p>Loads chunk file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="item_manager">
+<em class="property">class </em><code class="descname">item_manager</code><a class="headerlink" href="#item_manager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Manages items.</p>
+<p><em>minerals</em> : dictionary of all minerals, returned by <a class="reference external" href="#item_manager.load_minerals">item_manager.load_minerals</a></p>
+<dl class="class">
+<dt id="item_manager.mineral_counter">
+<em class="property">class </em><code class="descname">mineral_counter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#item_manager.mineral_counter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Grabs the <code class="docutils literal"><span class="pre">name</span></code> and <code class="docutils literal"><span class="pre">color</span></code> property from <code class="docutils literal"><span class="pre">obj</span></code> , and the adds its own
+<code class="docutils literal"><span class="pre">count</span></code> property</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="sword_crafter">
+<em class="property">class </em><code class="descname">sword_crafter</code><span class="sig-paren">(</span><em>parent</em>, <em>dimensions</em><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter" title="Permalink to this definition">¶</a></dt>
+<dd><p>sword_crafter is an autonomous object that will start when <code class="docutils literal"><span class="pre">sword_crafter.run</span></code> is called.
+Essentially, it takes over the gui display when it&#8217;s running. The sword crafter is used to
+edit the user&#8217;s sword in a friendly environment.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The surface of the sword_crafter cannot be customized. Since it takes a parent argument,
+it feeds all of it&#8217;s gui output directly to <code class="docutils literal"><span class="pre">parent.screen</span></code>.</p>
+</div>
+<dl class="method">
+<dt id="sword_crafter.check_mouse">
+<code class="descname">check_mouse</code><span class="sig-paren">(</span><em>event</em><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter.check_mouse" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run a couple of the sword_crafter&#8217;s children&#8217;s check_mouse methods.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sword_crafter.try_save">
+<code class="descname">try_save</code><span class="sig-paren">(</span><em>status</em><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter.try_save" title="Permalink to this definition">¶</a></dt>
+<dd><p>If status, run <a class="reference internal" href="#sword_crafter.save_weapon">sword_crafter.save_weapon</a> . It should be noted
+that the status parameter is coming from a confirm box.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sword_crafter.load_popup">
+<code class="descname">load_popup</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter.load_popup" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shows popup window. This is a method for the purpose of being a callback. To some button.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sword_crafter.ask_loop">
+<code class="descname">ask_loop</code><span class="sig-paren">(</span><em>question</em><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter.ask_loop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes over the main loop for a while, to wait for user response of <code class="docutils literal"><span class="pre">question</span></code>.
+This message uses <code class="docutils literal"><span class="pre">guiObjects.ask_window</span></code> .</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sword_crafter.show_conf">
+<code class="descname">show_conf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter.show_conf" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a certain confirm window in the center of the <a class="reference external" href="#runtime.gui">runtime.gui.screen</a> .</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sword_crafter.exit">
+<code class="descname">exit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter.exit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the <code class="docutils literal"><span class="pre">looping</span></code> property to <code class="docutils literal"><span class="pre">False</span></code>, therefore ending the
+<a class="reference internal" href="#sword_crafter.run">sword_crafter.run</a> loop without exiting.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sword_crafter.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>The run method is split into two sections: setup and loop.</p>
+<p>Though the class already has an <code class="docutils literal"><span class="pre">init</span></code> method, there is still setup that may only be done when the <code class="docutils literal"><span class="pre">run</span></code> method is called.
+After the setup, a loop is run while <code class="docutils literal"><span class="pre">sword_crafter.looping</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="sword_crafter.save_weapon">
+<code class="descname">save_weapon</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter.save_weapon" title="Permalink to this definition">¶</a></dt>
+<dd><p>Since Sword Smith Now is having trouble with encryption modules, so we are forced to
+just save the files in the png video format (0 security preveting game hacking...)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="game_kernel">
+<em class="property">class </em><code class="descname">game_kernel</code><span class="sig-paren">(</span><em>parent</em>, <em>dev_window=None</em>, <em>mode=0</em><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel" title="Permalink to this definition">¶</a></dt>
+<dd><div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">In Alpha 0.3.0 dev mode is the only mode supported. Please refer to <a class="reference external" href="#launcher">launcher.mode</a>.</p>
+</div>
+<p>This class serves as the parent class, and manages all of the other classes, as the name suggests.
+This is also where the main game loop is stored and run.</p>
+<p><em>parent</em> : This must fit the critera of <a class="reference internal" href="#launcher">launcher</a>. Usually this parameter is supplied by the main function.</p>
+<dl class="method">
+<dt id="game_kernel.log">
+<code class="descname">log</code><span class="sig-paren">(</span><em>msg</em>, <em>level=&quot;INFO&quot;</em>, <em>user=&quot;GAME&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.log" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forwards log input to <code class="docutils literal"><span class="pre">parent.log</span></code> (<a class="reference internal" href="#launcher.log">launcher.log</a>)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.kill_sound">
+<code class="descname">kill_sound</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.kill_sound" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mutes its audio manager. (<a class="reference internal" href="#audio_manager.mute">audio_manager.mute</a>)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.pause">
+<code class="descname">pause</code><span class="sig-paren">(</span><em>gui=True</em><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets <code class="docutils literal"><span class="pre">paused</span></code> to <code class="docutils literal"><span class="pre">True</span></code>. (Whether gui is <code class="docutils literal"><span class="pre">True</span></code> or <code class="docutils literal"><span class="pre">False</span></code>)</p>
+<p>Additionally, if <code class="docutils literal"><span class="pre">gui</span> <span class="pre">==</span> <span class="pre">True</span></code> it will take over the loop of the game, and run its own while loop. It will display a pause screen, with some buttons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.unpause">
+<code class="descname">unpause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.unpause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the <code class="docutils literal"><span class="pre">game_kernel.paused</span></code> to <code class="docutils literal"><span class="pre">False</span></code>. As of now nothing special, but there may be additions in regards to resuming processes, in the future.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.start_crafter">
+<code class="descname">start_crafter</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.start_crafter" title="Permalink to this definition">¶</a></dt>
+<dd><p>As long as the player has minerals (<a class="reference external" href="#new_player.possesions_class">player.possesions.minerals</a>) it will create a <a class="reference internal" href="#sword_crafter">sword_crafter</a> object and <a class="reference external" href="#sword_crafter.run">run it</a> .</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.toggle_pause">
+<code class="descname">toggle_pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.toggle_pause" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inverts the current state of pausing.
+If the game is paused, it calls <cite>game_kernel.unpause</cite>.
+Vice versa it calls <cite>game_kernel.pause</cite> with the <strong>default arguments</strong>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.pause_quit">
+<code class="descname">pause_quit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.pause_quit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets all of the <code class="docutils literal"><span class="pre">game_kernel</span></code>&#8216;s looping variables to a value that will make the game stop.
+(Essentially this stops the game from looping, without exiting python3)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Runs different methods to start the game, depending on the game&#8217;s <a class="reference external" href="#launcher">mode</a></p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.quit">
+<code class="descname">quit</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.quit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stops the game from looping, and exits <strong>pygame</strong>, not python.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.init_credits">
+<code class="descname">init_credits</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.init_credits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays the pre-game credits, in a finite (set) amount of time.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.run_start">
+<code class="descname">run_start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.run_start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Displays the start page. Has its own loop. It will also play the start page music.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.realm_explorer_init">
+<code class="descname">realm_explorer_init</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.realm_explorer_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the current chunk, for starting the game.
+At the moment it only runs in <a class="reference external" href="#launcher">Developer mode</a>, and it doesn&#8217;t do any processing to set the current chunk.
+It simply selects the first chunk out of <code class="docutils literal"><span class="pre">runtime.gui.chunks</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="game_kernel.run_realm_explorer">
+<code class="descname">run_realm_explorer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.run_realm_explorer" title="Permalink to this definition">¶</a></dt>
+<dd><p>This is the main game loop. Essentially, this manages the game during gameplay.
+It checks all the events, sound, player movement, etc.</p>
 </dd></dl>
 
 </dd></dl>
@@ -431,7 +705,7 @@
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
       
-        <a href="index.html" class="btn btn-neutral" title="Welcome to Sword Smith Now’s documentation!" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="Help.html" class="btn btn-neutral" title="2. Help" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
