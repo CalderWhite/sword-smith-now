@@ -1,51 +1,172 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <title>3. Files &#8212; Sword Smith Now 0.3.0-alpha documentation</title>
-    
-    <link rel="stylesheet" href="_static/classic.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.3.0-alpha',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true,
-        SOURCELINK_SUFFIX: '.txt'
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="2. Help" href="Help.html" /> 
-  </head>
-  <body role="document">
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             accesskey="I">index</a></li>
-        <li class="right" >
-          <a href="Help.html" title="2. Help"
-             accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Sword Smith Now 0.3.0-alpha documentation</a> &#187;</li> 
-      </ul>
-    </div>  
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Files &mdash; Sword Smith Now 0.3.0-alpha documentation</title>
+  
 
-    <div class="document">
-      <div class="documentwrapper">
-        <div class="bodywrapper">
-          <div class="body" role="main">
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="Sword Smith Now 0.3.0-alpha documentation" href="index.html"/>
+        <link rel="prev" title="2. Help" href="Help.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Sword Smith Now
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0-alpha
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Installation.html">1. Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Help.html">2. Help</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">3. Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#contents">3 - Contents</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">3.1 launcher.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functions">3.1.1 Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#classes">3.1.2 Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">3.2 runtime.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id3">3.2.1 Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">3.2.2 Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">3.2 guiObjects.py</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id6">3.2.1 Classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Sword Smith Now</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>3. Files</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Files.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
             
   <div class="section" id="files">
 <h1>3. Files<a class="headerlink" href="#files" title="Permalink to this headline">¶</a></h1>
@@ -108,6 +229,23 @@
 </dd>
 </dl>
 </li>
+<li><dl class="first docutils">
+<dt><a class="reference external" href="#id5">guiObjects.py</a></dt>
+<dd><ul class="first last">
+<li><dl class="first docutils">
+<dt><a class="reference external" href="#id6">guiObjects&gt;classes</a></dt>
+<dd><ul class="first last">
+<li><a class="reference internal" href="#ask_window">ask_window</a></li>
+<li><a class="reference internal" href="#confirm">confirm</a></li>
+<li><a class="reference internal" href="#button">button</a></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
 </ul>
 </div>
 <div class="section" id="id1">
@@ -134,7 +272,12 @@
 <dl class="class">
 <dt id="launcher">
 <em class="property">class </em><code class="descname">launcher</code><span class="sig-paren">(</span><em>mode</em>, <em>log_file</em>, <em>info_file</em>, <em>initial_gui=False</em>, <em>run_with_errors=True</em><span class="sig-paren">)</span><a class="headerlink" href="#launcher" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>mode</em> The mode defines what mode the game is running in.</p>
+<dd><dl class="attribute">
+<dt id="launcher.mode">
+<code class="descname">mode</code><a class="headerlink" href="#launcher.mode" title="Permalink to this definition">¶</a></dt>
+<dd><p>The mode defines what mode the game is running in. This may allow or block certain features.</p>
+</dd></dl>
+
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
 <p class="last">In Alpha 0.3.0 The only supported <code class="docutils literal"><span class="pre">mode</span></code> is <code class="docutils literal"><span class="pre">1</span></code>.</p>
@@ -168,18 +311,32 @@
 </tbody>
 </table>
 </div></blockquote>
-<p><em>log_file</em> The launcher will send all the logs to a file with this name. The location of that file will be in the installation location</p>
-<p><em>info_file</em> The launcher will search the <code class="docutils literal"><span class="pre">ssn</span></code> directory inside the current directory (<code class="docutils literal"><span class="pre">./ssn</span></code>) for a file with the name of info_file</p>
-<p><em>initial_gui</em></p>
-<blockquote>
-<div><p><strong>True</strong> : When the launcher is loaded, it will create a gui.</p>
+<dl class="attribute">
+<dt id="launcher.log_file">
+<code class="descname">log_file</code><a class="headerlink" href="#launcher.log_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The launcher will send all the logs to a file with this name. The location of that file will be in the installation location</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="launcher.info_file">
+<code class="descname">info_file</code><a class="headerlink" href="#launcher.info_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>The launcher will search the <code class="docutils literal"><span class="pre">ssn</span></code> directory inside the current directory (<code class="docutils literal"><span class="pre">./ssn</span></code>) for a file with the name of info_file</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="launcher.initial_gui">
+<code class="descname">initial_gui</code><a class="headerlink" href="#launcher.initial_gui" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>True</strong> : When the launcher is loaded, it will create a gui.</p>
 <p><strong>False</strong> : When the launcher is loaded, it will prompt the user in the terminal for a yes or no answer, whether to launch.</p>
-</div></blockquote>
-<p><em>run_with_errors</em></p>
-<blockquote>
-<div><p><strong>True</strong> : The launcher will loop, even after the program has hit a critical error. It will also log information on the error.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="launcher.run_with_errors">
+<code class="descname">run_with_errors</code><a class="headerlink" href="#launcher.run_with_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p><strong>True</strong> : The launcher will loop, even after the program has hit a critical error. It will also log information on the error.</p>
 <p><strong>False</strong> : The launcher will <code class="docutils literal"><span class="pre">exit</span></code> when it hits a critical error, and it will not log the error that was hit.</p>
-</div></blockquote>
+</dd></dl>
+
 <dl class="method">
 <dt id="launcher.try_launch">
 <code class="descname">try_launch</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#launcher.try_launch" title="Permalink to this definition">¶</a></dt>
@@ -232,7 +389,12 @@
 <dt id="launcher.gui">
 <em class="property">class </em><code class="descclassname">launcher.</code><code class="descname">gui</code><a class="headerlink" href="#launcher.gui" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sets up, and contains the tkinter display.</p>
-<p><em>tk</em> : The gui&#8217;s <code class="docutils literal"><span class="pre">Tk()</span></code> class.</p>
+<dl class="attribute">
+<dt id="launcher.gui.tk">
+<code class="descname">tk</code><a class="headerlink" href="#launcher.gui.tk" title="Permalink to this definition">¶</a></dt>
+<dd><p>The gui&#8217;s <code class="docutils literal"><span class="pre">Tk()</span></code> class.</p>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -245,8 +407,8 @@
 <dl class="function">
 <dt>
 <code class="descname">main</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span></dt>
-<dd><p>main forwards all the options from the parent object to the <cite>game_kernel</cite> class, and runs it.</p>
-<p><em>parent</em></p>
+<dd><p>main forwards all the options from the parent object to the <a class="reference internal" href="#game_kernel">game_kernel</a> class, and runs it.</p>
+<p><em>parent</em> :</p>
 <blockquote>
 <div>Please refer to the <a class="reference external" href="#launcher">launcher.launcher</a> for a documentation on what this parent object should consist of. The parent must consist of (at least) a log method, mode int and run_with_errors boolean.</div></blockquote>
 </dd></dl>
@@ -346,7 +508,7 @@ All the keys are the names, and the values are <a class="reference internal" hre
 </table>
 <p><strong>For minerals:</strong></p>
 <blockquote>
-<div><p><code class="docutils literal"><span class="pre">obj</span></code> must be a <a class="reference internal" href="#item_manager.mineral_counter">item_manager.mineral_counter</a> .</p>
+<div><p><code class="docutils literal"><span class="pre">obj</span></code> : must be a <a class="reference internal" href="#item_manager.mineral_counter">item_manager.mineral_counter</a> .</p>
 <p>This method will add to an existing <code class="docutils literal"><span class="pre">mineral_counter</span></code> the quantity or create a <code class="docutils literal"><span class="pre">mineral_counter</span></code> with the quantity provided.</p>
 <p>Example:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="c1"># We&#39;re assuming that item_manager is already defined.</span>
@@ -383,8 +545,18 @@ For this method will not check that, and consequently hit a critical <code class
 <dt id="runtime.gui">
 <em class="property">class </em><code class="descclassname">runtime.</code><code class="descname">gui</code><span class="sig-paren">(</span><em>parent</em><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui" title="Permalink to this definition">¶</a></dt>
 <dd><p>Manages anything to do with the display. To get to the window, you must go through this class</p>
-<p><em>parent</em> : Must be a <em>game_kernel</em></p>
-<p><em>screen</em> : A pygame surface. Dimensions: (600,600)</p>
+<dl class="attribute">
+<dt id="runtime.gui.parent">
+<code class="descname">parent</code><a class="headerlink" href="#runtime.gui.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must be a <em>game_kernel</em></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="runtime.gui.screen">
+<code class="descname">screen</code><a class="headerlink" href="#runtime.gui.screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>A pygame surface. Dimensions: (600,600)</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="runtime.gui.check_events">
 <code class="descname">check_events</code><span class="sig-paren">(</span><em>keybindings=True</em><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui.check_events" title="Permalink to this definition">¶</a></dt>
@@ -422,7 +594,12 @@ This also allows room of styling outside the game window.</p>
 <dl class="method">
 <dt id="runtime.gui.add_event">
 <code class="descname">add_event</code><span class="sig-paren">(</span><em>t</em><span class="sig-paren">)</span><a class="headerlink" href="#runtime.gui.add_event" title="Permalink to this definition">¶</a></dt>
-<dd><p><em>t</em> : Must be a <code class="docutils literal"><span class="pre">tuple</span></code> in the format: <code class="docutils literal"><span class="pre">(pygame</span> <span class="pre">event,</span> <span class="pre">callback)</span></code></p>
+<dd><dl class="attribute">
+<dt id="runtime.gui.t">
+<code class="descname">t</code><a class="headerlink" href="#runtime.gui.t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Must be a <code class="docutils literal"><span class="pre">tuple</span></code> in the format: <code class="docutils literal"><span class="pre">(pygame</span> <span class="pre">event,</span> <span class="pre">callback)</span></code></p>
+</dd></dl>
+
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">The callback will be supplied with an event object</p>
@@ -460,7 +637,12 @@ purpose. Instead it simply loads a predetermined chunk from an image.</p>
 <dt id="item_manager">
 <em class="property">class </em><code class="descname">item_manager</code><a class="headerlink" href="#item_manager" title="Permalink to this definition">¶</a></dt>
 <dd><p>Manages items.</p>
-<p><em>minerals</em> : dictionary of all minerals, returned by <a class="reference external" href="#item_manager.load_minerals">item_manager.load_minerals</a></p>
+<dl class="attribute">
+<dt id="item_manager.minerals">
+<code class="descname">minerals</code><a class="headerlink" href="#item_manager.minerals" title="Permalink to this definition">¶</a></dt>
+<dd><p>dictionary of all minerals, returned by <a class="reference external" href="#item_manager.load_minerals">item_manager.load_minerals</a></p>
+</dd></dl>
+
 <dl class="class">
 <dt id="item_manager.mineral_counter">
 <em class="property">class </em><code class="descname">mineral_counter</code><span class="sig-paren">(</span><em>obj</em><span class="sig-paren">)</span><a class="headerlink" href="#item_manager.mineral_counter" title="Permalink to this definition">¶</a></dt>
@@ -510,7 +692,7 @@ This message uses <code class="docutils literal"><span class="pre">guiObjects.as
 <dl class="method">
 <dt id="sword_crafter.show_conf">
 <code class="descname">show_conf</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#sword_crafter.show_conf" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a certain confirm window in the center of the <a class="reference external" href="#runtime.gui">runtime.gui.screen</a> .</p>
+<dd><p>Creates a certain confirm window in the center of the <a class="reference internal" href="#runtime.gui.screen">runtime.gui.screen</a> .</p>
 </dd></dl>
 
 <dl class="method">
@@ -542,11 +724,16 @@ just save the files in the png video format (0 security preveting game hacking..
 <em class="property">class </em><code class="descname">game_kernel</code><span class="sig-paren">(</span><em>parent</em>, <em>dev_window=None</em>, <em>mode=0</em><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel" title="Permalink to this definition">¶</a></dt>
 <dd><div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p class="last">In Alpha 0.3.0 dev mode is the only mode supported. Please refer to <a class="reference external" href="#launcher">launcher.mode</a>.</p>
+<p class="last">In Alpha 0.3.0 dev mode is the only mode supported. Please refer to <a class="reference internal" href="#launcher.mode">launcher.mode</a>.</p>
 </div>
 <p>This class serves as the parent class, and manages all of the other classes, as the name suggests.
 This is also where the main game loop is stored and run.</p>
-<p><em>parent</em> : This must fit the critera of <a class="reference internal" href="#launcher">launcher</a>. Usually this parameter is supplied by the main function.</p>
+<dl class="attribute">
+<dt id="game_kernel.parent">
+<code class="descname">parent</code><a class="headerlink" href="#game_kernel.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>This must fit the critera of <a class="reference internal" href="#launcher">launcher</a>. Usually this parameter is supplied by the main function.</p>
+</dd></dl>
+
 <dl class="method">
 <dt id="game_kernel.log">
 <code class="descname">log</code><span class="sig-paren">(</span><em>msg</em>, <em>level=&quot;INFO&quot;</em>, <em>user=&quot;GAME&quot;</em><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.log" title="Permalink to this definition">¶</a></dt>
@@ -582,8 +769,8 @@ This is also where the main game loop is stored and run.</p>
 <dt id="game_kernel.toggle_pause">
 <code class="descname">toggle_pause</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#game_kernel.toggle_pause" title="Permalink to this definition">¶</a></dt>
 <dd><p>Inverts the current state of pausing.
-If the game is paused, it calls <cite>game_kernel.unpause</cite>.
-Vice versa it calls <cite>game_kernel.pause</cite> with the <strong>default arguments</strong>.</p>
+If the game is paused, it calls <a class="reference internal" href="#game_kernel.unpause">game_kernel.unpause</a>.
+Vice versa it calls <a class="reference internal" href="#game_kernel.pause">game_kernel.pause</a> with the <strong>default arguments</strong>.</p>
 </dd></dl>
 
 <dl class="method">
@@ -636,75 +823,308 @@ It checks all the events, sound, player movement, etc.</p>
 
 </div>
 </div>
-<div class="section" id="guiobjects-py">
-<h2>3.2 guiObjects.py<a class="headerlink" href="#guiobjects-py" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>3.2 guiObjects.py<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="admonition danger">
+<p class="first admonition-title">Danger</p>
+<p class="last">guiObjects is a very unorganized file that will probably be restructured
+by Beta, so don&#8217;t count on it being the same then.</p>
+</div>
+<p>guiObjects is a file containing all the window related gui classes/widgets.</p>
+<div class="section" id="id6">
+<h3>3.2.1 Classes<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="ask_window">
+<em class="property">class </em><code class="descname">ask_window</code><span class="sig-paren">(</span><em>parent</em>, <em>screen</em>, <em>background_img</em>, <em>qtxt</em><span class="sig-paren">)</span><a class="headerlink" href="#ask_window" title="Permalink to this definition">¶</a></dt>
+<dd><img alt="_images/comp.svg" src="_images/comp.svg" /><p>ask_window should be used by functions such as <a class="reference internal" href="#sword_crafter.ask_loop">sword_crafter.ask_loop</a>, since they will handle the game loop.</p>
+<p>When shown, the ask window covers the entire screen, which is why it should have its own loop.</p>
+<dl class="attribute">
+<dt id="ask_window.parent">
+<code class="descname">parent</code><a class="headerlink" href="#ask_window.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>should have the same gui related properties as <a class="reference internal" href="#sword_crafter">sword_crafter</a></p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ask_window.screen">
+<code class="descname">screen</code><a class="headerlink" href="#ask_window.screen" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should be a pygame surface. (This should probably be <a class="reference internal" href="#runtime.gui.screen">runtime.gui.screen</a>)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ask_window.background_img">
+<code class="descname">background_img</code><a class="headerlink" href="#ask_window.background_img" title="Permalink to this definition">¶</a></dt>
+<dd><p>Should be a pygame surface.  The ask window wil blur this surface using a <a class="reference external" href="https://pillow.readthedocs.io/en/4.0.x/">PIL</a> filter, and then render it behind the popup window.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="ask_window.qtxt">
+<code class="descname">qtxt</code><a class="headerlink" href="#ask_window.qtxt" title="Permalink to this definition">¶</a></dt>
+<dd><p>A string that will be rendered by a font, as the question.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ask_window.check_keys">
+<code class="descname">check_keys</code><span class="sig-paren">(</span><em>e</em><span class="sig-paren">)</span><a class="headerlink" href="#ask_window.check_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>e</em> : pygame.event object, the key kind.</p>
+<p>Checks if allowed characters are pressed. If so, append them to <code class="docutils literal"><span class="pre">ask_window.text</span></code>.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ask_window.update">
+<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ask_window.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>redraw the display.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ask_window.check_events">
+<code class="descname">check_events</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ask_window.check_events" title="Permalink to this definition">¶</a></dt>
+<dd><p>A custom version of <a class="reference internal" href="#runtime.gui.check_events">runtime.gui.check_events</a>, with keypress.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="ask_window.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ask_window.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw its surface to the main display.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="confirm">
+<em class="property">class </em><code class="descname">confirm</code><span class="sig-paren">(</span><em>parent</em>, <em>surf</em>, <em>rect</em>, <em>msg</em>, <em>onclick</em><span class="sig-paren">)</span><a class="headerlink" href="#confirm" title="Permalink to this definition">¶</a></dt>
+<dd><img alt="_images/incomp.svg" src="_images/incomp.svg" /><div class="admonition danger">
+<p class="first admonition-title">Danger</p>
+<p class="last">THIS CLASS CAN <strong>ONLY</strong> BE USED WITH <a class="reference internal" href="#sword_crafter">sword_crafter</a></p>
+</div>
+<p>Essentially a confirm popup.</p>
+<dl class="attribute">
+<dt id="confirm.parent">
+<code class="descname">parent</code><a class="headerlink" href="#confirm.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>must be a <a class="reference internal" href="#sword_crafter">sword_crafter</a>.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confirm.surf">
+<code class="descname">surf</code><a class="headerlink" href="#confirm.surf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The main surface. (should be <a class="reference internal" href="#runtime.gui.screen">runtime.gui.screen</a>)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confirm.rect">
+<code class="descname">rect</code><a class="headerlink" href="#confirm.rect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Works in regularly compared to pygame and tkinter rectangles. (x,y,width,height)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confirm.msg">
+<code class="descname">msg</code><a class="headerlink" href="#confirm.msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>The question that will be asked.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="confirm.onclick">
+<code class="descname">onclick</code><a class="headerlink" href="#confirm.onclick" title="Permalink to this definition">¶</a></dt>
+<dd><p>The callback for the user&#8217;s answer.</p>
+</dd></dl>
+
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The onclick callback will be supplied with one parameter : True or False. Depending on the user&#8217;s descion.</p>
+</div>
+<dl class="method">
+<dt id="confirm.clickT">
+<code class="descname">clickT</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confirm.clickT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls the callback with <code class="docutils literal"><span class="pre">True</span></code> as the parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confirm.clickF">
+<code class="descname">clickF</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confirm.clickF" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calls the callback with <code class="docutils literal"><span class="pre">False</span></code> as the parameter.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confirm.check_click">
+<code class="descname">check_click</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confirm.check_click" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the user has clicked on any of the buttons.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confirm.update">
+<code class="descname">update</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confirm.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Redraw to its own surface</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="confirm.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#confirm.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw the object&#8217;s surface to the main surface. (<code class="docutils literal"><span class="pre">surf</span></code>)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="button">
+<em class="property">class </em><code class="descname">button</code><span class="sig-paren">(</span><em>surf</em>, <em>color</em>, <em>onclick</em>, <em>text=None</em>, <em>hover=None</em>, <em>text_align=&quot;center&quot;</em>, <em>padding=0</em>, <em>right_text=None</em>, <em>outer_offset=None</em>, <em>text_vertical=None</em><span class="sig-paren">)</span><a class="headerlink" href="#button" title="Permalink to this definition">¶</a></dt>
+<dd><img alt="_images/comp.svg" src="_images/comp.svg" /><dl class="attribute">
+<dt id="button.surf">
+<code class="descname">surf</code><a class="headerlink" href="#button.surf" title="Permalink to this definition">¶</a></dt>
+<dd><p>The surface where the button will be drawn.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="button.color">
+<code class="descname">color</code><a class="headerlink" href="#button.color" title="Permalink to this definition">¶</a></dt>
+<dd><p>The background color of the button. (Should be in rgb format <code class="docutils literal"><span class="pre">(R,G,B)</span></code>).</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="button.onclick">
+<code class="descname">onclick</code><a class="headerlink" href="#button.onclick" title="Permalink to this definition">¶</a></dt>
+<dd><p>The callback run, when the button is clicked.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="button.text">
+<code class="descname">text</code><a class="headerlink" href="#button.text" title="Permalink to this definition">¶</a></dt>
+<dd><p>If supplied, it should be a <code class="docutils literal"><span class="pre">pygame.font.Font.render</span></code> object. This will be displayed on the button.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="button.hover">
+<code class="descname">hover</code><a class="headerlink" href="#button.hover" title="Permalink to this definition">¶</a></dt>
+<dd><p>The color the button turns when hovered over. (RGB format)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="button.text_align">
+<code class="descname">text_align</code><a class="headerlink" href="#button.text_align" title="Permalink to this definition">¶</a></dt>
+<dd><p>options: <code class="docutils literal"><span class="pre">&quot;center&quot;</span></code>, <code class="docutils literal"><span class="pre">&quot;left&quot;</span></code>. The text will be positioned according to this parameter.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="button.padding">
+<code class="descname">padding</code><a class="headerlink" href="#button.padding" title="Permalink to this definition">¶</a></dt>
+<dd><p>The amount of pixels add/subtracted from the text&#8217;s calculated position.</p>
+</dd></dl>
+
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">padding is an unstable feature, and is recommended not to be touched. However, it is not deprecated, and still in use.</p>
+</div>
+<dl class="attribute">
+<dt id="button.right_text">
+<code class="descname">right_text</code><a class="headerlink" href="#button.right_text" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extra text that will be rendered from the right and out. Should be a <code class="docutils literal"><span class="pre">pygame.font.Font.render</span></code> object.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="button.outer_offset">
+<code class="descname">outer_offset</code><a class="headerlink" href="#button.outer_offset" title="Permalink to this definition">¶</a></dt>
+<dd><p>The offset surf is from the main surface.
+For Example, if a button was being draw on a surface that is not the main screen,
+it requires an out_offset parameter to tell it <strong>exactly</strong> where it is on the entire page, not just the surface it&#8217;s being drawn to.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="button.text_vertical">
+<code class="descname">text_vertical</code><a class="headerlink" href="#button.text_vertical" title="Permalink to this definition">¶</a></dt>
+<dd><p>Documentation unavailable.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="button.draw">
+<code class="descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#button.draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Draw button to its surface (<code class="docutils literal"><span class="pre">surf</span></code>)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="button.try_hover">
+<code class="descname">try_hover</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#button.try_hover" title="Permalink to this definition">¶</a></dt>
+<dd><p>If the mouse is hovering over the button, and there is a hover color for said button,
+change the background color of said button temporarily.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="button.get_hover">
+<code class="descname">get_hover</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#button.get_hover" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns <code class="docutils literal"><span class="pre">True</span></code> if the mouse is hovering over the button. If there are issues with this method, refer to <a class="reference internal" href="#button.outer_offset">button.outer_offset</a> for a possible reason why.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 </div>
 
 
+           </div>
+           <div class="articleComments">
+            
+           </div>
           </div>
-        </div>
-      </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">3. Files</a><ul>
-<li><a class="reference internal" href="#contents">3 - Contents</a></li>
-<li><a class="reference internal" href="#id1">3.1 launcher.py</a><ul>
-<li><a class="reference internal" href="#functions">3.1.1 Functions</a></li>
-<li><a class="reference internal" href="#classes">3.1.2 Classes</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#id2">3.2 runtime.py</a><ul>
-<li><a class="reference internal" href="#id3">3.2.1 Functions</a></li>
-<li><a class="reference internal" href="#id4">3.2.2 Classes</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#guiobjects-py">3.2 guiObjects.py</a></li>
-</ul>
-</li>
-</ul>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="Help.html" class="btn btn-neutral" title="2. Help" accesskey="p"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="Help.html"
-                        title="previous chapter">2. Help</a></p>
-  <div role="note" aria-label="source link">
-    <h3>This Page</h3>
-    <ul class="this-page-menu">
-      <li><a href="_sources/Files.rst.txt"
-            rel="nofollow">Show Source</a></li>
-    </ul>
-   </div>
-<div id="searchbox" style="display: none" role="search">
-  <h3>Quick search</h3>
-    <form class="search" action="search.html" method="get">
-      <div><input type="text" name="q" /></div>
-      <div><input type="submit" value="Go" /></div>
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
-    </form>
-</div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, Calder White.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
         </div>
       </div>
-      <div class="clearer"></div>
-    </div>
-    <div class="related" role="navigation" aria-label="related navigation">
-      <h3>Navigation</h3>
-      <ul>
-        <li class="right" style="margin-right: 10px">
-          <a href="genindex.html" title="General Index"
-             >index</a></li>
-        <li class="right" >
-          <a href="Help.html" title="2. Help"
-             >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">Sword Smith Now 0.3.0-alpha documentation</a> &#187;</li> 
-      </ul>
-    </div>
-    <div class="footer" role="contentinfo">
-        &#169; Copyright 2017, Calder White.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.5.1.
-    </div>
-  </body>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.0-alpha',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
 </html>

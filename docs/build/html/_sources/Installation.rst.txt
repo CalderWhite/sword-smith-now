@@ -48,6 +48,8 @@ Download the installer executable, which is currently only available to develope
 1.2.1.2 - Installing
 ^^^^^^^^^^^^^^^^^^^^
 
+.. note:: You may have to run the executable from the command line. Sorry! Sword Smith Now cannot currently verify their work, due to fees and such.
+
 Run the executable. Eventually, it should give the option of installation, and selecting a directory. The default directory is your %appdata% directory.
 
 1.2.1.3 - Running
@@ -63,4 +65,4 @@ Enter games directory::
 
 Run the game in dev mode::
 
-	launcher.exe -d
+	Sword_Smith_Now.exe -d

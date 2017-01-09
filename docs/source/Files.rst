@@ -20,6 +20,8 @@ File Contents (in alphabetical order):
 .. _runtime>functions: #id3
 .. _runtime.main: #id3
 .. _runtime>classes: #id4
+.. _guiObjects.py: #id5
+.. _guiObjects>classes: #id6
 
 - `launcher.py`_
 	- `launcher>functions`_
@@ -38,6 +40,11 @@ File Contents (in alphabetical order):
 		- `new_player`_
 		- `runtime.gui`_
 		- `sword_crafter`_
+- `guiObjects.py`_
+	- `guiObjects>classes`_
+		- `ask_window`_
+		- `confirm`_
+		- `button`_
 
 3.1 launcher.py
 ---------------
@@ -70,7 +77,9 @@ The ``launcher.py`` file will launch the game.
 
 .. class:: launcher(mode,log_file,info_file,initial_gui=False,run_with_errors=True)
 
-	*mode* \: The mode defines what mode the game is running in.
+	.. attribute:: mode
+
+		 The mode defines what mode the game is running in. This may allow or block certain features.
 	
 	.. warning::
 		In Alpha 0.3.0 The only supported ``mode`` is ``1``.
@@ -87,21 +96,21 @@ The ``launcher.py`` file will launch the game.
 		|  2   | Cheats mode. all dev mode cheats enabled |  NOT SUPPORTED  |
 		+------+------------------------------------------+-----------------+
 
-	*log_file* \: The launcher will send all the logs to a file with this name. The location of that file will be in the installation location
+	.. attribute:: log_file
 
-	*info_file* \: The launcher will search the ``ssn`` directory inside the current directory (``./ssn``) for a file with the name of info_file
+		The launcher will send all the logs to a file with this name. The location of that file will be in the installation location
 
-	*initial_gui* \:
+	.. attribute:: info_file
 
-	..
+		The launcher will search the ``ssn`` directory inside the current directory (``./ssn``) for a file with the name of info_file
+
+	.. attribute:: initial_gui
 
 		**True** \: When the launcher is loaded, it will create a gui.
 
 		**False** \: When the launcher is loaded, it will prompt the user in the terminal for a yes or no answer, whether to launch.
 
-	*run_with_errors*
-
-	..
+	.. attribute:: run_with_errors
 
 		**True** \: The launcher will loop, even after the program has hit a critical error. It will also log information on the error.
 
@@ -145,7 +154,9 @@ The ``launcher.py`` file will launch the game.
 	
 	Sets up, and contains the tkinter display.
 
-	*tk* \: The gui's ``Tk()`` class.
+	.. attribute:: tk
+
+		The gui's ``Tk()`` class.
 
 3.2 runtime.py
 --------------
@@ -261,9 +272,13 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 	Manages anything to do with the display. To get to the window, you must go through this class
 	
-	*parent* : Must be a *game_kernel*
+	.. attribute:: parent
+
+		Must be a *game_kernel*
 	
-	*screen* : A pygame surface. Dimensions: (600,600)
+	.. attribute:: screen
+
+		A pygame surface. Dimensions: (600,600)
 	
 	.. method:: check_events(keybindings=True)
 		
@@ -295,7 +310,9 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 	
 	.. method:: add_event(t)
 		
-		*t* : Must be a ``tuple`` in the format: ``(pygame event, callback)``
+		.. attribute:: t
+
+			Must be a ``tuple`` in the format: ``(pygame event, callback)``
 		
 		.. note:: The callback will be supplied with an event object
 		
@@ -328,7 +345,9 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 	
 	.. _item_manager.load_minerals: #item_manager.load_minerals
 	
-	*minerals* : dictionary of all minerals, returned by `item_manager.load_minerals`_
+	.. attribute:: minerals
+
+		dictionary of all minerals, returned by `item_manager.load_minerals`_
 	
 	.. load_minerals()
 		Returns the minerals json file (``minerals.json``).
@@ -375,8 +394,6 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 		
 	.. method:: show_conf()
 		
-		.. _runtime.gui.screen: #runtime.gui
-		
 		Creates a certain confirm window in the center of the `runtime.gui.screen`_ .
 	
 	.. method:: exit()
@@ -398,15 +415,15 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 .. class:: game_kernel(parent,dev_window=None,mode=0)
 	
-	.. _launcher.mode: #launcher
-	
 	.. warning::
 		In Alpha 0.3.0 dev mode is the only mode supported. Please refer to `launcher.mode`_.
 		
 	This class serves as the parent class, and manages all of the other classes, as the name suggests.
 	This is also where the main game loop is stored and run.
 	
-	*parent* : This must fit the critera of `launcher`_. Usually this parameter is supplied by the main function.
+	.. attribute:: parent
+
+		This must fit the critera of `launcher`_. Usually this parameter is supplied by the main function.
 	
 	
 	.. method:: log(msg,level="INFO",user="GAME")
@@ -487,6 +504,9 @@ The ``runtime.py``  file is the main file of the game. It consists of all the co
 
 guiObjects is a file containing all the window related gui classes/widgets.
 
+3.2.1 Classes
+~~~~~~~~~~~~~
+
 .. class:: ask_window(parent,screen,background_img,qtxt)
 
 	.. image:: comp.svg
@@ -495,16 +515,23 @@ guiObjects is a file containing all the window related gui classes/widgets.
 	
 	When shown, the ask window covers the entire screen, which is why it should have its own loop.
 
-	.. _runtime.gui.screen: #runtime.gui
 	.. _PIL: https://pillow.readthedocs.io/en/4.0.x/
 	
-	*parent* \:  should have the same gui related properties as `sword_crafter`_
+	.. attribute:: parent
+
+		should have the same gui related properties as `sword_crafter`_
 	
-	*screen* \: Should be a pygame surface. (This should probably be `runtime.gui.screen`_)
+	.. attribute:: screen
+
+		Should be a pygame surface. (This should probably be `runtime.gui.screen`_)
 	
-	*background_img* \: Should be a pygame surface.  The ask window wil blur this surface using a `PIL`_ filter, and then render it behind the popup window.
+	.. attribute:: background_img
+
+		Should be a pygame surface.  The ask window wil blur this surface using a `PIL`_ filter, and then render it behind the popup window.
 	
-	*qtxt* \: A string that will be rendered by a font, as the question.
+	.. attribute:: qtxt
+
+		A string that will be rendered by a font, as the question.
 	
 	.. method:: check_keys(e)
 		
@@ -533,15 +560,25 @@ guiObjects is a file containing all the window related gui classes/widgets.
 		
 	Essentially a confirm popup.
 	
-	*parent* \: must be a `sword_crafter`_.
+	.. attribute:: parent
+
+		must be a `sword_crafter`_.
 	
-	*surf* \: The main surface. (should be `runtime.gui.screen`_)
+	.. attribute:: surf
+
+		The main surface. (should be `runtime.gui.screen`_)
 	
-	*rect* \: Works in regularly compared to pygame and tkinter rectangles. (x,y,width,height)
+	.. attribute::  rect
+
+		Works in regularly compared to pygame and tkinter rectangles. (x,y,width,height)
 	
-	*msg* \: The question that will be asked.
+	.. attribute:: msg
+
+		The question that will be asked.
 	
-	*onclick* \: The callback for the user's answer.
+	.. attribute:: onclick
+
+		The callback for the user's answer.
 	
 	.. note:: The onclick callback will be supplied with one parameter : True or False. Depending on the user's descion.
 	
@@ -569,29 +606,49 @@ guiObjects is a file containing all the window related gui classes/widgets.
 	
 	.. image:: comp.svg
 	
-	*surf* : The surface where the button will be drawn.
+	.. attribute:: surf 
+
+		The surface where the button will be drawn.
 	
-	*color* : The background color of the button. (Should be in rgb format ``(R,G,B)``).
+	.. attribute:: color 
+
+		The background color of the button. (Should be in rgb format ``(R,G,B)``).
 	
-	*onclick** : The callback run, when the button is clicked.
+	.. attribute:: onclick
+
+		 The callback run, when the button is clicked.
 	
-	*text* : If supplied, it should be a ``pygame.font.Font.render`` object. This will be displayed on the button.
+	.. attribute:: text
+
+		If supplied, it should be a ``pygame.font.Font.render`` object. This will be displayed on the button.
 	
-	*hover* : The color the button turns when hovered over. (RGB format)
+	.. attribute:: hover
+
+		The color the button turns when hovered over. (RGB format)
 	
-	*text_align* : options: ``"center"``, ``"left"``. The text will be positioned according to this parameter.
+	.. attribute:: text_align
+
+		options: ``"center"``, ``"left"``. The text will be positioned according to this parameter.
 	
-	*padding* : The amount of pixels add/subtracted from the text's calculated position.
+	.. attribute:: padding
+
+		The amount of pixels add/subtracted from the text's calculated position.
 	
 	.. warning:: padding is an unstable feature, and is recommended not to be touched. However, it is not deprecated, and still in use.
 	
-	*right_text* : Extra text that will be rendered from the right and out. Should be a ``pygame.font.Font.render`` object.
+	.. attribute:: right_text
+
+		Extra text that will be rendered from the right and out. Should be a ``pygame.font.Font.render`` object.
 	
-	*outer_offset* : The offset surf is from the main surface.
+	.. attribute:: outer_offset
+
+		The offset surf is from the main surface.
 		For Example, if a button was being draw on a surface that is not the main screen,
-		 it requires an out_offset parameter to tell it **exactly** where it is on the entire page, not just the surface it's being drawn to.
+		it requires an out_offset parameter to tell it **exactly** where it is on the entire page, not just the surface it's being drawn to.
 		 
-	*text_vertical* : Documentation unavailable.
+	.. attribute:: text_vertical
+
+		Documentation unavailable.
 	
 	.. method:: draw()
 		
@@ -600,8 +657,8 @@ guiObjects is a file containing all the window related gui classes/widgets.
 	.. method:: try_hover()
 		
 		If the mouse is hovering over the button, and there is a hover color for said button,
-		change the background color of said button temporaroly.
+		change the background color of said button temporarily.
 	
 	.. method:: get_hover()
 		
-		
+		Returns ``True`` if the mouse is hovering over the button. If there are issues with this method, refer to `button.outer_offset`_ for a possible reason why.
