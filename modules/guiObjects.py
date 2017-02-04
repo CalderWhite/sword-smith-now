@@ -1,5 +1,107 @@
-import pygame,numpy, templates, os
+import pygame,numpy, os
+from modules import templates
 pygame.init()
+
+# Alpha v0.4+ Widgets
+class Text(object):
+	def __init__(self,pos,text,font,color):
+		self.text = font.render(text,False,color)
+		self.pos = pos
+		self.shown = True
+	def show(self):
+		self.shown = True
+	def hide(self):
+		self.shown = False
+	def draw(self,surface):
+		if self.shown:
+			surface.blit(self.text,self.pos)
+	def update(self):
+		pass
+class window(object):
+	def __init__(self,dimensions,position,*args):
+		"""Base class for a window. window(required : dimensions,position extra: backgroundColor)"""
+		# positional arguments
+		self.pos = position
+		# extra arguments
+		if len(args) > 0:
+			self.background = args[0]
+			if len(self.background) > 3:
+				self.transparent = True
+				self.surf = pygame.Surface(dimensions, pygame.SRCALPHA, 32)
+				self.surf.set_alpha(self.background[-1])
+			else:
+				self.surf = pygame.Surface(dimensions)
+				self.transparent = False
+		else:
+			self.background = (255,255,255)
+			self.surf = pygame.Surface(dimensions)
+			self.transparent = False
+		# empty properties
+		self.widgets = {}
+		self.shown = True
+	def add_widget(self,name,w):
+		self.widgets[name] = w
+	def remove_widget(self,name):
+		try:
+			self.widgets.pop(name)
+		except KeyError:
+			pass
+	def show(self):
+		self.shown = True
+	def hide(self):
+		self.shown = False
+	def draw(self,surface):
+		if self.shown:
+			self.surf.convert_alpha()
+			surface.blit(self.surf,self.pos)
+	def update(self):
+		if self.shown:
+			for n in self.widgets:
+				w = self.widgets[n]
+				# pos is v0.4+
+				# rect is v0.3>
+				if w.__dict__.__contains__("pos"):
+					w.draw(self.surf)
+				elif w.__dict__.__contains__("rect"):
+					w.draw(self.surf)
+class cmdWindow(window):
+	def __init__(self,gui):
+		self.gui = gui
+		self.w = int(self.gui.screen.get_width() * 0.7)
+		self.h = int(self.gui.screen.get_height() * 0.7)
+		self.f = pygame.font.Font("fonts/courbd.ttf",16)
+		# cmd stuff
+		# window init stuff
+		super().__init__((self.w,self.h),(0,self.gui.screen.get_height() - self.h),(100,100,100,100))
+	def refreshShell(self,cmd):
+		shell = cmd.sh
+		# clear out old widgets
+		self.widgets = {}
+		# re add all the widgets
+		l = shell.stdin.readLines()
+		maxx = int(self.h / 19) - 1
+		if len(l) > maxx:
+			l = l[-maxx::]
+		l.reverse()
+		for i,text in enumerate(l):
+			w = Text((0,self.h - ( (i + 2) * 19)),text,self.f,(255,255,255))
+			n = str(i)
+			self.add_widget(n, w)
+		# add the user's current typing to the widgets
+		w = Text((0,self.h - 19),"".join(cmd.inp),self.f,(255,255,255))
+		self.add_widget("user_input", w)
+	def update(self):
+		if self.shown:
+			self.surf.fill(self.background)
+			for n in self.widgets:
+				w = self.widgets[n]
+				# pos is v0.4+
+				# rect is v0.3>
+				if w.__dict__.__contains__("pos"):
+					w.draw(self.surf)
+				elif w.__dict__.__contains__("rect"):
+					w.draw(self.surf)
+# Alpha v0.3 and under Widgets
 class ask_window(object):
 	def __init__(self,parent,screen,background_img,qtxt):
 		self.background = background_img
@@ -549,4 +651,8 @@ class pixel_editor(object):
 					self.parent.parent.player.possesions.give(0,self.weapon_cache[y][x],1)
 					# now reset that square/pixel
 					self.weapon_cache[y][x] = None
-				# if it is already <None>, it's fine. Leave it.
+		pass
+
+if __name__ == '__main__':
+	w = cmdWindow()
+	print("done.")

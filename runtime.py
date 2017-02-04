@@ -1,5 +1,6 @@
-import pygame, time, random, sys, chunkObject, json, guiObjects, os, numpy
+import pygame, sys, json, os, numpy
 import PIL.Image, PIL.ImageFilter
+from modules import chunkObject, guiObjects, commandLine
 from GMK.items import mineral_constructor
 class font_collection(object):
 	def __init__(self):
@@ -248,6 +249,7 @@ class gui(object):
 				int((h - self.screen.get_height()) / 2)
 			)
 			)
+		pygame.display.update()
 	def set_cursor(self,name):
 		self.cursor = self.cursors[name]
 	def add_event(self,t):
@@ -292,16 +294,15 @@ class gui(object):
 		pass
 	class util(object):
 		def blur_surf(surf,radius=3):
-		    # create the original pygame surface
-		    #surf = pygame.image.fromstring(, size, mode)
-		    size = surf.get_size()
-		    raw = pygame.image.tostring(surf,"RGBA",False)
-		    # create a PIL image and blur it
-		    pil_blured = PIL.Image.frombytes("RGBA", size, raw).filter(PIL.ImageFilter.GaussianBlur(radius=radius))
-
-		    # convert it back to a pygame surface
-		    filtered = pygame.image.fromstring(pil_blured.tobytes("raw", "RGBA"), size, "RGBA")
-		    return filtered
+			# create the original pygame surface
+			#surf = pygame.image.fromstring(, size, mode)
+			size = surf.get_size()
+			raw = pygame.image.tostring(surf,"RGBA",False)
+			# create a PIL image and blur it
+			pil_blured = PIL.Image.frombytes("RGBA", size, raw).filter(PIL.ImageFilter.GaussianBlur(radius=radius))
+			# convert it back to a pygame surface
+			filtered = pygame.image.fromstring(pil_blured.tobytes("raw", "RGBA"), size, "RGBA")
+			return filtered
 class key_bindings(object):
 	def __init__(self,parent):
 		# right now, we won't be loading any key bindings from a user file.
@@ -309,24 +310,28 @@ class key_bindings(object):
 		self.parent = parent
 		if parent.mode == 0:
 			self.bindings = {
-				pygame.K_ESCAPE : parent.toggle_pause
 			}
 		elif parent.mode == 1:
 			self.bindings = {
-				pygame.K_ESCAPE : parent.toggle_pause,
 				pygame.K_g : parent.player.give_all
 			}
 		elif parent.mode == 2:
 			self.bindings = {
-				pygame.K_ESCAPE : parent.toggle_pause,
 				pygame.K_g : parent.player.give_all
 			}
+		# now for the bindings all modes will have
+		##self.bindings[pygame.K_p] = parent.toggle_pause
+		self.bindings[pygame.K_t] = parent.show_console
+		self.bindings[pygame.K_ESCAPE] = parent.escape_current
 	def check_all(self,event):
 		# run through key bindings
 		# run any functions/methods if that key is pressed
 		for key in self.bindings:
 			if event.key == key:
-				self.bindings[key]()
+				if not self.parent.widgets["consoleWindow"].shown:
+					self.bindings[key]()
+				elif event.key == pygame.K_ESCAPE:
+					self.parent.escape_current()
 class item_manager(object):
 	def __init__(self,parent):
 		self.minerals = self.load_minerals("minerals.json")
@@ -429,6 +434,7 @@ class sword_crafter(object):
 		self.confirms["build_confirm"] = confirm
 	def exit(self):
 		self.looping = False
+		self.parent.crafting = False
 		pass
 	def run(self):
 		# first pause the game PROGRAM so everything stops
@@ -526,6 +532,8 @@ class sword_crafter(object):
 				self.min_window.show()
 			else:
 				self.min_window.hide()
+			if keys[pygame.K_ESCAPE]:
+				self.parent.escape_current()
 			# refresh minerals according to the player's possesions
 			self.min_window.minerals = list(self.figurative_minerals.values())
 			# clear screen
@@ -649,6 +657,8 @@ class game_kernel(object):
 		"""Loads a bit of stuff and logs, however it does not run any boot scripts. That method can be run by self.run_start()."""
 		self.mode = mode
 		self.paused = False
+		self.widgets = {}
+		self.crafting = False
 		#automatically change mode to 1 if a dev window is supplied
 		if dev_window != None:
 			self.mode = 1
@@ -669,6 +679,11 @@ class game_kernel(object):
 		# keybindings last, since they'll use methods from the object above
 		self.log("Loading key bindings...")
 		self.key_bindings = key_bindings(self)
+		self.log("Adding console widgets...")
+		self.widgets["consoleWindow"] = guiObjects.cmdWindow(self.gui)
+		self.widgets["consoleWindow"].hide()
+		self.log("Initializing command shell...")
+		self.commandShell = commandLine.cmd(self)
 	def kill_sound(self):
 		"""Mutes the game."""
 		self.audio.mute()
@@ -775,12 +790,24 @@ class game_kernel(object):
 				pygame.display.update()
 	def unpause(self):
 		self.paused = False
+	def p(self,*args,**kwargs):
+		pass
+	def escape_current(self):
+		if self.widgets["consoleWindow"].shown:
+			self.widgets["consoleWindow"].hide()
+		elif self.crafting:
+			self.crafter.exit()
+		else:
+			self.toggle_pause()
+	def show_console(self):
+		self.widgets["consoleWindow"].show()
 	def start_crafter(self):
 		if not len(self.player.possesions.minerals) > 0:
 			print("Oops! You don't have any minerals. Try finding some, then come back.")
 		else:
-			crafter = sword_crafter(self,(24,24))
-			crafter.run()
+			self.crafter = sword_crafter(self,(24,24))
+			self.crafting = True
+			self.crafter.run()
 	def toggle_pause(self):
 		if not self.paused:
 			self.pause()
@@ -938,10 +965,14 @@ class game_kernel(object):
 		if self.mode == 1:
 			self.current_chunk = self.gui.chunks[0]
 		while self.page == "realm_1":
-			##print(self.stop)
-			keys = pygame.key.get_pressed()
+			if not self.widgets["consoleWindow"].shown:
+				keys = pygame.key.get_pressed()
 			if not self.stop:
-				self.gui.check_events()
+				if not self.widgets["consoleWindow"].shown:
+					self.gui.check_events()
+				else:
+					self.commandShell.capture()
+					self.widgets["consoleWindow"].refreshShell(self.commandShell)
 				# clear
 				self.gui.screen.fill( (255,255,255) )
 				# load values
@@ -949,8 +980,8 @@ class game_kernel(object):
 				sheight,swidth = self.gui.screen.get_size()
 				# modify player's position accordingly
 				# speed modification
-				self.player.check_movement()
-				#print(self.player.x,self.player.y)
+				if not self.widgets["consoleWindow"].shown:
+					self.player.check_movement()
 				# load & render background according to player's xy
 				self.gui.render_floor()
 				# render player
@@ -961,14 +992,20 @@ class game_kernel(object):
 				pygame.draw.rect(self.gui.screen,(255,0,0),[x,y,width,height],1)
 				# temporary rendering object
 				self.gui.render_objects()
+				# everything above the actual game
+				# render widgets
+				for w in self.widgets:
+					self.widgets[w].update()
+					self.widgets[w].draw(self.gui.screen)
 				# render mouse
 				x = mx - (self.gui.cursor.get_height() / 2)
 				y = my - (self.gui.cursor.get_width() / 2)
 				self.gui.screen.blit(self.gui.cursor,(x,y))
 				# finally, update
 				self.gui.update()
-				pygame.display.update()
-				self.gui.check_events()
+				# check events lastly to avoid closing errors
+				if not self.widgets["consoleWindow"].shown:
+					self.gui.check_events()
 def main(parent):
 	if parent == None:
 		print("Program cannot run without a launcher.")

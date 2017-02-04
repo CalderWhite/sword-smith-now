@@ -4,5 +4,5 @@
 		"requirements" : "./requirements.json",
 		"." : "."
 	},
-	"version" : "Alpha 0.3 Snapshot 0.8.0"
+	"version" : "Alpha 0.4 Snapshot 0.6.1"
 }

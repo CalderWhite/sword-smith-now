@@ -1,4 +1,4 @@
-import logging,json, tkinter, time, threading, sys, datetime, imp, os, gc
+import logging,json, tkinter, sys, datetime, imp, os, gc
 from tkinter import ttk
 
 class gui(object):
@@ -254,6 +254,6 @@ def main():
 		l.load()
 	
 if __name__ == '__main__':
-	##launch = launcher(1,"Sword_Smith_Now_logs.log","game_info.json",initial_gui=True)
-	##launch.load()
+	#launch = launcher(1,"Sword_Smith_Now_logs.log","game_info.json",initial_gui=True)
+	#launch.load()
 	main()
